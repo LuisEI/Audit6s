@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Audit6s</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Pantalla Inicial</string>
+    <string name="titulo_home">Auditoria 6S\'s</string>
+    <string name="ingreso_de_datos">INGRESO DE DATOS</string>
+    <string name="division">Division</string>
+    <string name="planta">Planta</string>
+    <string name="gerente">Gerente</string>
+    <string name="area">Area</string>
+    <string name="lider">Lider</string>
+    <string name="turno">Turno</string>
+    <string name="auditor">Auditor</string>
+    <string name="fecha">Fecha</string>
+    <string name="comenzar">Comenzar</string>
+</resources>
