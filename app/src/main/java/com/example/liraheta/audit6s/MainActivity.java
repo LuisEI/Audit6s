@@ -1,5 +1,6 @@
 package com.example.liraheta.audit6s;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import fragments.FragmentAuditoria;
+import fragments.FragmentCalificar;
 import fragments.FragmentConsulta;
 import fragments.FragmentHome;
 import fragments.FragmentIngreso;
@@ -25,7 +27,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         FragmentHome.OnFragmentInteractionListener, FragmentAuditoria.OnFragmentInteractionListener,
         FragmentConsulta.OnFragmentInteractionListener, FragmentSetting.OnFragmentInteractionListener,
-        FragmentIngreso.OnFragmentInteractionListener{
+        FragmentIngreso.OnFragmentInteractionListener, FragmentCalificar.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,5 +120,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

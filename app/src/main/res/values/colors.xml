@@ -3,5 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorCard">#e9e9e9</color>
+    <color name="colorCard">#E9E9E9</color>
+    <color name="colorActivado">#FF4081</color>
+    <color name="colorBtnDesactivado">#AAAAAA</color>
+    <color name="colorTitulos">#29B6F6</color>
 </resources>

@@ -90,7 +90,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="fontFamily" value="Albertus MT" />
-                                                <entry key="text" value="1" />
+                                                <entry key="text" value="20" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -101,7 +101,7 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="TEXT" />
-                                      <entry key="outputName" value="ic_num_1" />
+                                      <entry key="outputName" value="ic_num_20" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -137,7 +137,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/toggle/ic_star_border_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_camera_enhance_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -147,8 +147,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="ec3b77" />
-                            <entry key="outputName" value="ic_star" />
+                            <entry key="color" value="ffffff" />
+                            <entry key="outputName" value="ic_camera" />
                             <entry key="sourceFile" value="C:\Users\liraheta" />
                           </map>
                         </option>

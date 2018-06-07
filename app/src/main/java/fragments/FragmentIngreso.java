@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -135,10 +136,10 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(count > 0) {
-                    btnDivision.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")));
+                    btnDivision.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
                     btnDivision.setImageResource(R.drawable.ic_done);
                 }else {
-                    btnDivision.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#AAAAAA")));
+                    btnDivision.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorBtnDesactivado)));
                     btnDivision.setImageResource(R.drawable.ic_touch_ingreso);
                 }
             }
@@ -158,10 +159,10 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(count > 0) {
-                    btnPlanta.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")));
+                    btnPlanta.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
                     btnPlanta.setImageResource(R.drawable.ic_done);
                 }else {
-                    btnPlanta.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#AAAAAA")));
+                    btnPlanta.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorBtnDesactivado)));
                     btnPlanta.setImageResource(R.drawable.ic_touch_ingreso);
                 }
             }
@@ -181,10 +182,10 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(count > 0) {
-                    btnGerente.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")));
+                    btnGerente.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
                     btnGerente.setImageResource(R.drawable.ic_done);
                 }else {
-                    btnGerente.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#AAAAAA")));
+                    btnGerente.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorBtnDesactivado)));
                     btnGerente.setImageResource(R.drawable.ic_touch_ingreso);
                 }
             }
@@ -204,10 +205,10 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(count > 0) {
-                    btnArea.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")));
+                    btnArea.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
                     btnArea.setImageResource(R.drawable.ic_done);
                 }else {
-                    btnArea.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#AAAAAA")));
+                    btnArea.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorBtnDesactivado)));
                     btnArea.setImageResource(R.drawable.ic_touch_ingreso);
                 }
             }
@@ -227,10 +228,10 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(count > 0) {
-                    btnTurno.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")));
+                    btnTurno.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
                     btnTurno.setImageResource(R.drawable.ic_done);
                 }else {
-                    btnTurno.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#AAAAAA")));
+                    btnTurno.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorBtnDesactivado)));
                     btnTurno.setImageResource(R.drawable.ic_touch_ingreso);
                 }
             }
@@ -250,10 +251,10 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(count > 0) {
-                    btnFecha.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")));
+                    btnFecha.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
                     btnFecha.setImageResource(R.drawable.ic_done);
                 }else {
-                    btnFecha.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#AAAAAA")));
+                    btnFecha.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorBtnDesactivado)));
                     btnFecha.setImageResource(R.drawable.ic_touch_ingreso);
                 }
             }
@@ -273,10 +274,10 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(count > 0) {
-                    btnAuditor.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#4CAF50")));
+                    btnAuditor.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
                     btnAuditor.setImageResource(R.drawable.ic_done);
                 }else {
-                    btnAuditor.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#AAAAAA")));
+                    btnAuditor.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorBtnDesactivado)));
                     btnAuditor.setImageResource(R.drawable.ic_touch_ingreso);
                 }
             }

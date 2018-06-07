@@ -1,6 +1,7 @@
 package fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -120,10 +121,22 @@ public class FragmentHome extends Fragment implements View.OnClickListener {
             ft.commit();
         }
         else if(v.getId() == card2.getId()){
-            Toast.makeText(getContext(), "Seleccionado Card 2", Toast.LENGTH_SHORT).show();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.contenerdorFragment, new FragmentCalificar(), "calificar");
+            ft.addToBackStack(null);
+            ft.commit();
         }
         else if(v.getId() == card3.getId()){
             Toast.makeText(getContext(), "Seleccionado Card 3", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Fragment fragment = (Fragment) getChildFragmentManager().findFragmentByTag("calificar");
+        if (fragment != null) {
+            fragment.onActivityResult(requestCode, resultCode, data);
         }
     }
 

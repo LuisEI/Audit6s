@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hallazgo"
+        android:textAlignment="center"
+        android:textSize="48sp"
+        android:textColor="#FFF"
+        android:background="@color/colorTitulos" />
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:elevation="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:textAlignment="center"
+                android:text="Seleccione de la lista"
+                android:textSize="24sp" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="20dp"
+                android:layout_marginBottom="50dp">
+
+
+            </Spinner>
+
+            <ImageView
+                android:id="@+id/imaFoto"
+                android:layout_width="450dp"
+                android:layout_height="300dp"
+                android:layout_gravity="center"
+                android:background="@drawable/cam" />
+
+            <Button
+                android:id="@+id/btnTomarFoto"
+                android:layout_width="200dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
+                android:text="Foto"
+                android:textSize="28sp"
+                android:paddingStart="20dp"
+                android:drawableLeft="@drawable/ic_camera"
+                android:background="@drawable/button_background_photo"
+                android:textColor="#FFF"/>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center">
+
+        <Button
+            android:id="@+id/btnOkHallazgo"
+            android:layout_width="250dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="20dp"
+            android:text="OK"
+            android:textSize="28sp"
+            android:background="@drawable/button_background_blue"
+            android:textColor="#FFF"/>
+
+        <Button
+            android:id="@+id/btnAgregarHallazgo"
+            android:layout_width="250dp"
+            android:layout_height="60dp"
+            android:text="Agregar"
+            android:layout_marginStart="20dp"
+            android:textSize="28sp"
+            android:background="@drawable/button_background_blue"
+            android:textColor="#FFF"/>
+
+    </LinearLayout>
+
+</LinearLayout>
