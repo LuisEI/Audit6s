@@ -39,8 +39,8 @@
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
                     android:layout_marginTop="10dp"
-                    android:text="CLASIFICAR"
-                    android:textSize="28sp" />
+                    android:text="SELECCIONAR"
+                    android:textSize="24sp" />
 
             </LinearLayout>
 
@@ -274,7 +274,7 @@
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
                     android:layout_marginTop="10dp"
-                    android:text="CLASIFICAR"
+                    android:text="ORGANIZAR"
                     android:textSize="28sp" />
 
             </LinearLayout>
@@ -541,7 +541,7 @@
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
                     android:layout_marginTop="10dp"
-                    android:text="CLASIFICAR"
+                    android:text="LIMPIEZA"
                     android:textSize="28sp" />
 
             </LinearLayout>
@@ -808,7 +808,7 @@
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
                     android:layout_marginTop="10dp"
-                    android:text="CLASIFICAR"
+                    android:text="ESTANDAR"
                     android:textSize="28sp" />
 
             </LinearLayout>
@@ -1075,7 +1075,7 @@
                     android:layout_height="wrap_content"
                     android:textAlignment="center"
                     android:layout_marginTop="10dp"
-                    android:text="CLASIFICAR"
+                    android:text="SOSTENER"
                     android:textSize="28sp" />
 
             </LinearLayout>

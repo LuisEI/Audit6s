@@ -1,13 +1,35 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="fragments.FragmentConsulta">
 
     <!-- TODO: Update blank fragment layout -->
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:text="Galeria de Hallazgos"
+        android:textAlignment="center"
+        android:textSize="48sp"
+        android:textColor="#FFF"
+        android:background="@color/colorTitulos" />
 
-</FrameLayout>
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/galeria_hallazgo"
+        android:layout_width="match_parent"
+        android:layout_height="500dp">
+
+    </android.support.v4.view.ViewPager>
+
+    <TextView
+        android:id="@+id/galeria_hallazgo_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Hallazgo seleccionado"
+        android:textSize="48sp"/>
+
+</LinearLayout>

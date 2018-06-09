@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/alert_galeria_hallazgo"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Galeria de Hallazgos"
+        android:textAlignment="center"
+        android:textSize="48sp"
+        android:textColor="#FFF"
+        android:background="@color/colorTitulos" />
+
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/galeria_hallazgo"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:layout_marginTop="50dp">
+
+    </android.support.v4.view.ViewPager>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:text="Hallasgo Encontrado"
+        android:textSize="24sp"
+        android:textColor="@color/colorAccent"/>
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:background="@color/colorAccent" />
+
+    <TextView
+        android:id="@+id/galeria_hallazgo_text"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="20dp"
+        android:textAlignment="center"
+        android:text="Hallazgo seleccionado"
+        android:textSize="36sp"/>
+
+    <Button
+        android:id="@+id/btnSalirGaleria"
+        android:layout_width="250dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="30dp"
+        android:layout_gravity="center"
+        android:text="OK"
+        android:textSize="36sp"
+        android:textColor="#FFF"
+        android:background="@drawable/button_background_blue"/>
+
+</LinearLayout>

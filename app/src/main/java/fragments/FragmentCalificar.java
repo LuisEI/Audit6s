@@ -2,31 +2,32 @@ package fragments;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +36,16 @@ import com.example.liraheta.audit6s.R;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import adapters.ViewPageAdaptador;
+import sqlite.ConexionSQLiteHelper;
+import utilidades.Utilidades;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -127,11 +137,22 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
     private TextView txtNotaS4;
     private TextView txtNotaS5;
 
+    //Matrix de Hallazgos
+    private List<Map<String,Integer>> matrizHallazgos;
+
+    private ConexionSQLiteHelper conn;
+    boolean hallazgoSelect = false;
+
     //Instancias de la activity foto
     static final int REQUEST_TAKE_PHOTO = 2;
     String mCurrentPhotoPath;
     private ImageView mImageView;
     private Intent takePictureIntent;
+    private ArrayList<String> listaSpinner;
+    private ArrayList<String> listaImagenes;
+    private Map<Integer,Integer> mapaHallazgoReferencia;
+    private ViewPager viewPager;
+    private TextView txtHallazgo;
 
 
     public FragmentCalificar() {
@@ -169,6 +190,8 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         vista = inflater.inflate(R.layout.fragment_fragment_calificar, container, false);
+
+        conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null, 1);
 
         txtStarN1 = vista.findViewById(R.id.txtStarN1);
         txtStarN2 = vista.findViewById(R.id.txtStarN2);
@@ -256,6 +279,14 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         fab_n18.setOnClickListener(this);
         fab_n19.setOnClickListener(this);
 
+        btnHallazgoN1.setOnClickListener(this);
+
+        matrizHallazgos = new ArrayList<>();
+
+        for (int i=0; i<19; i++){
+            matrizHallazgos.add(new HashMap<String, Integer>());
+        }
+
         return vista;
     }
 
@@ -265,6 +296,84 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         double startN3 = Double.parseDouble(txtStarN3.getText().toString());
 
         txtNotaS1.setText(String.format("%.0f%%",(startN1 + startN2 + startN3)/15*100));
+    }
+
+    private void LlenarListaSpinner(int index){
+        SQLiteDatabase db = conn.getReadableDatabase();
+        listaSpinner = new ArrayList<>();
+        mapaHallazgoReferencia = new HashMap<>();
+        Cursor cursor = db.rawQuery("SELECT * FROM "+ Utilidades.TABLA_DETALLE +" WHERE id_hallazgo = ?", new String[]{String.valueOf(index + 1)});
+        int count = 0;
+        while (cursor.moveToNext()){
+            listaSpinner.add(cursor.getString(2));
+            mapaHallazgoReferencia.put(count++, cursor.getInt(1));
+        }
+
+        db.close();
+        cursor.close();
+    }
+
+    private String GetHallazgo(int id){
+        SQLiteDatabase db = conn.getReadableDatabase();
+        String descripcion = "";
+        Cursor cursor = db.rawQuery("SELECT descripcion FROM "+ Utilidades.TABLA_DETALLE +" WHERE id_detalle = ?", new String[]{String.valueOf(id)});
+        while (cursor.moveToNext()){
+            descripcion = cursor.getString(0);
+        }
+
+        db.close();
+        cursor.close();
+        return descripcion;
+    }
+
+    private int GetIndex(FloatingActionButton boton){
+        int index = -1;
+
+        if(boton.getId() == R.id.fab_n1) index = 0;
+        else if(boton.getId() == R.id.fab_n2) index = 1;
+        else if(boton.getId() == R.id.fab_n3) index = 2;
+        else if(boton.getId() == R.id.fab_n4) index = 3;
+        else if(boton.getId() == R.id.fab_n5) index = 4;
+        else if(boton.getId() == R.id.fab_n6) index = 5;
+        else if(boton.getId() == R.id.fab_n7) index = 6;
+        else if(boton.getId() == R.id.fab_n8) index = 7;
+        else if(boton.getId() == R.id.fab_n9) index = 8;
+        else if(boton.getId() == R.id.fab_n10) index = 9;
+        else if(boton.getId() == R.id.fab_n11) index = 10;
+        else if(boton.getId() == R.id.fab_n12) index = 11;
+        else if(boton.getId() == R.id.fab_n13) index = 12;
+        else if(boton.getId() == R.id.fab_n14) index = 13;
+        else if(boton.getId() == R.id.fab_n15) index = 14;
+        else if(boton.getId() == R.id.fab_n16) index = 15;
+        else if(boton.getId() == R.id.fab_n17) index = 16;
+        else if(boton.getId() == R.id.fab_n18) index = 17;
+        else if(boton.getId() == R.id.fab_n19) index = 18;
+
+        return index;
+    }
+
+    private void MostrarBotonHallazgo(int index){
+
+        if(index == 0) btnHallazgoN1.setVisibility(View.VISIBLE);
+        else if(index == 1) btnHallazgoN2.setVisibility(View.VISIBLE);
+        else if(index == 2) btnHallazgoN3.setVisibility(View.VISIBLE);
+        else if(index == 3) btnHallazgoN4.setVisibility(View.VISIBLE);
+        else if(index == 4) btnHallazgoN5.setVisibility(View.VISIBLE);
+        else if(index == 5) btnHallazgoN6.setVisibility(View.VISIBLE);
+        else if(index == 6) btnHallazgoN7.setVisibility(View.VISIBLE);
+        else if(index == 7) btnHallazgoN8.setVisibility(View.VISIBLE);
+        else if(index == 8) btnHallazgoN9.setVisibility(View.VISIBLE);
+        else if(index == 9) btnHallazgoN10.setVisibility(View.VISIBLE);
+        else if(index == 10) btnHallazgoN11.setVisibility(View.VISIBLE);
+        else if(index == 11) btnHallazgoN12.setVisibility(View.VISIBLE);
+        else if(index == 12) btnHallazgoN13.setVisibility(View.VISIBLE);
+        else if(index == 13) btnHallazgoN14.setVisibility(View.VISIBLE);
+        else if(index == 14) btnHallazgoN15.setVisibility(View.VISIBLE);
+        else if(index == 15) btnHallazgoN16.setVisibility(View.VISIBLE);
+        else if(index == 16) btnHallazgoN17.setVisibility(View.VISIBLE);
+        else if(index == 17) btnHallazgoN18.setVisibility(View.VISIBLE);
+        else if(index == 18) btnHallazgoN19.setVisibility(View.VISIBLE);
+
     }
 
     @Override
@@ -295,7 +404,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         btnHallazgo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LanzarVentanaHallazo();
+                LanzarVentanaHallazo(button);
             }
         });
 
@@ -303,29 +412,38 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
             @Override
             public void onClick(View v) {
                 tv.setText(String.format("%.0f", rb.getRating()));
-                alertDialog.dismiss();
+                if(matrizHallazgos.get(GetIndex(button)).size() > 0) MostrarBotonHallazgo(GetIndex(button));
                 CalificarS1();
                 button.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
+                alertDialog.dismiss();
             }
         });
 
     }
 
-    private void LanzarVentanaHallazo() {
+    private void LanzarVentanaHallazo(final FloatingActionButton b) {
 
         //Se crea la ventana de hallazgos
         final View alertFormView = getLayoutInflater().inflate(R.layout.alert_dialog_hallazgo, null);
 
         //Instancia de los componentes
+        final Spinner spHallazgo = alertFormView.findViewById(R.id.spHallazgo);
         Button btnTomarFoto = alertFormView.findViewById(R.id.btnTomarFoto);
         Button btnOKHallazgo = alertFormView.findViewById(R.id.btnOkHallazgo);
         Button btnAgregarHallazgo = alertFormView.findViewById(R.id.btnAgregarHallazgo);
         mImageView = alertFormView.findViewById(R.id.imaFoto);
 
+
+        LlenarListaSpinner(GetIndex(b));
+
+        ArrayAdapter adaptador = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview, listaSpinner);
+        spHallazgo.setAdapter(adaptador);
+
         btnTomarFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dispatchTakePictureIntent();
+                hallazgoSelect = true;
             }
         });
 
@@ -334,14 +452,109 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         builder.setView(alertFormView);
         final AlertDialog alertHallazgo = builder.create();
 
+        listaImagenes = new ArrayList<>();
+
+        btnAgregarHallazgo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(hallazgoSelect){
+                    matrizHallazgos.get(GetIndex(b)).put(mCurrentPhotoPath, spHallazgo.getSelectedItemPosition());
+                    spHallazgo.setSelection(-1);
+                    mImageView.setImageResource(R.drawable.cam);
+                    hallazgoSelect = false;
+                    Toast.makeText(getContext(), "Se agrego un hallazgo", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getContext(), "Debe tomar una fotografia", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
         btnOKHallazgo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alertHallazgo.dismiss();
+                if(hallazgoSelect){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+                    builder.setTitle("No ha almacenado el hallazgo")
+                            .setMessage("¿Desea almecenar el hallazgo?")
+                            .setPositiveButton("Almacenar el hallazgo y salir", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    matrizHallazgos.get(GetIndex(b)).put(mCurrentPhotoPath, spHallazgo.getSelectedItemPosition());
+                                    spHallazgo.setSelection(-1);
+                                    mImageView.setImageResource(R.drawable.cam);
+                                    hallazgoSelect = false;
+                                    Toast.makeText(getContext(), "Se agrego un hallazgo", Toast.LENGTH_SHORT).show();
+                                    alertHallazgo.dismiss();
+                                }
+                            })
+                            .setNegativeButton("No guardar y Salir", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    hallazgoSelect = false;
+                                    alertHallazgo.dismiss();
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
             }
         });
 
         alertHallazgo.show();
+
+    }
+
+    private void LanzarGaleriaHallazgo(FloatingActionButton button) {
+
+        final View alertFormGaleria = getLayoutInflater().inflate(R.layout.alert_dialog_galeria_hallazgo, null);
+
+        viewPager = alertFormGaleria.findViewById(R.id.galeria_hallazgo);
+        txtHallazgo = alertFormGaleria.findViewById(R.id.galeria_hallazgo_text);
+        Button botonSalir = alertFormGaleria.findViewById(R.id.btnSalirGaleria);
+
+        final List<Integer> lista_Ref_hallazgo = new ArrayList<>();
+
+        Iterator it = matrizHallazgos.get(GetIndex(button)).keySet().iterator();
+        while(it.hasNext()){
+            String key = it.next().toString();
+            listaImagenes.add(key);
+            lista_Ref_hallazgo.add(mapaHallazgoReferencia.get(matrizHallazgos.get(GetIndex(button)).get(key)));
+        }
+
+        txtHallazgo.setText(GetHallazgo(lista_Ref_hallazgo.get(0)));
+
+        ViewPageAdaptador adaptador = new ViewPageAdaptador(getContext(), listaImagenes);
+        viewPager.setAdapter(adaptador);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                txtHallazgo.setText(GetHallazgo(lista_Ref_hallazgo.get(position)));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setCancelable(true);
+        builder.setView(alertFormGaleria);
+        final AlertDialog alertDialog = builder.create();
+
+        botonSalir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
 
     }
 
@@ -431,6 +644,9 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         }
         else if(v.getId() == R.id.fab_n3){
             LanzarCalificador(txtStarN3, fab_n3,"SELECCIONAR", "¿Los niveles de inventario estan dentro de los limites establecidos?");
+        }
+        else if(v.getId() == R.id.btnHallazgoN1){
+            LanzarGaleriaHallazgo(fab_n1);
         }
     }
 
