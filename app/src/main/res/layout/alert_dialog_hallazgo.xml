@@ -52,8 +52,7 @@
                 android:layout_width="450dp"
                 android:layout_height="300dp"
                 android:layout_gravity="center"
-                android:background="@drawable/camera"
-                android:scaleType="centerInside" />
+                android:background="@drawable/cam" />
 
             <LinearLayout
                 android:layout_width="wrap_content"

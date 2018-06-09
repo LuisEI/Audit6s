@@ -303,7 +303,8 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         listaSpinner = new ArrayList<>();
         mapaHallazgoReferencia = new HashMap<>();
         Cursor cursor = db.rawQuery("SELECT * FROM "+ Utilidades.TABLA_DETALLE +" WHERE id_hallazgo = ?", new String[]{String.valueOf(index + 1)});
-        int count = 0;
+        int count = 1;
+        listaSpinner.add("Seleccione el Hallazgo");
         while (cursor.moveToNext()){
             listaSpinner.add(cursor.getString(2));
             mapaHallazgoReferencia.put(count++, cursor.getInt(1));
@@ -495,6 +496,8 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
+                }else {
+                    alertHallazgo.dismiss();
                 }
             }
         });

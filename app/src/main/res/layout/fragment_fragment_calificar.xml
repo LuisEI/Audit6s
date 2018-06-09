@@ -21,7 +21,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         android:layout_marginTop="20dp"
-        android:layout_height="180dp"
+        android:layout_height="165dp"
         app:cardElevation="5dp">
 
         <LinearLayout
@@ -40,7 +40,7 @@
                     android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:text="SELECCIONAR"
-                    android:textSize="24sp" />
+                    android:textSize="22sp" />
 
             </LinearLayout>
 
@@ -100,6 +100,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:padding="0dp"
                         android:src="@drawable/ic_hallazgo"
                         android:backgroundTint="#00ffffff"
                         android:visibility="invisible"/>
@@ -148,9 +149,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_hallazgo"
                         android:backgroundTint="#00ffffff"
-                        android:visibility="invisible"/>
+                        android:padding="0dp"
+                        android:src="@drawable/ic_hallazgo"
+                        android:visibility="invisible" />
 
                 </LinearLayout>
 
@@ -196,9 +198,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_hallazgo"
                         android:backgroundTint="#00ffffff"
-                        android:visibility="invisible"/>
+                        android:padding="0dp"
+                        android:src="@drawable/ic_hallazgo"
+                        android:visibility="invisible" />
 
                 </LinearLayout>
 
@@ -234,7 +237,7 @@
                     android:textAlignment="center"
                     android:layout_marginTop="20dp"
                     android:text="NOTA"
-                    android:textSize="28sp" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/txtNotaS1"
@@ -253,10 +256,10 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_marginStart="30dp"
+        android:layout_height="165dp"
         android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
-        android:layout_height="180dp"
         app:cardElevation="5dp">
 
         <LinearLayout
@@ -272,21 +275,21 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:text="ORGANIZAR"
-                    android:textSize="28sp" />
+                    android:textAlignment="center"
+                    android:textSize="22sp" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:orientation="horizontal"
-                android:paddingTop="10dp"
-                android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:layout_weight="1">
+                android:paddingStart="10dp"
+                android:paddingTop="10dp">
 
                 <View
                     android:layout_width="1dp"
@@ -304,14 +307,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:backgroundTint="@android:color/darker_gray"
-                        android:src="@drawable/ic_num_4" />
+                        android:src="@drawable/ic_num_4"
+                        app:backgroundTint="@android:color/darker_gray" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp">
 
                         <TextView
                             android:id="@+id/txtStarN4"
@@ -336,6 +339,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:backgroundTint="#00ffffff"
+                        android:padding="0dp"
                         android:src="@drawable/ic_hallazgo"
                         android:visibility="invisible" />
 
@@ -344,22 +348,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fab_n5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:backgroundTint="@android:color/darker_gray"
-                        android:src="@drawable/ic_num_5" />
+                        android:src="@drawable/ic_num_5"
+                        app:backgroundTint="@android:color/darker_gray" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp">
 
                         <TextView
                             android:id="@+id/txtStarN5"
@@ -374,7 +378,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_star"/>
+                            android:src="@drawable/ic_star" />
 
                     </LinearLayout>
 
@@ -384,6 +388,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:backgroundTint="#00ffffff"
+                        android:padding="0dp"
                         android:src="@drawable/ic_hallazgo"
                         android:visibility="invisible" />
 
@@ -392,22 +397,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fab_n6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:backgroundTint="@android:color/darker_gray"
-                        android:src="@drawable/ic_num_6" />
+                        android:src="@drawable/ic_num_6"
+                        app:backgroundTint="@android:color/darker_gray" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp">
 
                         <TextView
                             android:id="@+id/txtStarN6"
@@ -422,7 +427,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_star"/>
+                            android:src="@drawable/ic_star" />
 
                     </LinearLayout>
 
@@ -432,6 +437,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:backgroundTint="#00ffffff"
+                        android:padding="0dp"
                         android:src="@drawable/ic_hallazgo"
                         android:visibility="invisible" />
 
@@ -440,22 +446,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fab_n7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:backgroundTint="@android:color/darker_gray"
-                        android:src="@drawable/ic_num_7" />
+                        android:src="@drawable/ic_num_7"
+                        app:backgroundTint="@android:color/darker_gray" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp">
 
                         <TextView
                             android:id="@+id/txtStarN7"
@@ -470,7 +476,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_star"/>
+                            android:src="@drawable/ic_star" />
 
                     </LinearLayout>
 
@@ -480,11 +486,11 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:backgroundTint="#00ffffff"
+                        android:padding="0dp"
                         android:src="@drawable/ic_hallazgo"
                         android:visibility="invisible" />
 
                 </LinearLayout>
-
 
 
             </LinearLayout>
@@ -498,10 +504,10 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
                     android:layout_marginTop="20dp"
                     android:text="NOTA"
-                    android:textSize="28sp" />
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/txtNotaS2"
@@ -520,10 +526,10 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_marginStart="30dp"
+        android:layout_height="165dp"
         android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
-        android:layout_height="180dp"
         app:cardElevation="5dp">
 
         <LinearLayout
@@ -539,21 +545,21 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:text="LIMPIEZA"
-                    android:textSize="28sp" />
+                    android:textAlignment="center"
+                    android:textSize="22sp" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:orientation="horizontal"
-                android:paddingTop="10dp"
-                android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:layout_weight="1">
+                android:paddingStart="10dp"
+                android:paddingTop="10dp">
 
                 <View
                     android:layout_width="1dp"
@@ -571,14 +577,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:backgroundTint="@android:color/darker_gray"
-                        android:src="@drawable/ic_num_8" />
+                        android:src="@drawable/ic_num_8"
+                        app:backgroundTint="@android:color/darker_gray" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp">
 
                         <TextView
                             android:id="@+id/txtStarN8"
@@ -603,6 +609,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:backgroundTint="#00ffffff"
+                        android:padding="0dp"
                         android:src="@drawable/ic_hallazgo"
                         android:visibility="invisible" />
 
@@ -611,22 +618,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fab_n9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:backgroundTint="@android:color/darker_gray"
-                        android:src="@drawable/ic_num_9" />
+                        android:src="@drawable/ic_num_9"
+                        app:backgroundTint="@android:color/darker_gray" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp">
 
                         <TextView
                             android:id="@+id/txtStarN9"
@@ -641,7 +648,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_star"/>
+                            android:src="@drawable/ic_star" />
 
                     </LinearLayout>
 
@@ -651,6 +658,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:backgroundTint="#00ffffff"
+                        android:padding="0dp"
                         android:src="@drawable/ic_hallazgo"
                         android:visibility="invisible" />
 
@@ -659,22 +667,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fab_n10"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:backgroundTint="@android:color/darker_gray"
-                        android:src="@drawable/ic_num_10" />
+                        android:src="@drawable/ic_num_10"
+                        app:backgroundTint="@android:color/darker_gray" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp">
 
                         <TextView
                             android:id="@+id/txtStarN10"
@@ -689,7 +697,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_star"/>
+                            android:src="@drawable/ic_star" />
 
                     </LinearLayout>
 
@@ -699,6 +707,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:backgroundTint="#00ffffff"
+                        android:padding="0dp"
                         android:src="@drawable/ic_hallazgo"
                         android:visibility="invisible" />
 
@@ -707,22 +716,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fab_n11"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:backgroundTint="@android:color/darker_gray"
-                        android:src="@drawable/ic_num_11" />
+                        android:src="@drawable/ic_num_11"
+                        app:backgroundTint="@android:color/darker_gray" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp">
 
                         <TextView
                             android:id="@+id/txtStarN11"
@@ -737,7 +746,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_star"/>
+                            android:src="@drawable/ic_star" />
 
                     </LinearLayout>
 
@@ -747,11 +756,11 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:backgroundTint="#00ffffff"
+                        android:padding="0dp"
                         android:src="@drawable/ic_hallazgo"
                         android:visibility="invisible" />
 
                 </LinearLayout>
-
 
 
             </LinearLayout>
@@ -765,10 +774,10 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
                     android:layout_marginTop="20dp"
                     android:text="NOTA"
-                    android:textSize="28sp" />
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/txtNotaS3"
@@ -787,10 +796,10 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_marginStart="30dp"
+        android:layout_height="165dp"
         android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
-        android:layout_height="180dp"
         app:cardElevation="5dp">
 
         <LinearLayout
@@ -806,21 +815,21 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:text="ESTANDAR"
-                    android:textSize="28sp" />
+                    android:textAlignment="center"
+                    android:textSize="22sp" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:orientation="horizontal"
-                android:paddingTop="10dp"
-                android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:layout_weight="1">
+                android:paddingStart="10dp"
+                android:paddingTop="10dp">
 
                 <View
                     android:layout_width="1dp"
@@ -838,14 +847,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:backgroundTint="@android:color/darker_gray"
-                        android:src="@drawable/ic_num_12" />
+                        android:src="@drawable/ic_num_12"
+                        app:backgroundTint="@android:color/darker_gray" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp">
 
                         <TextView
                             android:id="@+id/txtStarN12"
@@ -870,6 +879,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:backgroundTint="#00ffffff"
+                        android:padding="0dp"
                         android:src="@drawable/ic_hallazgo"
                         android:visibility="invisible" />
 
@@ -878,22 +888,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fab_n13"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:backgroundTint="@android:color/darker_gray"
-                        android:src="@drawable/ic_num_13" />
+                        android:src="@drawable/ic_num_13"
+                        app:backgroundTint="@android:color/darker_gray" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp">
 
                         <TextView
                             android:id="@+id/txtStarN13"
@@ -908,7 +918,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_star"/>
+                            android:src="@drawable/ic_star" />
 
                     </LinearLayout>
 
@@ -918,6 +928,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:backgroundTint="#00ffffff"
+                        android:padding="0dp"
                         android:src="@drawable/ic_hallazgo"
                         android:visibility="invisible" />
 
@@ -926,22 +937,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fab_n14"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:backgroundTint="@android:color/darker_gray"
-                        android:src="@drawable/ic_num_14" />
+                        android:src="@drawable/ic_num_14"
+                        app:backgroundTint="@android:color/darker_gray" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp">
 
                         <TextView
                             android:id="@+id/txtStarN14"
@@ -956,7 +967,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_star"/>
+                            android:src="@drawable/ic_star" />
 
                     </LinearLayout>
 
@@ -966,6 +977,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:backgroundTint="#00ffffff"
+                        android:padding="0dp"
                         android:src="@drawable/ic_hallazgo"
                         android:visibility="invisible" />
 
@@ -974,22 +986,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fab_n15"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:backgroundTint="@android:color/darker_gray"
-                        android:src="@drawable/ic_num_15" />
+                        android:src="@drawable/ic_num_15"
+                        app:backgroundTint="@android:color/darker_gray" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp">
 
                         <TextView
                             android:id="@+id/txtStarN15"
@@ -1004,7 +1016,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_star"/>
+                            android:src="@drawable/ic_star" />
 
                     </LinearLayout>
 
@@ -1014,11 +1026,11 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:backgroundTint="#00ffffff"
+                        android:padding="0dp"
                         android:src="@drawable/ic_hallazgo"
                         android:visibility="invisible" />
 
                 </LinearLayout>
-
 
 
             </LinearLayout>
@@ -1032,10 +1044,10 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
                     android:layout_marginTop="20dp"
                     android:text="NOTA"
-                    android:textSize="28sp" />
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/txtNotaS4"
@@ -1054,10 +1066,10 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_marginStart="30dp"
+        android:layout_height="165dp"
         android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
-        android:layout_height="180dp"
         app:cardElevation="5dp">
 
         <LinearLayout
@@ -1073,21 +1085,21 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
                     android:layout_marginTop="10dp"
                     android:text="SOSTENER"
-                    android:textSize="28sp" />
+                    android:textAlignment="center"
+                    android:textSize="22sp" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:orientation="horizontal"
-                android:paddingTop="10dp"
-                android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:layout_weight="1">
+                android:paddingStart="10dp"
+                android:paddingTop="10dp">
 
                 <View
                     android:id="@+id/divider2"
@@ -1106,14 +1118,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:backgroundTint="@android:color/darker_gray"
-                        android:src="@drawable/ic_num_16" />
+                        android:src="@drawable/ic_num_16"
+                        app:backgroundTint="@android:color/darker_gray" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp">
 
                         <TextView
                             android:id="@+id/txtStarN16"
@@ -1138,6 +1150,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:backgroundTint="#00ffffff"
+                        android:padding="0dp"
                         android:src="@drawable/ic_hallazgo"
                         android:visibility="invisible" />
 
@@ -1146,22 +1159,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fab_n17"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:backgroundTint="@android:color/darker_gray"
-                        android:src="@drawable/ic_num_17" />
+                        android:src="@drawable/ic_num_17"
+                        app:backgroundTint="@android:color/darker_gray" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp">
 
                         <TextView
                             android:id="@+id/txtStarN17"
@@ -1176,7 +1189,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_star"/>
+                            android:src="@drawable/ic_star" />
 
                     </LinearLayout>
 
@@ -1186,6 +1199,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:backgroundTint="#00ffffff"
+                        android:padding="0dp"
                         android:src="@drawable/ic_hallazgo"
                         android:visibility="invisible" />
 
@@ -1194,22 +1208,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fab_n18"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:backgroundTint="@android:color/darker_gray"
-                        android:src="@drawable/ic_num_18" />
+                        android:src="@drawable/ic_num_18"
+                        app:backgroundTint="@android:color/darker_gray" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp">
 
                         <TextView
                             android:id="@+id/txtStarN18"
@@ -1224,7 +1238,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_star"/>
+                            android:src="@drawable/ic_star" />
 
                     </LinearLayout>
 
@@ -1234,6 +1248,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:backgroundTint="#00ffffff"
+                        android:padding="0dp"
                         android:src="@drawable/ic_hallazgo"
                         android:visibility="invisible" />
 
@@ -1242,22 +1257,22 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/fab_n19"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        app:backgroundTint="@android:color/darker_gray"
-                        android:src="@drawable/ic_num_19" />
+                        android:src="@drawable/ic_num_19"
+                        app:backgroundTint="@android:color/darker_gray" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp">
 
                         <TextView
                             android:id="@+id/txtStarN19"
@@ -1272,7 +1287,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_star"/>
+                            android:src="@drawable/ic_star" />
 
                     </LinearLayout>
 
@@ -1282,11 +1297,11 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:backgroundTint="#00ffffff"
+                        android:padding="0dp"
                         android:src="@drawable/ic_hallazgo"
                         android:visibility="invisible" />
 
                 </LinearLayout>
-
 
 
             </LinearLayout>
@@ -1300,10 +1315,10 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
                     android:layout_marginTop="20dp"
                     android:text="NOTA"
-                    android:textSize="28sp" />
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/txtNotaS5"
