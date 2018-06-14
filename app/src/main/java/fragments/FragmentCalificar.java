@@ -22,10 +22,10 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -43,6 +43,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import adapters.SpinnerAdaptador;
 import adapters.ViewPageAdaptador;
 import sqlite.ConexionSQLiteHelper;
 import utilidades.Utilidades;
@@ -280,6 +281,24 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         fab_n19.setOnClickListener(this);
 
         btnHallazgoN1.setOnClickListener(this);
+        btnHallazgoN2.setOnClickListener(this);
+        btnHallazgoN3.setOnClickListener(this);
+        btnHallazgoN4.setOnClickListener(this);
+        btnHallazgoN5.setOnClickListener(this);
+        btnHallazgoN6.setOnClickListener(this);
+        btnHallazgoN7.setOnClickListener(this);
+        btnHallazgoN8.setOnClickListener(this);
+        btnHallazgoN9.setOnClickListener(this);
+        btnHallazgoN10.setOnClickListener(this);
+        btnHallazgoN11.setOnClickListener(this);
+        btnHallazgoN12.setOnClickListener(this);
+        btnHallazgoN13.setOnClickListener(this);
+        btnHallazgoN14.setOnClickListener(this);
+        btnHallazgoN15.setOnClickListener(this);
+        btnHallazgoN16.setOnClickListener(this);
+        btnHallazgoN17.setOnClickListener(this);
+        btnHallazgoN18.setOnClickListener(this);
+        btnHallazgoN19.setOnClickListener(this);
 
         matrizHallazgos = new ArrayList<>();
 
@@ -290,12 +309,31 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         return vista;
     }
 
-    private void CalificarS1(){
-        double startN1 = Double.parseDouble(txtStarN1.getText().toString());
-        double startN2 = Double.parseDouble(txtStarN2.getText().toString());
-        double startN3 = Double.parseDouble(txtStarN3.getText().toString());
+    private void CalificarNota(FloatingActionButton b){
 
-        txtNotaS1.setText(String.format("%.0f%%",(startN1 + startN2 + startN3)/15*100));
+        if(b.getId() == R.id.fab_n1 || b.getId() == R.id.fab_n2 || b.getId() == R.id.fab_n3){
+            double startN1 = Double.parseDouble(txtStarN1.getText().toString());
+            double startN2 = Double.parseDouble(txtStarN2.getText().toString());
+            double startN3 = Double.parseDouble(txtStarN3.getText().toString());
+            txtNotaS1.setText(String.format("%.0f%%",(startN1 + startN2 + startN3)/15*100));
+        }else if(b.getId() == R.id.fab_n4 || b.getId() == R.id.fab_n5 || b.getId() == R.id.fab_n6 || b.getId() == R.id.fab_n7){
+            CalculoNota(txtStarN4, txtStarN5, txtStarN6, txtStarN7, txtNotaS2);
+        }else if(b.getId() == R.id.fab_n8 || b.getId() == R.id.fab_n9 || b.getId() == R.id.fab_n10 || b.getId() == R.id.fab_n11){
+            CalculoNota(txtStarN8, txtStarN9, txtStarN10, txtStarN11, txtNotaS3);
+        }else if(b.getId() == R.id.fab_n12 || b.getId() == R.id.fab_n13 || b.getId() == R.id.fab_n14 || b.getId() == R.id.fab_n15){
+            CalculoNota(txtStarN12, txtStarN13, txtStarN14, txtStarN15, txtNotaS4);
+        }else if(b.getId() == R.id.fab_n16 || b.getId() == R.id.fab_n17 || b.getId() == R.id.fab_n18 || b.getId() == R.id.fab_n19){
+            CalculoNota(txtStarN16, txtStarN17, txtStarN18, txtStarN19, txtNotaS5);
+        }
+
+    }
+
+    private static void CalculoNota(TextView txtEstrallas1, TextView txtEstrallas2, TextView txtEstrallas3, TextView txtEstrallas4, TextView txtNota) {
+        double startN1 = Double.parseDouble(txtEstrallas1.getText().toString());
+        double startN2 = Double.parseDouble(txtEstrallas2.getText().toString());
+        double startN3 = Double.parseDouble(txtEstrallas3.getText().toString());
+        double startN4 = Double.parseDouble(txtEstrallas4.getText().toString());
+        txtNota.setText(String.format("%.0f%%",(startN1 + startN2 + startN3 + startN4)/20*100));
     }
 
     private void LlenarListaSpinner(int index){
@@ -303,8 +341,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         listaSpinner = new ArrayList<>();
         mapaHallazgoReferencia = new HashMap<>();
         Cursor cursor = db.rawQuery("SELECT * FROM "+ Utilidades.TABLA_DETALLE +" WHERE id_hallazgo = ?", new String[]{String.valueOf(index + 1)});
-        int count = 1;
-        listaSpinner.add("Seleccione el Hallazgo");
+        int count = 0;
         while (cursor.moveToNext()){
             listaSpinner.add(cursor.getString(2));
             mapaHallazgoReferencia.put(count++, cursor.getInt(1));
@@ -382,15 +419,89 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         super.onSaveInstanceState(outState);
     }
 
-    private void LanzarCalificador(final TextView tv, final FloatingActionButton button, String titulo, String msj) {
+    private void LanzarCalificadorPunto16(final TextView tv, final FloatingActionButton button) {
+
+        final View viewPunto16 = getLayoutInflater().inflate(R.layout.alert_dialog_punto16, null);
+        final NumberPicker npArea = viewPunto16.findViewById(R.id.npPersonaArea);
+        final NumberPicker npNoSaben = viewPunto16.findViewById(R.id.npNoConocenObj);
+        final TextView txtResultP16 = viewPunto16.findViewById(R.id.txtResultP16);
+        final RatingBar rbPunto16 = viewPunto16.findViewById(R.id.rbPunto16);
+        Button btnCalP16 = viewPunto16.findViewById(R.id.btnCalPunto16);
+
+        npArea.setMinValue(1);
+        npArea.setMaxValue(50);
+
+        npNoSaben.setMinValue(0);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setCancelable(true);
+        builder.setView(viewPunto16);
+        final AlertDialog alertDialog = builder.create();
+
+        npArea.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                npNoSaben.setMaxValue(newVal);
+                double p = CalcularPorcentaje(npArea.getValue(), npNoSaben.getValue());
+                txtResultP16.setText((String.format("%.0f%%", p*100)));
+                rbPunto16.setRating(ObtenerEstrella(p));
+            }
+        });
+
+        npNoSaben.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                double p = CalcularPorcentaje(npArea.getValue(), npNoSaben.getValue());
+                txtResultP16.setText((String.format("%.0f%%", p*100)));
+                rbPunto16.setRating(ObtenerEstrella(p));
+            }
+        });
+
+        alertDialog.show();
+
+        btnCalP16.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tv.setText(String.format("%.0f", rbPunto16.getRating()));
+                button.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
+                alertDialog.dismiss();
+            }
+        });
+    }
+
+    private float ObtenerEstrella(double percent) {
+        float start;
+        if(percent == 1){
+            start=5;
+        }else if(percent >= 0.8){
+            start=4;
+        }else if(percent >= 0.6){
+            start=3;
+        }else if(percent >= 0.4){
+            start=2;
+        }else if(percent >= 0.2){
+            start=1;
+        }else {
+            start=0;
+        }
+        return start;
+    }
+
+    private double CalcularPorcentaje(int personas, int noSaben) {
+        return (personas - noSaben) * 1.0 / personas;
+    }
+
+    private void LanzarCalificador(final TextView tv, final FloatingActionButton button, float paso, String titulo, String msj) {
         //Se crea la ventana para calificar el punto de auditoria
         final View alertFormView = getLayoutInflater().inflate(R.layout.alert_dialog_calificar, null);
 
         TextView txtTitulo = alertFormView.findViewById(R.id.txtAlertTitulo);
         TextView txtMensaje = alertFormView.findViewById(R.id.txtAlertMensaje);
-        Button btnHallazgo = alertFormView.findViewById(R.id.btnAlertHallazgo);
+        FloatingActionButton btnHallazgo = alertFormView.findViewById(R.id.btnAlertHallazgo);
         Button btnCalificar = alertFormView.findViewById(R.id.btnAlertCalif);
         final RatingBar rb = alertFormView.findViewById(R.id.rbCalificar);
+
+        rb.setStepSize(paso);
 
         txtTitulo.setText(titulo);
         txtMensaje.setText(msj);
@@ -414,7 +525,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
             public void onClick(View v) {
                 tv.setText(String.format("%.0f", rb.getRating()));
                 if(matrizHallazgos.get(GetIndex(button)).size() > 0) MostrarBotonHallazgo(GetIndex(button));
-                CalificarS1();
+                CalificarNota(button);
                 button.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
                 alertDialog.dismiss();
             }
@@ -437,8 +548,11 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
 
         LlenarListaSpinner(GetIndex(b));
 
-        ArrayAdapter adaptador = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview, listaSpinner);
+        final SpinnerAdaptador adaptador = new SpinnerAdaptador(getContext(), R.layout.spinner_textview);
+        adaptador.addAll(listaSpinner);
+        adaptador.add("Seleccione el Hallazgo");
         spHallazgo.setAdapter(adaptador);
+        spHallazgo.setSelection(adaptador.getCount());
 
         btnTomarFoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -458,16 +572,17 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         btnAgregarHallazgo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(hallazgoSelect){
+                if(hallazgoSelect && !spHallazgo.getSelectedItem().toString().equals("Seleccione el Hallazgo")){
                     matrizHallazgos.get(GetIndex(b)).put(mCurrentPhotoPath, spHallazgo.getSelectedItemPosition());
-                    spHallazgo.setSelection(-1);
+                    spHallazgo.setSelection(adaptador.getCount());
                     mImageView.setImageResource(R.drawable.cam);
                     hallazgoSelect = false;
                     Toast.makeText(getContext(), "Se agrego un hallazgo", Toast.LENGTH_SHORT).show();
-                }else{
+                }else if(spHallazgo.getSelectedItem().toString().equals("Seleccione el Hallazgo")){
+                    Toast.makeText(getContext(), "Debe seleccionar el hallazgo", Toast.LENGTH_SHORT).show();
+                }else if(!hallazgoSelect){
                     Toast.makeText(getContext(), "Debe tomar una fotografia", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
 
@@ -594,7 +709,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
                 storageDir      /* directory */
         );
 
-        // se guarda la direccion de la imagen
+        // Se guarda la direccion de la imagen
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
@@ -640,16 +755,115 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.fab_n1){
-            LanzarCalificador(txtStarN1, fab_n1,"SELECCIONAR", "¿Hay objetos que no corresponden al area de trabajo?");
+            LanzarCalificador(txtStarN1, fab_n1, 1,"SELECCIONAR", "¿Hay objetos que no corresponden al area de trabajo?");
         }
         else if(v.getId() == R.id.fab_n2){
-            LanzarCalificador(txtStarN2, fab_n2,"SELECCIONAR", "¿Se han definido niveles de inventario de materiales necesarios para realizar el trabajo?");
+            LanzarCalificador(txtStarN2, fab_n2, 1,"SELECCIONAR", "¿Se han definido niveles de inventario de materiales necesarios para realizar el trabajo?");
         }
         else if(v.getId() == R.id.fab_n3){
-            LanzarCalificador(txtStarN3, fab_n3,"SELECCIONAR", "¿Los niveles de inventario estan dentro de los limites establecidos?");
+            LanzarCalificador(txtStarN3, fab_n3, 1,"SELECCIONAR", "¿Los niveles de inventario estan dentro de los limites establecidos?");
+        }
+        else if(v.getId() == R.id.fab_n4){
+            LanzarCalificador(txtStarN4, fab_n4, 1,"ORGANIZAR", "¿Estan identificadas las  herramientas necesarias para realizar el trabajo?");
+        }
+        else if(v.getId() == R.id.fab_n5){
+            LanzarCalificador(txtStarN5, fab_n5, 1,"ORGANIZAR", "¿Encuentro los elementos de mi lugar de trabajo en máximo 30 segundos?");
+        }
+        else if(v.getId() == R.id.fab_n6){
+            LanzarCalificador(txtStarN6, fab_n6, 1,"ORGANIZAR", "¿Cada cosa esta colocada en el lugar establecido?");
+        }
+        else if(v.getId() == R.id.fab_n7){
+            LanzarCalificador(txtStarN7, fab_n7, 1,"ORGANIZAR", "¿No se observa ninguna condicion insegura en el orden del area?");
+        }
+        else if(v.getId() == R.id.fab_n8){
+            LanzarCalificador(txtStarN8, fab_n8, 1,"LIMPIEZA", "¿Existe un rol definido para mantener limpia el area y puesto de trabajo?");
+        }
+        else if(v.getId() == R.id.fab_n9){
+            LanzarCalificador(txtStarN9, fab_n9, 1,"LIMPIEZA", "¿Se poseen las herramientas necesarias para realizar el rol de limpieza?");
+        }
+        else if(v.getId() == R.id.fab_n10){
+            LanzarCalificador(txtStarN10, fab_n10, 1,"LIMPIEZA", "¿Los pisos y las paredes se encuentran limpios?");
+        }
+        else if(v.getId() == R.id.fab_n11){
+            LanzarCalificador(txtStarN11, fab_n11, 1,"LIMPIEZA", "¿La estacion de trabajo ( escritorio, maquina, gavetas, computadora, estante) se encuentra limpias ( sin adhesivos, polvo, grasa, etc)?");
+        }
+        else if(v.getId() == R.id.fab_n12){
+            LanzarCalificador(txtStarN12, fab_n12, 5,"ESTÁNDAR", "¿Existen un estandar visual de 6S´s del area y publicado en un lugar accesible?");
+        }
+        else if(v.getId() == R.id.fab_n13){
+            LanzarCalificador(txtStarN13, fab_n13, 1,"ESTÁNDAR", "¿Existen señalizaciones de seguridad? (Uso de EPP, Extintores, equipos, etc)");
+        }
+        else if(v.getId() == R.id.fab_n14){
+            LanzarCalificador(txtStarN14, fab_n14, 1,"ESTÁNDAR", "¿Se encuentra etiquetados y demarcados la estación de trabajo y los objetos dentro de la misma?");
+        }
+        else if(v.getId() == R.id.fab_n15){
+            LanzarCalificador(txtStarN15, fab_n15, 1,"ESTÁNDAR", "¿Se respeta y se mantiene el estandar visual  de 6S´s definido?");
+        }
+        else if(v.getId() == R.id.fab_n16){
+            LanzarCalificadorPunto16(txtStarN16, fab_n16);
+        }
+        else if(v.getId() == R.id.fab_n17){
+            LanzarCalificador(txtStarN17, fab_n17, 5,"SOSTENER", "¿Resultados de auditorias anteriores a la vista y actualizados?");
+        }
+        else if(v.getId() == R.id.fab_n18){
+            LanzarCalificador(txtStarN18, fab_n18, 1,"SOSTENER", "No existen hallazgos recurrentes");
+        }
+        else if(v.getId() == R.id.fab_n19){
+            LanzarCalificador(txtStarN19, fab_n19, 5,"SOSTENER", "¿Existe un calendario (quien, cuando) y se realizan auto-auditorias en el area?");
         }
         else if(v.getId() == R.id.btnHallazgoN1){
             LanzarGaleriaHallazgo(fab_n1);
+        }
+        else if(v.getId() == R.id.btnHallazgoN2){
+            LanzarGaleriaHallazgo(fab_n2);
+        }
+        else if(v.getId() == R.id.btnHallazgoN3){
+            LanzarGaleriaHallazgo(fab_n3);
+        }
+        else if(v.getId() == R.id.btnHallazgoN4){
+            LanzarGaleriaHallazgo(fab_n4);
+        }
+        else if(v.getId() == R.id.btnHallazgoN5){
+            LanzarGaleriaHallazgo(fab_n5);
+        }
+        else if(v.getId() == R.id.btnHallazgoN6){
+            LanzarGaleriaHallazgo(fab_n6);
+        }
+        else if(v.getId() == R.id.btnHallazgoN7){
+            LanzarGaleriaHallazgo(fab_n7);
+        }
+        else if(v.getId() == R.id.btnHallazgoN8){
+            LanzarGaleriaHallazgo(fab_n8);
+        }
+        else if(v.getId() == R.id.btnHallazgoN9){
+            LanzarGaleriaHallazgo(fab_n9);
+        }
+        else if(v.getId() == R.id.btnHallazgoN10){
+            LanzarGaleriaHallazgo(fab_n10);
+        }
+        else if(v.getId() == R.id.btnHallazgoN11){
+            LanzarGaleriaHallazgo(fab_n11);
+        }
+        else if(v.getId() == R.id.btnHallazgoN12){
+            LanzarGaleriaHallazgo(fab_n12);
+        }
+        else if(v.getId() == R.id.btnHallazgoN13){
+            LanzarGaleriaHallazgo(fab_n13);
+        }
+        else if(v.getId() == R.id.btnHallazgoN14){
+            LanzarGaleriaHallazgo(fab_n14);
+        }
+        else if(v.getId() == R.id.btnHallazgoN15){
+            LanzarGaleriaHallazgo(fab_n15);
+        }
+        else if(v.getId() == R.id.btnHallazgoN17){
+            LanzarGaleriaHallazgo(fab_n17);
+        }
+        else if(v.getId() == R.id.btnHallazgoN18){
+            LanzarGaleriaHallazgo(fab_n18);
+        }
+        else if(v.getId() == R.id.btnHallazgoN19){
+            LanzarGaleriaHallazgo(fab_n19);
         }
     }
 

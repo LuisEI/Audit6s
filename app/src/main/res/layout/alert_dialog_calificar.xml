@@ -2,7 +2,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -13,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="SELECCIONAR"
         android:textAlignment="center"
-        android:textSize="48sp"
+        android:textSize="36sp"
         android:textColor="#FFF"
         android:background="@color/colorTitulos" />
 
@@ -36,8 +35,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
                 android:text="¿Hay objetos que no corresponden al area de trabajo?"
-                android:textSize="34sp"
+                android:textSize="26sp"
                 android:textAlignment="center"/>
 
             <RatingBar
@@ -51,16 +52,29 @@
                 android:scaleY="1.5"
                 android:layout_gravity="center"/>
 
-            <Button
+            <android.support.design.widget.FloatingActionButton
                 android:id="@+id/btnAlertHallazgo"
-                android:layout_width="250dp"
+                android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
                 android:layout_margin="40dp"
-                android:text="Hallazgo"
-                android:textSize="32sp"
-                android:textColor="#FFF"
-                android:background="@drawable/button_background_photo" />
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_hallazgo_boton"
+                app:fab_colorPressed="@color/colorTitulos"
+                app:fab_colorNormal="@color/colorPrimary"/>
+
+            <!--<Button-->
+                <!--android:id="@+id/btnAlertHallazgo"-->
+                <!--android:layout_width="250dp"-->
+                <!--android:layout_height="60dp"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_margin="40dp"-->
+                <!--android:text="Hallazgo"-->
+                <!--android:textSize="32sp"-->
+                <!--android:textColor="#FFF"-->
+                <!--android:visibility="gone"-->
+                <!--android:background="@drawable/button_background_photo" />-->
 
         </LinearLayout>
 
