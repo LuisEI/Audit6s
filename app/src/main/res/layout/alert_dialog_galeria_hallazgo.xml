@@ -22,14 +22,14 @@
         android:layout_marginStart="50dp"
         android:text="Imagen"
         android:textSize="18sp"
-        android:textColor="@color/colorBtnDesactivado"/>
+        android:textColor="@color/colorAccent"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
-        android:background="@color/colorBtnDesactivado"/>
+        android:background="@color/colorAccent"/>
 
     <android.support.v4.view.ViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -47,14 +47,14 @@
         android:layout_marginStart="50dp"
         android:text="Hallasgo Encontrado"
         android:textSize="18sp"
-        android:textColor="@color/colorBtnDesactivado"/>
+        android:textColor="@color/colorAccent"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
-        android:background="@color/colorBtnDesactivado"/>
+        android:background="@color/colorAccent"/>
 
     <TextView
         android:id="@+id/galeria_hallazgo_text"
@@ -66,7 +66,7 @@
         android:textAlignment="center"
         android:text="Hallazgo seleccionado"
         android:textSize="24sp"
-        android:textColor="@color/colorAccent"/>
+        android:textColor="@color/colorPrimaryDark"/>
 
     <Button
         android:id="@+id/btnSalirGaleria"

@@ -1348,6 +1348,7 @@
             android:orientation="vertical">
 
             <Button
+                android:id="@+id/btnGuardarDB"
                 android:layout_width="300dp"
                 android:layout_height="80dp"
                 android:layout_gravity="center"

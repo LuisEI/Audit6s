@@ -253,103 +253,120 @@ public class FragmentSetting extends Fragment {
         List<String[]> listaDetalle = new ArrayList<>();
 
         listaDetalle.add(new String[]{"1","1","Articulo Personal"});
-        listaDetalle.add(new String[]{"1","2","Documentos"});
-        listaDetalle.add(new String[]{"1","3","Muebles"});
-        listaDetalle.add(new String[]{"1","4","Piezas de maquinas"});
-        listaDetalle.add(new String[]{"1","5","Materiales de produccion"});
-        listaDetalle.add(new String[]{"1","6","Herramientas de trabajo"});
-        listaDetalle.add(new String[]{"1","7","Herramientas de mantenimiento"});
-        listaDetalle.add(new String[]{"2","8","Inventario de entrada"});
-        listaDetalle.add(new String[]{"2","9","Inventario de proceso"});
-        listaDetalle.add(new String[]{"2","10","Inventario de salida"});
-        listaDetalle.add(new String[]{"2","11","Documentos"});
-        listaDetalle.add(new String[]{"2","12","Herramientas"});
-        listaDetalle.add(new String[]{"2","13","Repuestos"});
-        listaDetalle.add(new String[]{"3","14","Excede los niveles de inventario de entrada"});
-        listaDetalle.add(new String[]{"3","15","Excede los niveles de inventario de salida"});
-        listaDetalle.add(new String[]{"3","16","Excede los niveles de inventario en proceso"});
-        listaDetalle.add(new String[]{"3","17","Excede los niveles de inventario de documentos"});
-        listaDetalle.add(new String[]{"3","18","Excede los niveles de inventario de herramientas"});
-        listaDetalle.add(new String[]{"3","19","Excede los niveles de inventario de repuestos"});
-        listaDetalle.add(new String[]{"3","20","Desabastecido de inventario de entrada"});
-        listaDetalle.add(new String[]{"3","21","Desabastecido de inventario de procesos"});
-        listaDetalle.add(new String[]{"3","22","Desabastecido de inventario de salida"});
-        listaDetalle.add(new String[]{"3","23","Desabastecido de inventario de Documentos"});
-        listaDetalle.add(new String[]{"3","24","Desabastecido de inventario de Herramientas"});
-        listaDetalle.add(new String[]{"3","25","Desabastecido de inventario de Repuestos"});
-        listaDetalle.add(new String[]{"5","26","Lapicero"});
-        listaDetalle.add(new String[]{"5","27","Lapiz"});
-        listaDetalle.add(new String[]{"5","28","Espatula"});
-        listaDetalle.add(new String[]{"5","29","Llave para desarmar"});
-        listaDetalle.add(new String[]{"5","30","pinza"});
-        listaDetalle.add(new String[]{"5","31","cuchilla"});
-        listaDetalle.add(new String[]{"5","32","documento"});
-        listaDetalle.add(new String[]{"5","33","calculadora"});
-        listaDetalle.add(new String[]{"5","34","cuaderno"});
-        listaDetalle.add(new String[]{"6","35","Maquina"});
-        listaDetalle.add(new String[]{"6","36","Carrito de material"});
-        listaDetalle.add(new String[]{"6","37","Equipos de medicion"});
-        listaDetalle.add(new String[]{"6","38","Equipos de oficina"});
-        listaDetalle.add(new String[]{"6","39","Herramientas manuales"});
-        listaDetalle.add(new String[]{"6","40","Herramientas de oficina"});
-        listaDetalle.add(new String[]{"7","41","Cables en el piso"});
-        listaDetalle.add(new String[]{"7","42","Caida a diferente nivel"});
-        listaDetalle.add(new String[]{"7","43","Derrame de liquidos"});
-        listaDetalle.add(new String[]{"7","44","Peligro de electrocucion"});
-        listaDetalle.add(new String[]{"7","45","Peligros de golpes"});
-        listaDetalle.add(new String[]{"7","46","atrapamiento por partes moviles"});
-        listaDetalle.add(new String[]{"7","47","Peligro de heridas o puncion"});
-        listaDetalle.add(new String[]{"8","48","No lo tiene al alcance"});
-        listaDetalle.add(new String[]{"8","49","No se ha definido la frecuencia adecuada"});
-        listaDetalle.add(new String[]{"8","50","No ha contenmplado area y espacios importantes para limpiar"});
-        listaDetalle.add(new String[]{"9","51","No se han contemplado las herramientas necesarias para hacer el rol"});
-        listaDetalle.add(new String[]{"9","52","No posee escoba"});
-        listaDetalle.add(new String[]{"9","53","No posee pala"});
-        listaDetalle.add(new String[]{"9","54","No posee wipes"});
-        listaDetalle.add(new String[]{"9","55","No posee quimico limpiador"});
-        listaDetalle.add(new String[]{"9","56","No posee trapeador"});
-        listaDetalle.add(new String[]{"10","57","Piso Sucio"});
-        listaDetalle.add(new String[]{"10","58","Pared Sucia"});
-        listaDetalle.add(new String[]{"10","59","Columna Sucia"});
-        listaDetalle.add(new String[]{"11","60","Gavetas sucias"});
-        listaDetalle.add(new String[]{"11","61","Escritorio Sucio"});
-        listaDetalle.add(new String[]{"11","62","Superficie de maquina sucia"});
-        listaDetalle.add(new String[]{"11","63","Bandejas de maquinas sucias"});
-        listaDetalle.add(new String[]{"11","64","Estantes sucios"});
-        listaDetalle.add(new String[]{"11","65","Computadora sucia"});
-        listaDetalle.add(new String[]{"11","66","Maquina sucia"});
-        listaDetalle.add(new String[]{"11","67","Mueble sucio"});
-        listaDetalle.add(new String[]{"11","68","Sillas sucia"});
-        listaDetalle.add(new String[]{"12","69","No posee estandar"});
-        listaDetalle.add(new String[]{"12","70","No esta colocado el estandar"});
-        listaDetalle.add(new String[]{"12","71","El estandar no esta actualizado"});
-        listaDetalle.add(new String[]{"12","72","El estandar no esta a colores"});
-        listaDetalle.add(new String[]{"13","73","No existe señalizacion en el acceso al area"});
-        listaDetalle.add(new String[]{"13","74","No se respeta la señalizacion de uso de EPP"});
-        listaDetalle.add(new String[]{"13","75","Los extintores no estan señalizados"});
-        listaDetalle.add(new String[]{"13","76","Los paneles electricos no estan señalizados"});
-        listaDetalle.add(new String[]{"13","77","Los espacios señalizados para no obstruir no se respetan"});
-        listaDetalle.add(new String[]{"14","78","No cumple la rotulacion con el estandar de letra"});
-        listaDetalle.add(new String[]{"14","79","No todo esta rotulado"});
-        listaDetalle.add(new String[]{"14","80","La rotulacion esta dañada"});
-        listaDetalle.add(new String[]{"14","81","No posee rotulacion"});
-        listaDetalle.add(new String[]{"14","82","No posee de marcacion"});
-        listaDetalle.add(new String[]{"14","83","La demarcacion esta dañada"});
-        listaDetalle.add(new String[]{"14","84","La demarcacion no corresponde a los colores establecidos"});
-        listaDetalle.add(new String[]{"15","85","No se repeta en los objetos que corresponden al area"});
-        listaDetalle.add(new String[]{"15","86","No se respetan los niveles de inventario"});
-        listaDetalle.add(new String[]{"15","87","No se respeta en la limpieza del area"});
-        listaDetalle.add(new String[]{"15","88","No se respeta en la limpieza en la estacion de trabajo"});
-        listaDetalle.add(new String[]{"15","89","No se respetan las demarcaciones del area"});
-        listaDetalle.add(new String[]{"16","90","El personal no lo conoce"});
-        listaDetalle.add(new String[]{"16","91","El personal no conoce su rol de limpieza"});
-        listaDetalle.add(new String[]{"16","92","El personal no conoce el objetivo de las 6S´s"});
-        listaDetalle.add(new String[]{"17","93","No esta el documento de registro de las auditorias anteriores"});
-        listaDetalle.add(new String[]{"17","94","No esta actualizada la grafica detendenciade 6S´s"});
-        listaDetalle.add(new String[]{"18","95","Se repiten los hallazgos del ultimo periodo"});
-        listaDetalle.add(new String[]{"19","96","No posee un programa de autoauditorias de 6S´s"});
-        listaDetalle.add(new String[]{"19","97","No se ha cumplido el programa"});
-        listaDetalle.add(new String[]{"19","98","Lider no ha cumplido su autoevaluacion de 6S´s"});
+        listaDetalle.add(new String[]{"2","1","Documentos"});
+        listaDetalle.add(new String[]{"3","1","Muebles"});
+        listaDetalle.add(new String[]{"4","1","Piezas de maquinas"});
+        listaDetalle.add(new String[]{"5","1","Materiales de produccion"});
+        listaDetalle.add(new String[]{"6","1","Herramientas de trabajo"});
+        listaDetalle.add(new String[]{"7","1","Herramientas de mantenimiento"});
+
+        listaDetalle.add(new String[]{"8","2","Inventario de entrada"});
+        listaDetalle.add(new String[]{"9","2","Inventario de proceso"});
+        listaDetalle.add(new String[]{"10","2","Inventario de salida"});
+        listaDetalle.add(new String[]{"11","2","Documentos"});
+        listaDetalle.add(new String[]{"12","2","Herramientas"});
+        listaDetalle.add(new String[]{"13","2","Repuestos"});
+
+        listaDetalle.add(new String[]{"14","3","Excede los niveles de inventario de entrada"});
+        listaDetalle.add(new String[]{"15","3","Excede los niveles de inventario de salida"});
+        listaDetalle.add(new String[]{"16","3","Excede los niveles de inventario en proceso"});
+        listaDetalle.add(new String[]{"17","3","Excede los niveles de inventario de documentos"});
+        listaDetalle.add(new String[]{"18","3","Excede los niveles de inventario de herramientas"});
+        listaDetalle.add(new String[]{"19","3","Excede los niveles de inventario de repuestos"});
+        listaDetalle.add(new String[]{"20","3","Desabastecido de inventario de entrada"});
+        listaDetalle.add(new String[]{"21","3","Desabastecido de inventario de procesos"});
+        listaDetalle.add(new String[]{"22","3","Desabastecido de inventario de salida"});
+        listaDetalle.add(new String[]{"23","3","Desabastecido de inventario de Documentos"});
+        listaDetalle.add(new String[]{"24","3","Desabastecido de inventario de Herramientas"});
+        listaDetalle.add(new String[]{"25","3","Desabastecido de inventario de Repuestos"});
+
+        listaDetalle.add(new String[]{"26","5","Lapicero"});
+        listaDetalle.add(new String[]{"27","5","Lapiz"});
+        listaDetalle.add(new String[]{"28","5","Espatula"});
+        listaDetalle.add(new String[]{"29","5","Llave para desarmar"});
+        listaDetalle.add(new String[]{"30","5","pinza"});
+        listaDetalle.add(new String[]{"31","5","cuchilla"});
+        listaDetalle.add(new String[]{"32","5","documento"});
+        listaDetalle.add(new String[]{"33","5","calculadora"});
+        listaDetalle.add(new String[]{"34","5","cuaderno"});
+
+        listaDetalle.add(new String[]{"35","6","Maquina"});
+        listaDetalle.add(new String[]{"36","6","Carrito de material"});
+        listaDetalle.add(new String[]{"37","6","Equipos de medicion"});
+        listaDetalle.add(new String[]{"38","6","Equipos de oficina"});
+        listaDetalle.add(new String[]{"39","6","Herramientas manuales"});
+        listaDetalle.add(new String[]{"40","6","Herramientas de oficina"});
+
+        listaDetalle.add(new String[]{"41","7","Cables en el piso"});
+        listaDetalle.add(new String[]{"42","7","Caida a diferente nivel"});
+        listaDetalle.add(new String[]{"43","7","Derrame de liquidos"});
+        listaDetalle.add(new String[]{"44","7","Peligro de electrocucion"});
+        listaDetalle.add(new String[]{"45","7","Peligros de golpes"});
+        listaDetalle.add(new String[]{"46","7","atrapamiento por partes moviles"});
+        listaDetalle.add(new String[]{"47","7","Peligro de heridas o puncion"});
+
+        listaDetalle.add(new String[]{"48","8","No lo tiene al alcance"});
+        listaDetalle.add(new String[]{"49","8","No se ha definido la frecuencia adecuada"});
+        listaDetalle.add(new String[]{"50","8","No ha contenmplado area y espacios importantes para limpiar"});
+
+        listaDetalle.add(new String[]{"51","9","No se han contemplado las herramientas necesarias para hacer el rol"});
+        listaDetalle.add(new String[]{"52","9","No posee escoba"});
+        listaDetalle.add(new String[]{"53","9","No posee pala"});
+        listaDetalle.add(new String[]{"54","9","No posee wipes"});
+        listaDetalle.add(new String[]{"55","9","No posee quimico limpiador"});
+        listaDetalle.add(new String[]{"56","9","No posee trapeador"});
+
+        listaDetalle.add(new String[]{"57","10","Piso Sucio"});
+        listaDetalle.add(new String[]{"58","10","Pared Sucia"});
+        listaDetalle.add(new String[]{"59","10","Columna Sucia"});
+
+        listaDetalle.add(new String[]{"60","11","Gavetas sucias"});
+        listaDetalle.add(new String[]{"61","11","Escritorio Sucio"});
+        listaDetalle.add(new String[]{"62","11","Superficie de maquina sucia"});
+        listaDetalle.add(new String[]{"63","11","Bandejas de maquinas sucias"});
+        listaDetalle.add(new String[]{"64","11","Estantes sucios"});
+        listaDetalle.add(new String[]{"65","11","Computadora sucia"});
+        listaDetalle.add(new String[]{"66","11","Maquina sucia"});
+        listaDetalle.add(new String[]{"67","11","Mueble sucio"});
+        listaDetalle.add(new String[]{"68","11","Sillas sucia"});
+
+        listaDetalle.add(new String[]{"69","12","No posee estandar"});
+        listaDetalle.add(new String[]{"70","12","No esta colocado el estandar"});
+        listaDetalle.add(new String[]{"71","12","El estandar no esta actualizado"});
+        listaDetalle.add(new String[]{"72","12","El estandar no esta a colores"});
+
+        listaDetalle.add(new String[]{"73","13","No existe señalizacion en el acceso al area"});
+        listaDetalle.add(new String[]{"74","13","No se respeta la señalizacion de uso de EPP"});
+        listaDetalle.add(new String[]{"75","13","Los extintores no estan señalizados"});
+        listaDetalle.add(new String[]{"76","13","Los paneles electricos no estan señalizados"});
+        listaDetalle.add(new String[]{"77","13","Los espacios señalizados para no obstruir no se respetan"});
+
+        listaDetalle.add(new String[]{"78","14","No cumple la rotulacion con el estandar de letra"});
+        listaDetalle.add(new String[]{"79","14","No todo esta rotulado"});
+        listaDetalle.add(new String[]{"80","14","La rotulacion esta dañada"});
+        listaDetalle.add(new String[]{"81","14","No posee rotulacion"});
+        listaDetalle.add(new String[]{"82","14","No posee de marcacion"});
+        listaDetalle.add(new String[]{"83","14","La demarcacion esta dañada"});
+        listaDetalle.add(new String[]{"84","14","La demarcacion no corresponde a los colores establecidos"});
+
+        listaDetalle.add(new String[]{"85","15","No se repeta en los objetos que corresponden al area"});
+        listaDetalle.add(new String[]{"86","15","No se respetan los niveles de inventario"});
+        listaDetalle.add(new String[]{"87","15","No se respeta en la limpieza del area"});
+        listaDetalle.add(new String[]{"88","15","No se respeta en la limpieza en la estacion de trabajo"});
+        listaDetalle.add(new String[]{"89","15","No se respetan las demarcaciones del area"});
+
+        listaDetalle.add(new String[]{"90","16","El personal no lo conoce"});
+        listaDetalle.add(new String[]{"91","16","El personal no conoce su rol de limpieza"});
+        listaDetalle.add(new String[]{"92","16","El personal no conoce el objetivo de las 6S´s"});
+
+        listaDetalle.add(new String[]{"93","17","No esta el documento de registro de las auditorias anteriores"});
+        listaDetalle.add(new String[]{"94","17","No esta actualizada la grafica detendenciade 6S´s"});
+
+        listaDetalle.add(new String[]{"95","18","Se repiten los hallazgos del ultimo periodo"});
+
+        listaDetalle.add(new String[]{"96","19","No posee un programa de autoauditorias de 6S´s"});
+        listaDetalle.add(new String[]{"97","19","No se ha cumplido el programa"});
+        listaDetalle.add(new String[]{"98","19","Lider no ha cumplido su autoevaluacion de 6S´s"});
 
 
         for(String[] dato: listaDetalle){

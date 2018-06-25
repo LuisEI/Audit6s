@@ -19,6 +19,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,9 +43,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import adapters.SpinnerAdaptador;
 import adapters.ViewPageAdaptador;
+import entidades.Auditoria;
+import entidades.Encontrado;
 import sqlite.ConexionSQLiteHelper;
 import utilidades.Utilidades;
 
@@ -58,7 +62,7 @@ import static android.app.Activity.RESULT_OK;
  * Use the {@link FragmentCalificar#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentCalificar extends Fragment implements View.OnClickListener{
+public class FragmentCalificar extends Fragment implements View.OnClickListener, View.OnLongClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -70,6 +74,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
 
     private OnFragmentInteractionListener mListener;
 
+    //region DECLARACION DE VARIABLES
     private View vista;
     private TextView txtStarN1;
     private TextView txtStarN2;
@@ -151,10 +156,18 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
     private Intent takePictureIntent;
     private ArrayList<String> listaSpinner;
     private ArrayList<String> listaImagenes;
-    private Map<Integer,Integer> mapaHallazgoReferencia;
+    private List<Map<Integer,Integer>> mapaHallazgoReferencia;
     private ViewPager viewPager;
     private TextView txtHallazgo;
+    private static float[] arrayNotas = new float[6];
+    private boolean[] estaCalificado = new boolean[19];
+    private TextView txtNotaTotal;
+    List<Encontrado> hallazgosEncontrados = new ArrayList<>();
 
+    private Auditoria AuditoriaDB = new Auditoria();
+    private Button btnGuardarDB;
+
+    //endregion
 
     public FragmentCalificar() {
         // Required empty public constructor
@@ -192,7 +205,12 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         vista = inflater.inflate(R.layout.fragment_fragment_calificar, container, false);
 
+
+        //region ENLAZANDO COMPONENTES DE LA VISTA
+
         conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null, 1);
+
+        btnGuardarDB = vista.findViewById(R.id.btnGuardarDB);
 
         txtStarN1 = vista.findViewById(R.id.txtStarN1);
         txtStarN2 = vista.findViewById(R.id.txtStarN2);
@@ -219,6 +237,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         txtNotaS3 = vista.findViewById(R.id.txtNotaS3);
         txtNotaS4 = vista.findViewById(R.id.txtNotaS4);
         txtNotaS5 = vista.findViewById(R.id.txtNotaS5);
+        txtNotaTotal = vista.findViewById(R.id.txtNotaTotal);
 
         fab_n1 = vista.findViewById(R.id.fab_n1);
         fab_n2 = vista.findViewById(R.id.fab_n2);
@@ -280,6 +299,26 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         fab_n18.setOnClickListener(this);
         fab_n19.setOnClickListener(this);
 
+        fab_n1.setOnLongClickListener(this);
+        fab_n2.setOnLongClickListener(this);
+        fab_n3.setOnLongClickListener(this);
+        fab_n4.setOnLongClickListener(this);
+        fab_n5.setOnLongClickListener(this);
+        fab_n6.setOnLongClickListener(this);
+        fab_n7.setOnLongClickListener(this);
+        fab_n8.setOnLongClickListener(this);
+        fab_n9.setOnLongClickListener(this);
+        fab_n10.setOnLongClickListener(this);
+        fab_n11.setOnLongClickListener(this);
+        fab_n12.setOnLongClickListener(this);
+        fab_n13.setOnLongClickListener(this);
+        fab_n14.setOnLongClickListener(this);
+        fab_n15.setOnLongClickListener(this);
+        fab_n16.setOnLongClickListener(this);
+        fab_n17.setOnLongClickListener(this);
+        fab_n18.setOnLongClickListener(this);
+        fab_n19.setOnLongClickListener(this);
+
         btnHallazgoN1.setOnClickListener(this);
         btnHallazgoN2.setOnClickListener(this);
         btnHallazgoN3.setOnClickListener(this);
@@ -300,10 +339,20 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         btnHallazgoN18.setOnClickListener(this);
         btnHallazgoN19.setOnClickListener(this);
 
+        btnGuardarDB.setOnClickListener(this);
+
         matrizHallazgos = new ArrayList<>();
+        mapaHallazgoReferencia = new ArrayList<>();
+
+        //endregion
 
         for (int i=0; i<19; i++){
             matrizHallazgos.add(new HashMap<String, Integer>());
+            mapaHallazgoReferencia.add(new HashMap<Integer,Integer>());
+        }
+
+        for (int i=0; i<6; i++){
+            arrayNotas[i] = 0;
         }
 
         return vista;
@@ -312,10 +361,11 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
     private void CalificarNota(FloatingActionButton b){
 
         if(b.getId() == R.id.fab_n1 || b.getId() == R.id.fab_n2 || b.getId() == R.id.fab_n3){
-            double startN1 = Double.parseDouble(txtStarN1.getText().toString());
-            double startN2 = Double.parseDouble(txtStarN2.getText().toString());
-            double startN3 = Double.parseDouble(txtStarN3.getText().toString());
+            float startN1 = Float.parseFloat(txtStarN1.getText().toString());
+            float startN2 = Float.parseFloat(txtStarN2.getText().toString());
+            float startN3 = Float.parseFloat(txtStarN3.getText().toString());
             txtNotaS1.setText(String.format("%.0f%%",(startN1 + startN2 + startN3)/15*100));
+            arrayNotas[1] = (startN1 + startN2 + startN3)/15*100;
         }else if(b.getId() == R.id.fab_n4 || b.getId() == R.id.fab_n5 || b.getId() == R.id.fab_n6 || b.getId() == R.id.fab_n7){
             CalculoNota(txtStarN4, txtStarN5, txtStarN6, txtStarN7, txtNotaS2);
         }else if(b.getId() == R.id.fab_n8 || b.getId() == R.id.fab_n9 || b.getId() == R.id.fab_n10 || b.getId() == R.id.fab_n11){
@@ -326,25 +376,44 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
             CalculoNota(txtStarN16, txtStarN17, txtStarN18, txtStarN19, txtNotaS5);
         }
 
+        arrayNotas[0] = (arrayNotas[1] + arrayNotas[2] + arrayNotas[3] + arrayNotas[4] + arrayNotas[5])/5;
+        txtNotaTotal.setText(String.format("%.0f%%", arrayNotas[0]));
+
+        AuditoriaDB.setRes_s1(arrayNotas[1]);
+        AuditoriaDB.setRes_s2(arrayNotas[2]);
+        AuditoriaDB.setRes_s3(arrayNotas[3]);
+        AuditoriaDB.setRes_s4(arrayNotas[4]);
+        AuditoriaDB.setRes_s5(arrayNotas[5]);
+        AuditoriaDB.setRes_total(arrayNotas[0]);
     }
 
     private static void CalculoNota(TextView txtEstrallas1, TextView txtEstrallas2, TextView txtEstrallas3, TextView txtEstrallas4, TextView txtNota) {
-        double startN1 = Double.parseDouble(txtEstrallas1.getText().toString());
-        double startN2 = Double.parseDouble(txtEstrallas2.getText().toString());
-        double startN3 = Double.parseDouble(txtEstrallas3.getText().toString());
-        double startN4 = Double.parseDouble(txtEstrallas4.getText().toString());
+        float startN1 = Float.parseFloat(txtEstrallas1.getText().toString());
+        float startN2 = Float.parseFloat(txtEstrallas2.getText().toString());
+        float startN3 = Float.parseFloat(txtEstrallas3.getText().toString());
+        float startN4 = Float.parseFloat(txtEstrallas4.getText().toString());
+
         txtNota.setText(String.format("%.0f%%",(startN1 + startN2 + startN3 + startN4)/20*100));
+
+        if(txtNota.getId() == R.id.txtNotaS2){
+            arrayNotas[2] = (startN1 + startN2 + startN3 + startN4)/20*100;
+        }else if(txtNota.getId() == R.id.txtNotaS3){
+            arrayNotas[3] = (startN1 + startN2 + startN3 + startN4)/20*100;
+        }else if(txtNota.getId() == R.id.txtNotaS4){
+            arrayNotas[4] = (startN1 + startN2 + startN3 + startN4)/20*100;
+        }else if(txtNota.getId() == R.id.txtNotaS5){
+            arrayNotas[5] = (startN1 + startN2 + startN3 + startN4)/20*100;
+        }
     }
 
     private void LlenarListaSpinner(int index){
         SQLiteDatabase db = conn.getReadableDatabase();
         listaSpinner = new ArrayList<>();
-        mapaHallazgoReferencia = new HashMap<>();
         Cursor cursor = db.rawQuery("SELECT * FROM "+ Utilidades.TABLA_DETALLE +" WHERE id_hallazgo = ?", new String[]{String.valueOf(index + 1)});
         int count = 0;
         while (cursor.moveToNext()){
             listaSpinner.add(cursor.getString(2));
-            mapaHallazgoReferencia.put(count++, cursor.getInt(1));
+            mapaHallazgoReferencia.get(index).put(count++, cursor.getInt(0));
         }
 
         db.close();
@@ -414,11 +483,6 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
 
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
     private void LanzarCalificadorPunto16(final TextView tv, final FloatingActionButton button) {
 
         final View viewPunto16 = getLayoutInflater().inflate(R.layout.alert_dialog_punto16, null);
@@ -464,6 +528,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
             public void onClick(View v) {
                 tv.setText(String.format("%.0f", rbPunto16.getRating()));
                 button.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
+                estaCalificado[15] = true;
                 alertDialog.dismiss();
             }
         });
@@ -501,7 +566,10 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         Button btnCalificar = alertFormView.findViewById(R.id.btnAlertCalif);
         final RatingBar rb = alertFormView.findViewById(R.id.rbCalificar);
 
+        final int indice = GetIndex(button);
+
         rb.setStepSize(paso);
+
 
         txtTitulo.setText(titulo);
         txtMensaje.setText(msj);
@@ -524,13 +592,48 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
             @Override
             public void onClick(View v) {
                 tv.setText(String.format("%.0f", rb.getRating()));
-                if(matrizHallazgos.get(GetIndex(button)).size() > 0) MostrarBotonHallazgo(GetIndex(button));
+                if(matrizHallazgos.get(indice).size() > 0) MostrarBotonHallazgo(indice);
                 CalificarNota(button);
+                estaCalificado[indice] = true;
+                GuardarPuntosDB(rb.getRating(), indice);
                 button.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
                 alertDialog.dismiss();
             }
         });
 
+    }
+
+    private void LanzarCalificadorRapido(final TextView tv, final FloatingActionButton button) {
+        int indice = GetIndex(button);
+        tv.setText(String.format("%.0f", 5f));
+        if(matrizHallazgos.get(indice).size() > 0) MostrarBotonHallazgo(indice);
+        CalificarNota(button);
+        estaCalificado[indice] = true;
+        GuardarPuntosDB(5f, indice);
+        button.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
+
+    }
+
+    private void GuardarPuntosDB(float rating, int index) {
+        if(index == 0) AuditoriaDB.setS1_obs_1((int)rating);
+        else if(index == 1) AuditoriaDB.setS1_obs_2((int)rating);
+        else if(index == 2) AuditoriaDB.setS1_obs_3((int)rating);
+        else if(index == 3) AuditoriaDB.setS2_obs_1((int)rating);
+        else if(index == 4) AuditoriaDB.setS2_obs_2((int)rating);
+        else if(index == 5) AuditoriaDB.setS2_obs_3((int)rating);
+        else if(index == 6) AuditoriaDB.setS2_obs_4((int)rating);
+        else if(index == 7) AuditoriaDB.setS3_obs_1((int)rating);
+        else if(index == 8) AuditoriaDB.setS3_obs_2((int)rating);
+        else if(index == 9) AuditoriaDB.setS3_obs_3((int)rating);
+        else if(index == 10) AuditoriaDB.setS3_obs_4((int)rating);
+        else if(index == 11) AuditoriaDB.setS4_obs_1((int)rating);
+        else if(index == 12) AuditoriaDB.setS4_obs_2((int)rating);
+        else if(index == 13) AuditoriaDB.setS4_obs_3((int)rating);
+        else if(index == 14) AuditoriaDB.setS4_obs_4((int)rating);
+        else if(index == 15) AuditoriaDB.setS5_obs_1((int)rating);
+        else if(index == 16) AuditoriaDB.setS5_obs_2((int)rating);
+        else if(index == 17) AuditoriaDB.setS5_obs_3((int)rating);
+        else if(index == 18) AuditoriaDB.setS5_obs_4((int)rating);
     }
 
     private void LanzarVentanaHallazo(final FloatingActionButton b) {
@@ -545,8 +648,9 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         Button btnAgregarHallazgo = alertFormView.findViewById(R.id.btnAgregarHallazgo);
         mImageView = alertFormView.findViewById(R.id.imaFoto);
 
+        final int indice = GetIndex(b);
 
-        LlenarListaSpinner(GetIndex(b));
+        LlenarListaSpinner(indice);
 
         final SpinnerAdaptador adaptador = new SpinnerAdaptador(getContext(), R.layout.spinner_textview);
         adaptador.addAll(listaSpinner);
@@ -573,10 +677,17 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
             @Override
             public void onClick(View v) {
                 if(hallazgoSelect && !spHallazgo.getSelectedItem().toString().equals("Seleccione el Hallazgo")){
-                    matrizHallazgos.get(GetIndex(b)).put(mCurrentPhotoPath, spHallazgo.getSelectedItemPosition());
+                    matrizHallazgos.get(indice).put(mCurrentPhotoPath, spHallazgo.getSelectedItemPosition());
+
+                    Encontrado encontrado = new Encontrado();
+                    encontrado.setId_detalle(mapaHallazgoReferencia.get(indice).get(spHallazgo.getSelectedItemPosition()));
+                    encontrado.setRuta(mCurrentPhotoPath);
+                    hallazgosEncontrados.add(encontrado);
+
                     spHallazgo.setSelection(adaptador.getCount());
                     mImageView.setImageResource(R.drawable.cam);
                     hallazgoSelect = false;
+
                     Toast.makeText(getContext(), "Se agrego un hallazgo", Toast.LENGTH_SHORT).show();
                 }else if(spHallazgo.getSelectedItem().toString().equals("Seleccione el Hallazgo")){
                     Toast.makeText(getContext(), "Debe seleccionar el hallazgo", Toast.LENGTH_SHORT).show();
@@ -628,6 +739,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         viewPager = alertFormGaleria.findViewById(R.id.galeria_hallazgo);
         txtHallazgo = alertFormGaleria.findViewById(R.id.galeria_hallazgo_text);
         Button botonSalir = alertFormGaleria.findViewById(R.id.btnSalirGaleria);
+        int indice = GetIndex(button);
 
         final List<Integer> lista_Ref_hallazgo = new ArrayList<>();
 
@@ -635,7 +747,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         while(it.hasNext()){
             String key = it.next().toString();
             listaImagenes.add(key);
-            lista_Ref_hallazgo.add(mapaHallazgoReferencia.get(matrizHallazgos.get(GetIndex(button)).get(key)));
+            lista_Ref_hallazgo.add(mapaHallazgoReferencia.get(indice).get(matrizHallazgos.get(indice).get(key)));
         }
 
         txtHallazgo.setText(GetHallazgo(lista_Ref_hallazgo.get(0)));
@@ -676,6 +788,67 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
 
     }
 
+    private void GuardarDatosEnDB(){
+
+        boolean calificacionCompleta = true;
+
+        for(boolean calificado: estaCalificado){
+            if(!calificado) calificacionCompleta = false;
+        }
+
+        Random r = new Random();
+
+        if(calificacionCompleta){
+            SQLiteDatabase db = conn.getWritableDatabase();
+
+            Object[] datos = new Object[]{
+                    r.nextInt(),
+                    AuditoriaDB.getArea(),
+                    AuditoriaDB.getAuditor(),
+                    AuditoriaDB.getTurno(),
+                    AuditoriaDB.getFecha(),
+                    AuditoriaDB.getS1_obs_1(),
+                    AuditoriaDB.getS1_obs_2(),
+                    AuditoriaDB.getS1_obs_3(),
+                    AuditoriaDB.getS2_obs_1(),
+                    AuditoriaDB.getS2_obs_2(),
+                    AuditoriaDB.getS2_obs_3(),
+                    AuditoriaDB.getS2_obs_4(),
+                    AuditoriaDB.getS3_obs_1(),
+                    AuditoriaDB.getS3_obs_2(),
+                    AuditoriaDB.getS3_obs_3(),
+                    AuditoriaDB.getS3_obs_4(),
+                    AuditoriaDB.getS4_obs_1(),
+                    AuditoriaDB.getS4_obs_2(),
+                    AuditoriaDB.getS4_obs_3(),
+                    AuditoriaDB.getS4_obs_4(),
+                    AuditoriaDB.getS5_obs_1(),
+                    AuditoriaDB.getS5_obs_2(),
+                    AuditoriaDB.getS5_obs_3(),
+                    AuditoriaDB.getS5_obs_4(),
+                    AuditoriaDB.getRes_s1(),
+                    AuditoriaDB.getRes_s2(),
+                    AuditoriaDB.getRes_s3(),
+                    AuditoriaDB.getRes_s4(),
+                    AuditoriaDB.getRes_s5(),
+                    AuditoriaDB.getRes_total(),
+                    0
+            };
+
+            String sql = "INSERT INTO " + Utilidades.TABLA_AUDITORIA + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+            db.execSQL(sql, datos);
+
+            db.close();
+            conn.close();
+
+            Toast.makeText(getContext(), "Datos almacenados correctamente", Toast.LENGTH_SHORT).show();
+
+        }else{
+            Toast.makeText(getContext(), "No ha terminado de calificar", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void dispatchTakePictureIntent() {
         takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -712,6 +885,11 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         // Se guarda la direccion de la imagen
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -865,6 +1043,76 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener{
         else if(v.getId() == R.id.btnHallazgoN19){
             LanzarGaleriaHallazgo(fab_n19);
         }
+        else if(v.getId() == R.id.btnGuardarDB){
+            GuardarDatosEnDB();
+        }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+
+        boolean activado = false;
+
+        if(v.getId() == R.id.fab_n1){
+            LanzarCalificadorRapido(txtStarN1, fab_n1);
+            activado = true;
+        }else if(v.getId() == R.id.fab_n2){
+            LanzarCalificadorRapido(txtStarN2, fab_n2);
+            activado = true;
+        }else if(v.getId() == R.id.fab_n3){
+            LanzarCalificadorRapido(txtStarN3, fab_n3);
+            activado = true;
+        }else if(v.getId() == R.id.fab_n4){
+            LanzarCalificadorRapido(txtStarN4, fab_n4);
+            activado = true;
+        }else if(v.getId() == R.id.fab_n5){
+            LanzarCalificadorRapido(txtStarN5, fab_n5);
+            activado = true;
+        }else if(v.getId() == R.id.fab_n6){
+            LanzarCalificadorRapido(txtStarN6, fab_n6);
+            activado = true;
+        }else if(v.getId() == R.id.fab_n7){
+            LanzarCalificadorRapido(txtStarN7, fab_n7);
+            activado = true;
+        }else if(v.getId() == R.id.fab_n8){
+            LanzarCalificadorRapido(txtStarN8, fab_n8);
+            activado = true;
+        }else if(v.getId() == R.id.fab_n9){
+            LanzarCalificadorRapido(txtStarN9, fab_n9);
+            activado = true;
+        }else if(v.getId() == R.id.fab_n10){
+            LanzarCalificadorRapido(txtStarN10, fab_n10);
+            activado = true;
+        }else if(v.getId() == R.id.fab_n11){
+            LanzarCalificadorRapido(txtStarN11, fab_n11);
+            activado = true;
+        }else if(v.getId() == R.id.fab_n12){
+            LanzarCalificadorRapido(txtStarN12, fab_n12);
+            activado = true;
+        }else if(v.getId() == R.id.fab_n13){
+            LanzarCalificadorRapido(txtStarN13, fab_n13);
+            activado = true;
+        }else if(v.getId() == R.id.fab_n14){
+            LanzarCalificadorRapido(txtStarN14, fab_n14);
+            activado = true;
+        }else if(v.getId() == R.id.fab_n15){
+            LanzarCalificadorRapido(txtStarN15, fab_n15);
+            activado = true;
+        }else if(v.getId() == R.id.fab_n16){
+            LanzarCalificadorRapido(txtStarN16, fab_n16);
+            activado = true;
+        }else if(v.getId() == R.id.fab_n17){
+            LanzarCalificadorRapido(txtStarN17, fab_n17);
+            activado = true;
+        }else if(v.getId() == R.id.fab_n18){
+            LanzarCalificadorRapido(txtStarN18, fab_n18);
+            activado = true;
+        }else if(v.getId() == R.id.fab_n19){
+            LanzarCalificadorRapido(txtStarN19, fab_n19);
+            activado = true;
+        }
+
+        return activado;
     }
 
     /**

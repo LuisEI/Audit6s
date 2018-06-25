@@ -22,12 +22,14 @@ import fragments.FragmentConsulta;
 import fragments.FragmentHome;
 import fragments.FragmentIngreso;
 import fragments.FragmentSetting;
+import fragments.FragmentSincronizar;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         FragmentHome.OnFragmentInteractionListener, FragmentAuditoria.OnFragmentInteractionListener,
         FragmentConsulta.OnFragmentInteractionListener, FragmentSetting.OnFragmentInteractionListener,
-        FragmentIngreso.OnFragmentInteractionListener, FragmentCalificar.OnFragmentInteractionListener {
+        FragmentIngreso.OnFragmentInteractionListener, FragmentCalificar.OnFragmentInteractionListener,
+        FragmentSincronizar.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +107,8 @@ public class MainActivity extends AppCompatActivity
             myFragment = new FragmentSetting();
             fragmentSelecionado = true;
         } else if (id == R.id.nav_about) {
-
+            myFragment = new FragmentSincronizar();
+            fragmentSelecionado = true;
         }
 
         if(fragmentSelecionado){

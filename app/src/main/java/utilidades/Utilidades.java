@@ -16,9 +16,10 @@ public class Utilidades {
     public static final String CAMPO_AREA = "area";
     public static final String CAMPO_LIDER = "lider";
     public static final String CAMPO_ID_PLANTA = "id_planta";
+    public static final String CAMPO_ID_GERENTE_FK = "id_gerente";
 
     public static final String CREAR_TABLA_AREA = "CREATE TABLE " + TABLA_AREA + " (" +
-            CAMPO_ID_AREA + " INTEGER, " + CAMPO_AREA + " TEXT, " + CAMPO_LIDER + " TEXT, " + CAMPO_ID_PLANTA + " INTEGER)";
+            CAMPO_ID_AREA + " INTEGER, " + CAMPO_AREA + " TEXT, " + CAMPO_LIDER + " TEXT, " + CAMPO_ID_PLANTA + " INTEGER, "+ CAMPO_ID_GERENTE_FK + " INTEGER)";
 
     //Constantes de la tabla Gerentes
     public static final String TABLA_GERENTE = "t_gerente";
@@ -57,8 +58,8 @@ public class Utilidades {
     public static final String CAMPO_DESCRIPCION = "descripcion";
 
     public static final String CREAR_TABLA_DETALLE = "CREATE TABLE " + TABLA_DETALLE + " (" +
-            CAMPO_ID_HALLAZGO + " INTEGER, "+
-            CAMPO_ID_DETALLE + " INTEGER, "+
+            CAMPO_ID_DETALLE + " INTEGER, " +
+            CAMPO_ID_HALLAZGO + " INTEGER, " +
             CAMPO_DESCRIPCION + " TEXT)";
 
     //Constantes de la tabla Auditoria
@@ -91,11 +92,11 @@ public class Utilidades {
     public static final String CAMPO_RES_S4 = "res_s4";
     public static final String CAMPO_RES_S5 = "res_s5";
     public static final String CAMPO_RES_TOTAL = "res_total";
+    public static final String CAMPO_SYNC = "sincronizado";
 
     public static final String CREAR_TABLA_AUDITORIA = "CREATE TABLE " + TABLA_AUDITORIA + " (" +
             CAMPO_ID_AUDITORIA + " INTEGER, " +
             CAMPO_AREA + " INTEGER, " +
-            CAMPO_GERENTE + " INTEGER, " +
             CAMPO_AUDITOR + " INTEGER, " +
             CAMPO_TURNO + " INTEGER, " +
             CAMPO_FECHA + " TEXT, " +
@@ -123,6 +124,16 @@ public class Utilidades {
             CAMPO_RES_S3 + " REAL, " +
             CAMPO_RES_S4 + " REAL, " +
             CAMPO_RES_S5 + " REAL, " +
-            CAMPO_RES_TOTAL + " REAL)";
+            CAMPO_RES_TOTAL + " REAL, " +
+            CAMPO_SYNC + " INTEGER)";
 
+
+    //Constantes de la tabla Encontrados
+    public static final String TABLA_ENCONTRADO = "t_encontrado";
+    public static final String CAMPO_RUTA_IMAGEN = "ruta_imagen";
+
+    public static final String CREAR_TABLA_ENCONTRADO =  "CREATE TABLE " + TABLA_ENCONTRADO + " (" +
+            CAMPO_ID_DETALLE + " INTEGER, " +
+            CAMPO_RUTA_IMAGEN + " TEXT, " +
+            CAMPO_ID_AUDITORIA + " INTEGER)";
 }

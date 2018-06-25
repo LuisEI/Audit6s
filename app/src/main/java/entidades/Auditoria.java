@@ -26,12 +26,12 @@ public class Auditoria {
     private int s5_obs_2;
     private int s5_obs_3;
     private int s5_obs_4;
-    private double res_s1;
-    private double res_s2;
-    private double res_s3;
-    private double res_s4;
-    private double res_s5;
-    private double res_total;
+    private float res_s1;
+    private float res_s2;
+    private float res_s3;
+    private float res_s4;
+    private float res_s5;
+    private float res_total;
 
     public Auditoria() {
 
@@ -229,51 +229,53 @@ public class Auditoria {
         this.s5_obs_4 = s5_obs_4;
     }
 
-    public double getRes_s1() {
+    public float getRes_s1() {
         return res_s1;
     }
 
-    public void setRes_s1(double res_s1) {
+    public void setRes_s1(float res_s1) {
         this.res_s1 = res_s1;
     }
 
-    public double getRes_s2() {
+    public float getRes_s2() {
         return res_s2;
     }
 
-    public void setRes_s2(double res_s2) {
+    public void setRes_s2(float res_s2) {
         this.res_s2 = res_s2;
     }
 
-    public double getRes_s3() {
+    public float getRes_s3() {
         return res_s3;
     }
 
-    public void setRes_s3(double res_s3) {
+    public void setRes_s3(float res_s3) {
         this.res_s3 = res_s3;
     }
 
-    public double getRes_s4() {
+    public float getRes_s4() {
         return res_s4;
     }
 
-    public void setRes_s4(double res_s4) {
+    public void setRes_s4(float res_s4) {
         this.res_s4 = res_s4;
     }
 
-    public double getRes_s5() {
+    public float getRes_s5() {
         return res_s5;
     }
 
-    public void setRes_s5(double res_s5) {
+    public void setRes_s5(float res_s5) {
         this.res_s5 = res_s5;
     }
 
-    public double getRes_total() {
+    public float getRes_total() {
         return res_total;
     }
 
-    public void setRes_total(double res_total) {
+    public void setRes_total(float res_total) {
         this.res_total = res_total;
     }
+
+
 }

@@ -6,6 +6,7 @@ public class Area {
     private String area;
     private String lider;
     private int id_planta;
+    private int id_gerente;
 
     public Area() {
 
@@ -41,5 +42,13 @@ public class Area {
 
     public void setId_planta(int id_planta) {
         this.id_planta = id_planta;
+    }
+
+    public int getId_gerente() {
+        return id_gerente;
+    }
+
+    public void setId_gerente(int id_gerente) {
+        this.id_gerente = id_gerente;
     }
 }
