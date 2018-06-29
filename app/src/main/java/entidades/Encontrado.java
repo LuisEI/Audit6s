@@ -3,7 +3,7 @@ package entidades;
 public class Encontrado {
 
     private int id_detalle;
-    private String ruta;
+    private String imagen;
     private int id_auditoria;
 
 
@@ -20,12 +20,12 @@ public class Encontrado {
         this.id_detalle = id_detalle;
     }
 
-    public String getRuta() {
-        return ruta;
+    public String getImagen() {
+        return imagen;
     }
 
-    public void setRuta(String ruta) {
-        this.ruta = ruta;
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 
     public int getId_auditoria() {

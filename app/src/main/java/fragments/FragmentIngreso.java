@@ -9,9 +9,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -29,6 +31,8 @@ import android.widget.Toast;
 import com.example.liraheta.audit6s.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import entidades.Division;
 import sqlite.ConexionSQLiteHelper;
@@ -56,6 +60,7 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
 
     private View vista;
     private ConexionSQLiteHelper conn;
+    Vibrator vibe;
 
     private ArrayList<Division> divisionLista;
     private ArrayList<String> listaSpinner;
@@ -77,6 +82,14 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
     private FloatingActionButton btnFecha;
     private FloatingActionButton btnAuditor;
 
+    Map<String,Integer> mapaDivision;
+    Map<String,Integer> mapaPlanta;
+    Map<String,Integer> mapaGerente;
+    Map<String,Integer> mapaArea;
+    Map<String,Integer> mapaAuditor;
+
+    private int turno = 0;
+    private String fechaMySQL;
     private AlertDialog dialogTurno;
 
     private Button btnValidar;
@@ -125,6 +138,8 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
         txtTurno = vista.findViewById(R.id.txtTurno);
         txtFecha = vista.findViewById(R.id.txtFecha);
         txtAuditor = vista.findViewById(R.id.txtAuditor);
+
+        vibe = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
 
         txtDivision.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
@@ -360,7 +375,8 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
         datePickerDialog.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                txtInput.getEditText().setText(String.valueOf(dayOfMonth) + "/" + String.valueOf(month) + "/" + String.valueOf(year));
+                fechaMySQL = (new StringBuilder().append(year).append("-").append(month+1).append("-").append(dayOfMonth)).toString();
+                txtInput.getEditText().setText(new StringBuilder().append(dayOfMonth).append("-").append(month+1).append("-").append(year));
             }
         });
         datePickerDialog.show();
@@ -382,19 +398,19 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
                 {
                     case 0:
                         txtTurno.getEditText().setText("Primero");
-                        Toast.makeText(getContext(), "First Item Clicked", Toast.LENGTH_LONG).show();
+                        turno = 1;
                         break;
                     case 1:
                         txtTurno.getEditText().setText("Segundo");
-                        Toast.makeText(getContext(), "Second Item Clicked", Toast.LENGTH_LONG).show();
+                        turno = 2;
                         break;
                     case 2:
                         txtTurno.getEditText().setText("Tercero");
-                        Toast.makeText(getContext(), "Third Item Clicked", Toast.LENGTH_LONG).show();
+                        turno = 3;
                         break;
                     case 3:
                         txtTurno.getEditText().setText("Cuarto");
-                        Toast.makeText(getContext(), "Four Item Clicked", Toast.LENGTH_LONG).show();
+                        turno = 4;
                         break;
                 }
                 dialogTurno.dismiss();
@@ -405,29 +421,49 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
 
     }
 
-    private void Validar() {
-        Comprobacion(txtDivision, "Debe seleccionar la Division");
-        Comprobacion(txtPlanta, "Debe seleccionar la Planta");
-        Comprobacion(txtGerente, "Debe seleccionar el Gerente ");
-        Comprobacion(txtArea, "Debe seleccionar el Area");
-        Comprobacion(txtLider, "Debe seleccionar el Lider");
-        Comprobacion(txtTurno, "Debe seleccionar el Turno");
-        Comprobacion(txtFecha, "Debe seleccionar la Fecha");
-        Comprobacion(txtAuditor, "Debe seleccionar el Auditor");
+    private boolean Validar() {
+        boolean valido = true;
+        if (!Comprobacion(txtDivision, "Debe seleccionar la Division")) valido = false;
+        if (!Comprobacion(txtPlanta, "Debe seleccionar la Planta")) valido = false;
+        if (!Comprobacion(txtGerente, "Debe seleccionar el Gerente ")) valido = false;
+        if (!Comprobacion(txtArea, "Debe seleccionar el Area")) valido = false;
+        if (!Comprobacion(txtLider, "Debe seleccionar el Lider")) valido = false;
+        if (!Comprobacion(txtTurno, "Debe seleccionar el Turno")) valido = false;
+        if (!Comprobacion(txtFecha, "Debe seleccionar la Fecha")) valido = false;
+        if (!Comprobacion(txtAuditor, "Debe seleccionar el Auditor")) valido = false;
+        return valido;
     }
 
-    private void Comprobacion(TextInputLayout txtInput, String texto){
+    private boolean Comprobacion(TextInputLayout txtInput, String texto){
+        boolean valido = true;
         if(txtInput.getEditText().getText().toString().equals("")){
             txtInput.setError(texto);
+            valido = false;
         }else {
             txtInput.setError(null);
         }
+        return valido;
     }
 
     private void LlenarLista(String tabla){
-        SQLiteDatabase db = conn.getReadableDatabase();
+        SQLiteDatabase db;
         listaSpinner = new ArrayList<String>();
-        Cursor cursor = db.rawQuery("SELECT * FROM "+ tabla, null);
+        Cursor cursor;
+
+        if(tabla.equals(Utilidades.TABLA_AREA)){
+            int id = LlamarIDplanta(txtPlanta.getEditText().getText().toString());
+            db = conn.getReadableDatabase();
+            if(id != 0){
+                cursor = db.rawQuery("SELECT * FROM "+ tabla+" WHERE id_planta like ?", new String[]{String.valueOf(id)+ "%"});
+            }else{
+                cursor = db.rawQuery("SELECT * FROM "+ tabla, null);
+            }
+        }else{
+            db = conn.getReadableDatabase();
+            cursor = db.rawQuery("SELECT * FROM "+ tabla, null);
+        }
+
+        LLenarMapas(cursor, tabla);
 
         while (cursor.moveToNext()){
             listaSpinner.add(cursor.getString(1));
@@ -435,6 +471,51 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
 
         db.close();
         cursor.close();
+    }
+
+    private void LLenarMapas(Cursor cursor, String tabla) {
+
+        if (tabla.equals(Utilidades.TABLA_DIVISION)){
+            mapaDivision = new HashMap<>();
+            while (cursor.moveToNext()){
+                mapaDivision.put(cursor.getString(1), cursor.getInt(0));
+            }
+        } else if (tabla.equals(Utilidades.TABLA_PLANTA)){
+            mapaPlanta = new HashMap<>();
+            while (cursor.moveToNext()){
+                mapaPlanta.put(cursor.getString(1), cursor.getInt(0));
+            }
+        } else if (tabla.equals(Utilidades.TABLA_GERENTE)){
+            mapaGerente = new HashMap<>();
+            while (cursor.moveToNext()){
+                mapaGerente.put(cursor.getString(1), cursor.getInt(0));
+            }
+        } else if (tabla.equals(Utilidades.TABLA_AREA)){
+            mapaArea = new HashMap<>();
+            while (cursor.moveToNext()){
+                mapaArea.put(cursor.getString(1), cursor.getInt(0));
+            }
+        } else if (tabla.equals(Utilidades.TABLA_AUDITOR)){
+            mapaAuditor = new HashMap<>();
+            while (cursor.moveToNext()){
+                mapaAuditor.put(cursor.getString(1), cursor.getInt(0));
+            }
+        }
+
+        cursor.moveToFirst();
+        cursor.moveToPrevious();
+    }
+
+    private int LlamarIDplanta(String planta){
+        SQLiteDatabase db = conn.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT id_planta FROM "+ Utilidades.TABLA_PLANTA +" WHERE planta = ?", new String[]{planta});
+        int id = 0;
+        while (cursor.moveToNext()){
+            id = cursor.getInt(0);
+        }
+        db.close();
+        cursor.close();
+        return id;
     }
 
     private void LlamarLider(String area){
@@ -506,6 +587,8 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
 
+        vibe.vibrate(20);
+
         if(v.getId() == R.id.btnDivision){
             txtDivision.getEditText().requestFocus();
             LanzarListaSeleccionable(txtDivision, Utilidades.TABLA_DIVISION, "Seleccione la Division");
@@ -526,7 +609,26 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
             txtAuditor.getEditText().requestFocus();
             LanzarListaSeleccionable(txtAuditor, Utilidades.TABLA_AUDITOR, "Seleccione el Auditor");
         }else if (v.getId() == R.id.btnValidar){
-            Validar();
+            if (Validar()) {
+                Toast.makeText(getContext(), "Es valido", Toast.LENGTH_SHORT).show();
+
+                Bundle bundle = new Bundle();
+                bundle.putInt("division", mapaDivision.get(txtDivision.getEditText().getText().toString()));
+                bundle.putInt("planta", mapaPlanta.get(txtPlanta.getEditText().getText().toString()));
+                bundle.putInt("gerente", mapaGerente.get(txtGerente.getEditText().getText().toString()));
+                bundle.putInt("area", mapaArea.get(txtArea.getEditText().getText().toString()));
+                bundle.putInt("auditor", mapaAuditor.get(txtAuditor.getEditText().getText().toString()));
+                bundle.putInt("turno", turno);
+                bundle.putString("fecha", fechaMySQL);
+
+                FragmentCalificar fragmentCalificar = new FragmentCalificar();
+                fragmentCalificar.setArguments(bundle);
+
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.contenerdorFragment, fragmentCalificar, "calificar");
+                ft.addToBackStack(null);
+                ft.commit();
+            }
         }
 
     }

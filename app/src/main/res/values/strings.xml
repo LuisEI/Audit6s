@@ -10,7 +10,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Pantalla Inicial</string>
     <string name="titulo_home">Auditoria 6S\'s</string>
-    <string name="ingreso_de_datos">INGRESO DE DATOS</string>
+    <string name="ingreso_de_datos">Ingreso de datos</string>
     <string name="division">Division</string>
     <string name="planta">Planta</string>
     <string name="gerente">Gerente</string>

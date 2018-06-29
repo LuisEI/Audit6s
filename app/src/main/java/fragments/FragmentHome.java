@@ -127,7 +127,10 @@ public class FragmentHome extends Fragment implements View.OnClickListener {
             ft.commit();
         }
         else if(v.getId() == card3.getId()){
-            Toast.makeText(getContext(), "Seleccionado Card 3", Toast.LENGTH_SHORT).show();
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.contenerdorFragment, new FragmentSincronizar());
+            ft.addToBackStack(null);
+            ft.commit();
         }
     }
 

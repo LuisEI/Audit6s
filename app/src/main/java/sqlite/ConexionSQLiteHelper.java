@@ -22,6 +22,7 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper{
         db.execSQL(Utilidades.CREAR_TABLA_HALLAZGOS);
         db.execSQL(Utilidades.CREAR_TABLA_DETALLE);
         db.execSQL(Utilidades.CREAR_TABLA_AUDITORIA);
+        db.execSQL(Utilidades.CREAR_TABLA_ENCONTRADO);
     }
 
     @Override
@@ -34,6 +35,7 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper{
         db.execSQL("DROP TABLE IF EXISTS " + Utilidades.TABLA_HALLAZGOS);
         db.execSQL("DROP TABLE IF EXISTS " + Utilidades.TABLA_DETALLE);
         db.execSQL("DROP TABLE IF EXISTS " + Utilidades.TABLA_AUDITORIA);
+        db.execSQL("DROP TABLE IF EXISTS " + Utilidades.TABLA_ENCONTRADO);
         onCreate(db);
     }
 }

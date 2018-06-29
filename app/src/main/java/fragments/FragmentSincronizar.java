@@ -2,11 +2,12 @@ package fragments;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.liraheta.audit6s.R;
 
@@ -28,10 +31,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import entidades.Area;
 import entidades.Auditor;
+import entidades.Auditoria;
 import entidades.Division;
 import entidades.Gerente;
 import entidades.HallazgoDetalle;
@@ -58,8 +64,8 @@ public class FragmentSincronizar extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private Button btnsyncLocal;
-    private TextView txtResult;
+    private Button btnSyncLocal;
+    private Button btnSyncRemoto;
     private View vista;
     private RequestQueue request;
     private JsonArrayRequest jsonArrayRequestDivision;
@@ -69,9 +75,15 @@ public class FragmentSincronizar extends Fragment {
     private JsonArrayRequest jsonArrayRequestAuditor;
     private JsonArrayRequest jsonArrayRequestHallazgos;
     private JsonArrayRequest jsonArrayRequestDetalles;
-    private ProgressBar progressBar;
+    private ProgressBar pbDownload;
+    //private Auditoria auditParams;
+
+    private ConexionSQLiteHelper conn;
 
     private OnFragmentInteractionListener mListener;
+    private TextView txtResgistrosNoSyn;
+    //private StringRequest stringRequest;
+
 
     public FragmentSincronizar() {
         // Required empty public constructor
@@ -109,25 +121,170 @@ public class FragmentSincronizar extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         vista = inflater.inflate(R.layout.fragment_fragment_sincronizar, container, false);
-        txtResult = vista.findViewById(R.id.txtResultJson);
-        btnsyncLocal = vista.findViewById(R.id.btnSyncLocal);
-        progressBar = vista.findViewById(R.id.progressBar);
-        btnsyncLocal.setOnClickListener(new View.OnClickListener() {
+        btnSyncLocal = vista.findViewById(R.id.btnSyncLocal);
+        btnSyncRemoto = vista.findViewById(R.id.btnSyncRemoto);
+        txtResgistrosNoSyn = vista.findViewById(R.id.txtRegistroNoSync);
+        pbDownload = vista.findViewById(R.id.pbDownload);
+        btnSyncLocal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SincronizacionLocal();
             }
         });
+        btnSyncRemoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SincronizacionRemota();
+            }
+        });
         request = Volley.newRequestQueue(getContext());
+        RegistrosNoSincronizados();
         return vista;
+    }
+
+    private void RegistrosNoSincronizados() {
+
+        conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null, 1);
+        SQLiteDatabase db = conn.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM "+ Utilidades.TABLA_AUDITORIA +" WHERE "+ Utilidades.CAMPO_SYNC +" = ?", new String[]{"0"});
+        int registros = cursor.getCount();
+        db.close();
+        cursor.close();
+
+        if(registros > 0){
+            txtResgistrosNoSyn.setText(String.valueOf(registros));
+            txtResgistrosNoSyn.setVisibility(View.VISIBLE);
+            btnSyncRemoto.setBackgroundResource(R.drawable.button_background_pink);
+        }else {
+            txtResgistrosNoSyn.setText(String.valueOf(registros));
+            txtResgistrosNoSyn.setVisibility(View.INVISIBLE);
+            btnSyncRemoto.setBackgroundResource(R.drawable.button_background_blue);
+        }
+    }
+
+    private void SincronizacionRemota() {
+
+        String url_base = "http://192.168.100.7/WebServiceApp/";
+
+        List<Auditoria> listaAuditorias = obtenerListaAuditorias();
+        for(Auditoria auditParams: listaAuditorias){
+            EnviarAuditoria(url_base,auditParams);
+        }
+    }
+
+    private void EnviarAuditoria(String url_base, final Auditoria auditParams) {
+
+        String url = url_base + "SaveAuditoria.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(getContext(), "OK todo en orden " + String.valueOf(auditParams.getId_auditoria()), Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(), "Ocurrio un error", Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> parametros = new HashMap<>();
+                parametros.put("id_auditoria", String.valueOf(auditParams.getId_auditoria()));
+                parametros.put("area", String.valueOf(auditParams.getArea()));
+                parametros.put("auditor", String.valueOf(auditParams.getAuditor()));
+                parametros.put("turno", String.valueOf(auditParams.getTurno()));
+                parametros.put("fecha", auditParams.getFecha());
+                parametros.put("s1_obs_1", String.valueOf(auditParams.getS1_obs_1()));
+                parametros.put("s1_obs_2", String.valueOf(auditParams.getS1_obs_2()));
+                parametros.put("s1_obs_3", String.valueOf(auditParams.getS1_obs_3()));
+                parametros.put("s2_obs_1", String.valueOf(auditParams.getS2_obs_1()));
+                parametros.put("s2_obs_2", String.valueOf(auditParams.getS2_obs_2()));
+                parametros.put("s2_obs_3", String.valueOf(auditParams.getS2_obs_3()));
+                parametros.put("s2_obs_4", String.valueOf(auditParams.getS2_obs_4()));
+                parametros.put("s3_obs_1", String.valueOf(auditParams.getS3_obs_1()));
+                parametros.put("s3_obs_2", String.valueOf(auditParams.getS3_obs_2()));
+                parametros.put("s3_obs_3", String.valueOf(auditParams.getS3_obs_3()));
+                parametros.put("s3_obs_4", String.valueOf(auditParams.getS3_obs_4()));
+                parametros.put("s4_obs_1", String.valueOf(auditParams.getS4_obs_1()));
+                parametros.put("s4_obs_2", String.valueOf(auditParams.getS4_obs_2()));
+                parametros.put("s4_obs_3", String.valueOf(auditParams.getS4_obs_3()));
+                parametros.put("s4_obs_4", String.valueOf(auditParams.getS4_obs_4()));
+                parametros.put("s5_obs_1", String.valueOf(auditParams.getS5_obs_1()));
+                parametros.put("s5_obs_2", String.valueOf(auditParams.getS5_obs_2()));
+                parametros.put("s5_obs_3", String.valueOf(auditParams.getS5_obs_3()));
+                parametros.put("s5_obs_4", String.valueOf(auditParams.getS5_obs_4()));
+                parametros.put("res_s1", String.valueOf(auditParams.getRes_s1()));
+                parametros.put("res_s2", String.valueOf(auditParams.getRes_s2()));
+                parametros.put("res_s3", String.valueOf(auditParams.getRes_s3()));
+                parametros.put("res_s4", String.valueOf(auditParams.getRes_s4()));
+                parametros.put("res_s5", String.valueOf(auditParams.getRes_s5()));
+                parametros.put("res_total", String.valueOf(auditParams.getRes_total()));
+                return parametros;
+            }
+        };
+
+        request.add(stringRequest);
+    }
+
+    private List<Auditoria> obtenerListaAuditorias() {
+
+        conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null, 1);
+        SQLiteDatabase db = conn.getReadableDatabase();
+        List<Auditoria> listaAuditorias = new ArrayList<>();
+        Auditoria a;
+
+        Cursor cursor = db.rawQuery("SELECT * FROM "+ Utilidades.TABLA_AUDITORIA +" WHERE "+ Utilidades.CAMPO_SYNC +" = ?", new String[]{"0"});
+
+        while (cursor.moveToNext()){
+
+            a = new Auditoria();
+            a.setId_auditoria(cursor.getInt(0));
+            a.setArea(cursor.getInt(1));
+            a.setTurno(cursor.getInt(2));
+            a.setAuditor(cursor.getInt(3));
+            a.setFecha(cursor.getString(4));
+            a.setS1_obs_1(cursor.getInt(5));
+            a.setS1_obs_2(cursor.getInt(6));
+            a.setS1_obs_3(cursor.getInt(7));
+            a.setS2_obs_1(cursor.getInt(8));
+            a.setS2_obs_2(cursor.getInt(9));
+            a.setS2_obs_3(cursor.getInt(10));
+            a.setS2_obs_4(cursor.getInt(11));
+            a.setS3_obs_1(cursor.getInt(12));
+            a.setS3_obs_2(cursor.getInt(13));
+            a.setS3_obs_3(cursor.getInt(14));
+            a.setS3_obs_4(cursor.getInt(15));
+            a.setS4_obs_1(cursor.getInt(16));
+            a.setS4_obs_2(cursor.getInt(17));
+            a.setS4_obs_3(cursor.getInt(18));
+            a.setS4_obs_4(cursor.getInt(19));
+            a.setS5_obs_1(cursor.getInt(20));
+            a.setS5_obs_2(cursor.getInt(21));
+            a.setS5_obs_3(cursor.getInt(22));
+            a.setS5_obs_4(cursor.getInt(23));
+            a.setRes_s1(cursor.getInt(24));
+            a.setRes_s2(cursor.getInt(25));
+            a.setRes_s3(cursor.getInt(26));
+            a.setRes_s4(cursor.getInt(27));
+            a.setRes_s5(cursor.getInt(28));
+            a.setRes_total(cursor.getInt(29));
+
+            listaAuditorias.add(a);
+        }
+
+        db.close();
+        cursor.close();
+
+        return listaAuditorias;
     }
 
     private void SincronizacionLocal(){
 
-        progressBar.setVisibility(View.VISIBLE);
-        String url_base = "http://192.168.100.7/WebServiceApp/";
+        pbDownload.setVisibility(View.VISIBLE);
+        String url_base = "http://web01.avxslv.com/lean/";
 
-        jsonArrayRequestDivision = new JsonArrayRequest(Request.Method.GET, url_base + "LoadDivision.php", null, new Response.Listener<JSONArray>() {
+        jsonArrayRequestDivision = new JsonArrayRequest(Request.Method.GET, url_base + "CargarDivision.php", null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 GuardarDivisionLocal(ListaObjetosDivision(response));
@@ -140,7 +297,7 @@ public class FragmentSincronizar extends Fragment {
         });
         request.add(jsonArrayRequestDivision);
 
-        jsonArrayRequestPlanta = new JsonArrayRequest(Request.Method.GET, url_base + "LoadPlanta.php", null, new Response.Listener<JSONArray>() {
+        jsonArrayRequestPlanta = new JsonArrayRequest(Request.Method.GET, url_base + "CargarPlanta.php", null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 GuardarPlantaLocal(ListaObjetosPlanta(response));
@@ -153,7 +310,7 @@ public class FragmentSincronizar extends Fragment {
         });
         request.add(jsonArrayRequestPlanta);
 
-        jsonArrayRequestArea = new JsonArrayRequest(Request.Method.GET, url_base + "LoadArea.php", null, new Response.Listener<JSONArray>() {
+        jsonArrayRequestArea = new JsonArrayRequest(Request.Method.GET, url_base + "CargarArea.php", null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 GuardarAreaLocal(ListaObjetosArea(response));
@@ -166,7 +323,7 @@ public class FragmentSincronizar extends Fragment {
         });
         request.add(jsonArrayRequestArea);
 
-        jsonArrayRequestGerente = new JsonArrayRequest(Request.Method.GET, url_base + "LoadGerente.php", null, new Response.Listener<JSONArray>() {
+        jsonArrayRequestGerente = new JsonArrayRequest(Request.Method.GET, url_base + "CargarGerente.php", null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 GuardarGerenteLocal(ListaObjetosGerente(response));
@@ -179,7 +336,7 @@ public class FragmentSincronizar extends Fragment {
         });
         request.add(jsonArrayRequestGerente);
 
-        jsonArrayRequestAuditor = new JsonArrayRequest(Request.Method.GET, url_base + "LoadAuditor.php", null, new Response.Listener<JSONArray>() {
+        jsonArrayRequestAuditor = new JsonArrayRequest(Request.Method.GET, url_base + "CargarAuditor.php", null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 GuardarAuditorLocal(ListaObjetosAuditor(response));
@@ -192,7 +349,7 @@ public class FragmentSincronizar extends Fragment {
         });
         request.add(jsonArrayRequestAuditor);
 
-        jsonArrayRequestHallazgos = new JsonArrayRequest(Request.Method.GET, url_base + "LoadHallazgos.php", null, new Response.Listener<JSONArray>() {
+        jsonArrayRequestHallazgos = new JsonArrayRequest(Request.Method.GET, url_base + "CargarHallazgos.php", null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 GuardarHallazgosLocal(ListaObjetosHallazgo(response));
@@ -205,7 +362,7 @@ public class FragmentSincronizar extends Fragment {
         });
         request.add(jsonArrayRequestHallazgos);
 
-        jsonArrayRequestDetalles = new JsonArrayRequest(Request.Method.GET, url_base + "LoadDetalle.php", null, new Response.Listener<JSONArray>() {
+        jsonArrayRequestDetalles = new JsonArrayRequest(Request.Method.GET, url_base + "CargarDetalle.php", null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 GuardarDetalleLocal(ListaObjetosDetalle(response));
@@ -225,7 +382,6 @@ public class FragmentSincronizar extends Fragment {
         List<Division> lista= new ArrayList<Division>();
         try {
             JSONArray json = jsonArray;
-            StringBuilder sb = new StringBuilder();
             for(int i=0; i<json.length(); i++){
                 JSONObject object = new JSONObject(json.getString(i));
                 Division div = new Division();
@@ -233,7 +389,6 @@ public class FragmentSincronizar extends Fragment {
                 div.setDivision(object.getString("division"));
                 lista.add(div);
             }
-            txtResult.setText(sb.toString());
         }catch (JSONException e) {
             e.printStackTrace();
         }
@@ -245,7 +400,6 @@ public class FragmentSincronizar extends Fragment {
         List<Planta> lista= new ArrayList<Planta>();
         try {
             JSONArray json = jsonArray;
-            StringBuilder sb = new StringBuilder();
             for(int i=0; i<json.length(); i++){
                 JSONObject object = new JSONObject(json.getString(i));
                 Planta planta = new Planta();
@@ -254,7 +408,6 @@ public class FragmentSincronizar extends Fragment {
                 planta.setId_division(object.getInt("id_division"));
                 lista.add(planta);
             }
-            txtResult.setText(sb.toString());
         }catch (JSONException e) {
             e.printStackTrace();
         }
@@ -266,7 +419,6 @@ public class FragmentSincronizar extends Fragment {
         List<Area> lista= new ArrayList<>();
         try {
             JSONArray json = jsonArray;
-            StringBuilder sb = new StringBuilder();
             for(int i=0; i<json.length(); i++){
                 JSONObject object = new JSONObject(json.getString(i));
                 Area area = new Area();
@@ -277,7 +429,6 @@ public class FragmentSincronizar extends Fragment {
                 area.setId_gerente(object.getInt("id_gerente"));
                 lista.add(area);
             }
-            txtResult.setText(sb.toString());
         }catch (JSONException e) {
             e.printStackTrace();
         }
@@ -289,7 +440,6 @@ public class FragmentSincronizar extends Fragment {
         List<Gerente> lista = new ArrayList<>();
         try {
             JSONArray json = jsonArray;
-            StringBuilder sb = new StringBuilder();
             for(int i=0; i<json.length(); i++){
                 JSONObject object = new JSONObject(json.getString(i));
                 Gerente gerente = new Gerente();
@@ -297,7 +447,6 @@ public class FragmentSincronizar extends Fragment {
                 gerente.setGerente(object.getString("gerente"));
                 lista.add(gerente);
             }
-            txtResult.setText(sb.toString());
         }catch (JSONException e) {
             e.printStackTrace();
         }
@@ -309,7 +458,6 @@ public class FragmentSincronizar extends Fragment {
         List<Auditor> lista= new ArrayList<>();
         try {
             JSONArray json = jsonArray;
-            StringBuilder sb = new StringBuilder();
             for(int i=0; i<json.length(); i++){
                 JSONObject object = new JSONObject(json.getString(i));
                 Auditor auditor = new Auditor();
@@ -317,7 +465,6 @@ public class FragmentSincronizar extends Fragment {
                 auditor.setAuditor(object.getString("auditor"));
                 lista.add(auditor);
             }
-            txtResult.setText(sb.toString());
         }catch (JSONException e) {
             e.printStackTrace();
         }
@@ -329,7 +476,6 @@ public class FragmentSincronizar extends Fragment {
         List<Hallazgos> lista = new ArrayList<>();
         try {
             JSONArray json = jsonArray;
-            StringBuilder sb = new StringBuilder();
             for(int i=0; i<json.length(); i++){
                 JSONObject object = new JSONObject(json.getString(i));
                 Hallazgos hallazgos = new Hallazgos();
@@ -337,7 +483,6 @@ public class FragmentSincronizar extends Fragment {
                 hallazgos.setHallazgo(object.getString("hallazgo"));
                 lista.add(hallazgos);
             }
-            txtResult.setText(sb.toString());
         }catch (JSONException e) {
             e.printStackTrace();
         }
@@ -349,7 +494,6 @@ public class FragmentSincronizar extends Fragment {
         List<HallazgoDetalle> lista= new ArrayList<>();
         try {
             JSONArray json = jsonArray;
-            StringBuilder sb = new StringBuilder();
             for(int i=0; i<json.length(); i++){
                 JSONObject object = new JSONObject(json.getString(i));
                 HallazgoDetalle detalle = new HallazgoDetalle();
@@ -358,7 +502,6 @@ public class FragmentSincronizar extends Fragment {
                 detalle.setDescripcion(object.getString("descripcion"));
                 lista.add(detalle);
             }
-            txtResult.setText(sb.toString());
         }catch (JSONException e) {
             e.printStackTrace();
         }
@@ -502,7 +645,7 @@ public class FragmentSincronizar extends Fragment {
         db.close();
         conn.close();
 
-        progressBar.setVisibility(View.INVISIBLE);
+        pbDownload.setVisibility(View.INVISIBLE);
         Toast.makeText(getContext(), "Se ha actualizado la base de datos local", Toast.LENGTH_LONG).show();
     }
 

@@ -2,6 +2,9 @@ package utilidades;
 
 public class Utilidades {
 
+    //Nombre de la Base de Datos
+    public static final String DB_NOMBRE = "slv_lean_app";
+
     //Constantes de la tabla Division
     public static final String TABLA_DIVISION = "t_division";
     public static final String CAMPO_ID_DIVISION = "id_division";

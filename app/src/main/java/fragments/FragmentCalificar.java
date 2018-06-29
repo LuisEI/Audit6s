@@ -19,7 +19,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,13 +36,17 @@ import com.example.liraheta.audit6s.R;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.TimeZone;
 
 import adapters.SpinnerAdaptador;
 import adapters.ViewPageAdaptador;
@@ -166,6 +169,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
 
     private Auditoria AuditoriaDB = new Auditoria();
     private Button btnGuardarDB;
+    private String currentPhotoName;
 
     //endregion
 
@@ -205,6 +209,22 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
                              Bundle savedInstanceState) {
         vista = inflater.inflate(R.layout.fragment_fragment_calificar, container, false);
 
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            Toast.makeText(getContext(), "La division es: " + String.valueOf(bundle.getInt("division")), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "La planta es: " + String.valueOf(bundle.getInt("planta")), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "El gerente es: " + String.valueOf(bundle.getInt("gerente")), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "El area es: " + String.valueOf(bundle.getInt("area")), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "El auditor es: " + String.valueOf(bundle.getInt("auditor")), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "El turno es: " + String.valueOf(bundle.getInt("turno")), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "La fecha es: " + bundle.getString("fecha"), Toast.LENGTH_LONG).show();
+
+
+            AuditoriaDB.setArea(bundle.getInt("auditor"));
+            AuditoriaDB.setArea(bundle.getInt("area"));
+            AuditoriaDB.setTurno(bundle.getInt("turno"));
+            AuditoriaDB.setId_auditoria(obtenerID());
+        }
 
         //region ENLAZANDO COMPONENTES DE LA VISTA
 
@@ -356,6 +376,15 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         }
 
         return vista;
+    }
+
+    public int obtenerID() {
+        int id = 0;
+        String fecha = new SimpleDateFormat("HHmmss").format(new Date());
+        String area = String.valueOf(AuditoriaDB.getArea());
+        String auditor = String.valueOf(AuditoriaDB.getAuditor());
+        id = Integer.parseInt(area+auditor+fecha);
+        return id;
     }
 
     private void CalificarNota(FloatingActionButton b){
@@ -570,7 +599,6 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
 
         rb.setStepSize(paso);
 
-
         txtTitulo.setText(titulo);
         txtMensaje.setText(msj);
 
@@ -643,9 +671,9 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
 
         //Instancia de los componentes
         final Spinner spHallazgo = alertFormView.findViewById(R.id.spHallazgo);
-        Button btnTomarFoto = alertFormView.findViewById(R.id.btnTomarFoto);
+        FloatingActionButton btnTomarFoto = alertFormView.findViewById(R.id.btnTomarFoto);
         Button btnOKHallazgo = alertFormView.findViewById(R.id.btnOkHallazgo);
-        Button btnAgregarHallazgo = alertFormView.findViewById(R.id.btnAgregarHallazgo);
+        FloatingActionButton btnAgregarHallazgo = alertFormView.findViewById(R.id.btnAgregarHallazgo);
         mImageView = alertFormView.findViewById(R.id.imaFoto);
 
         final int indice = GetIndex(b);
@@ -681,11 +709,11 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
 
                     Encontrado encontrado = new Encontrado();
                     encontrado.setId_detalle(mapaHallazgoReferencia.get(indice).get(spHallazgo.getSelectedItemPosition()));
-                    encontrado.setRuta(mCurrentPhotoPath);
+                    encontrado.setImagen(currentPhotoName);
                     hallazgosEncontrados.add(encontrado);
 
                     spHallazgo.setSelection(adaptador.getCount());
-                    mImageView.setImageResource(R.drawable.cam);
+                    mImageView.setImageResource(R.drawable.cam512);
                     hallazgoSelect = false;
 
                     Toast.makeText(getContext(), "Se agrego un hallazgo", Toast.LENGTH_SHORT).show();
@@ -801,8 +829,10 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         if(calificacionCompleta){
             SQLiteDatabase db = conn.getWritableDatabase();
 
+            int id_audi = r.nextInt();
+
             Object[] datos = new Object[]{
-                    r.nextInt(),
+                    id_audi,
                     AuditoriaDB.getArea(),
                     AuditoriaDB.getAuditor(),
                     AuditoriaDB.getTurno(),
@@ -836,8 +866,13 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
             };
 
             String sql = "INSERT INTO " + Utilidades.TABLA_AUDITORIA + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
             db.execSQL(sql, datos);
+
+            for(Encontrado encontrado: hallazgosEncontrados){
+                String consulta = "INSERT INTO " + Utilidades.TABLA_ENCONTRADO + " VALUES (?,?,?)";
+                Object[] listaDatos = new Object[]{ encontrado.getId_detalle(), encontrado.getImagen(), id_audi};
+                db.execSQL(consulta, listaDatos);
+            }
 
             db.close();
             conn.close();
@@ -877,13 +912,14 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
+                imageFileName,  /* nombre del archivo */
+                ".jpg",         /* sufijo */
+                storageDir      /* directorio */
         );
 
         // Se guarda la direccion de la imagen
         mCurrentPhotoPath = image.getAbsolutePath();
+        currentPhotoName = imageFileName + ".jpg";
         return image;
     }
 
