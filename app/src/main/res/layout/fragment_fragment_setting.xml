@@ -6,71 +6,21 @@
     tools:context="fragments.FragmentSetting">
 
     <!-- TODO: Update blank fragment layout -->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PANEL DE OPCIONES"
+        android:textSize="36sp"
+        android:layout_gravity="center"/>
+
     <Button
-        android:id="@+id/btnAgragarDatos"
-        android:layout_width="match_parent"
+        android:id="@+id/btnBorrarRegistros"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:text="Datos Automatico"
-        android:textSize="36sp" />
-
-    <EditText
-        android:id="@+id/id_div"
-        android:layout_width="400dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:hint="id_division"
-        android:textSize="36sp"
-        android:layout_gravity="center"/>
-
-    <EditText
-        android:id="@+id/div"
-        android:layout_width="400dp"
-        android:layout_height="wrap_content"
-        android:hint="division"
-        android:textSize="36sp"
-        android:layout_gravity="center"/>
-
-    <Button
-        android:id="@+id/btnReg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Registar Datos"
-        android:textSize="36sp"
-        android:layout_gravity="center"/>
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="73dp"
-        android:background="?android:attr/listDivider"
-        android:layout_marginTop="200dp"/>
-
-    <Button
-        android:id="@+id/btnLeer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Leer Base de Datos"
-        android:textSize="36sp"
-        android:layout_gravity="center"
-        android:layout_marginTop="200dp"/>
-
-    <EditText
-        android:id="@+id/id_div_leer"
-        android:layout_width="400dp"
-        android:layout_height="wrap_content"
-        android:hint="id_division"
-        android:textSize="36sp"
-        android:layout_gravity="center"/>
-
-    <EditText
-        android:id="@+id/div_leer"
-        android:layout_width="400dp"
-        android:layout_height="wrap_content"
-        android:hint="division"
-        android:textSize="36sp"
-        android:layout_gravity="center"/>
-
+        android:text="Borrar Registros"
+        android:textSize="24sp"/>
 
 </LinearLayout>

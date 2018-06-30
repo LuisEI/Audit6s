@@ -39,6 +39,7 @@ import entidades.Area;
 import entidades.Auditor;
 import entidades.Auditoria;
 import entidades.Division;
+import entidades.Encontrado;
 import entidades.Gerente;
 import entidades.HallazgoDetalle;
 import entidades.Hallazgos;
@@ -164,7 +165,7 @@ public class FragmentSincronizar extends Fragment {
 
     private void SincronizacionRemota() {
 
-        String url_base = "http://192.168.100.7/WebServiceApp/";
+        String url_base = "http://web01.avxslv.com/lean/";
 
         List<Auditoria> listaAuditorias = obtenerListaAuditorias();
         for(Auditoria auditParams: listaAuditorias){
@@ -174,12 +175,18 @@ public class FragmentSincronizar extends Fragment {
 
     private void EnviarAuditoria(String url_base, final Auditoria auditParams) {
 
-        String url = url_base + "SaveAuditoria.php";
+        String url = url_base + "GuardarAuditoria.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(getContext(), "OK todo en orden " + String.valueOf(auditParams.getId_auditoria()), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "OK todo en orden " + String.valueOf(auditParams.getId_auditoria()), Toast.LENGTH_SHORT).show();
+                List<Encontrado> listaE = obtenerListaEncontrado(auditParams.getId_auditoria());
+                StringBuilder texto = new StringBuilder();
+                texto.append("ID Detalle: ").append(listaE.get(0).getId_detalle()).append("\n");
+                texto.append("Nombre foto: ").append(listaE.get(0).getImagen()).append("\n");
+                texto.append("ID Auditoria: ").append(listaE.get(0).getId_auditoria());
+                Toast.makeText(getContext(), texto.toString(), Toast.LENGTH_SHORT).show();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -241,8 +248,8 @@ public class FragmentSincronizar extends Fragment {
             a = new Auditoria();
             a.setId_auditoria(cursor.getInt(0));
             a.setArea(cursor.getInt(1));
-            a.setTurno(cursor.getInt(2));
-            a.setAuditor(cursor.getInt(3));
+            a.setAuditor(cursor.getInt(2));
+            a.setTurno(cursor.getInt(3));
             a.setFecha(cursor.getString(4));
             a.setS1_obs_1(cursor.getInt(5));
             a.setS1_obs_2(cursor.getInt(6));
@@ -277,6 +284,32 @@ public class FragmentSincronizar extends Fragment {
         cursor.close();
 
         return listaAuditorias;
+    }
+
+    private List<Encontrado> obtenerListaEncontrado(int id_auditoria){
+
+        conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null, 1);
+        SQLiteDatabase db = conn.getReadableDatabase();
+        List<Encontrado> listaEncontrados = new ArrayList<>();
+        Encontrado e;
+
+        Cursor cursor = db.rawQuery("SELECT * FROM "+ Utilidades.TABLA_ENCONTRADO +" WHERE "+ Utilidades.CAMPO_ID_AUDITORIA +" = ?", new String[]{String.valueOf(id_auditoria)});
+
+        while (cursor.moveToNext()){
+
+            e = new Encontrado();
+
+            e.setId_detalle(cursor.getInt(0));
+            e.setImagen(cursor.getString(1));
+            e.setId_detalle(cursor.getInt(2));
+
+            listaEncontrados.add(e);
+        }
+
+        db.close();
+        cursor.close();
+
+        return listaEncontrados;
     }
 
     private void SincronizacionLocal(){

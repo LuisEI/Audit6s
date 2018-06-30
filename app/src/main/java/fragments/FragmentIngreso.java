@@ -587,7 +587,7 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
 
-        vibe.vibrate(20);
+        //vibe.vibrate(20);
 
         if(v.getId() == R.id.btnDivision){
             txtDivision.getEditText().requestFocus();

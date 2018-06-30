@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lytLayout"
+    android:background="@drawable/toast_custom_fail"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dip"
+    android:gravity="center">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/alert_icono"
+        android:layout_margin="20dp"/>
+
+    <TextView
+        android:id="@+id/toastMessageFail"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dip"
+        android:paddingRight="15dip"
+        android:drawablePadding="5dp"
+        android:textSize="24sp"
+        android:textColor="#ff2028"
+        android:textAlignment="center"
+        android:text=""
+        android:layout_marginEnd="10dp"/>
+
+</LinearLayout>

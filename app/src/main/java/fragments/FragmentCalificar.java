@@ -19,6 +19,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,17 +37,13 @@ import com.example.liraheta.audit6s.R;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.TimeZone;
 
 import adapters.SpinnerAdaptador;
 import adapters.ViewPageAdaptador;
@@ -220,9 +217,10 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
             Toast.makeText(getContext(), "La fecha es: " + bundle.getString("fecha"), Toast.LENGTH_LONG).show();
 
 
-            AuditoriaDB.setArea(bundle.getInt("auditor"));
+            AuditoriaDB.setAuditor(bundle.getInt("auditor"));
             AuditoriaDB.setArea(bundle.getInt("area"));
             AuditoriaDB.setTurno(bundle.getInt("turno"));
+            AuditoriaDB.setFecha(bundle.getString("fecha"));
             AuditoriaDB.setId_auditoria(obtenerID());
         }
 
@@ -669,6 +667,16 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         //Se crea la ventana de hallazgos
         final View alertFormView = getLayoutInflater().inflate(R.layout.alert_dialog_hallazgo, null);
 
+        //Mensajes Personalizados
+        final Toast toastOK = new Toast(getContext());
+        View toast_layoutOK = getLayoutInflater().inflate(R.layout.toast_layout_ok, null);
+        toastOK.setView(toast_layoutOK);
+
+        final Toast toastFail = new Toast(getContext());
+        View toast_layoutFail = getLayoutInflater().inflate(R.layout.toast_layout_fail, null);
+        final TextView txtToastFail = toast_layoutFail.findViewById(R.id.toastMessageFail);
+        toastFail.setView(toast_layoutFail);
+
         //Instancia de los componentes
         final Spinner spHallazgo = alertFormView.findViewById(R.id.spHallazgo);
         FloatingActionButton btnTomarFoto = alertFormView.findViewById(R.id.btnTomarFoto);
@@ -716,11 +724,24 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
                     mImageView.setImageResource(R.drawable.cam512);
                     hallazgoSelect = false;
 
-                    Toast.makeText(getContext(), "Se agrego un hallazgo", Toast.LENGTH_SHORT).show();
+
+
+
+                    toastOK.setGravity(Gravity.CENTER, 0, -100);
+                    toastOK.setDuration(Toast.LENGTH_SHORT);
+                    toastOK.show();
+
+                    //Toast.makeText(getContext(), "Se agrego un hallazgo", Toast.LENGTH_SHORT).show();
                 }else if(spHallazgo.getSelectedItem().toString().equals("Seleccione el Hallazgo")){
-                    Toast.makeText(getContext(), "Debe seleccionar el hallazgo", Toast.LENGTH_SHORT).show();
+                    txtToastFail.setText("Seleccione un hallazgo");
+                    toastFail.setGravity(Gravity.CENTER, 0, -100);
+                    toastFail.setDuration(Toast.LENGTH_SHORT);
+                    toastFail.show();
                 }else if(!hallazgoSelect){
-                    Toast.makeText(getContext(), "Debe tomar una fotografia", Toast.LENGTH_SHORT).show();
+                    txtToastFail.setText("Tome una fotografia");
+                    toastFail.setGravity(Gravity.CENTER, 0, -100);
+                    toastFail.setDuration(Toast.LENGTH_SHORT);
+                    toastFail.show();
                 }
             }
         });
@@ -829,10 +850,8 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         if(calificacionCompleta){
             SQLiteDatabase db = conn.getWritableDatabase();
 
-            int id_audi = r.nextInt();
-
             Object[] datos = new Object[]{
-                    id_audi,
+                    AuditoriaDB.getId_auditoria(),
                     AuditoriaDB.getArea(),
                     AuditoriaDB.getAuditor(),
                     AuditoriaDB.getTurno(),
@@ -870,7 +889,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
 
             for(Encontrado encontrado: hallazgosEncontrados){
                 String consulta = "INSERT INTO " + Utilidades.TABLA_ENCONTRADO + " VALUES (?,?,?)";
-                Object[] listaDatos = new Object[]{ encontrado.getId_detalle(), encontrado.getImagen(), id_audi};
+                Object[] listaDatos = new Object[]{ encontrado.getId_detalle(), encontrado.getImagen(), AuditoriaDB.getId_auditoria()};
                 db.execSQL(consulta, listaDatos);
             }
 
