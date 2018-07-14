@@ -51,12 +51,14 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_marginEnd="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Personas en el Area"
+                        android:layout_gravity="center"
                         android:textAlignment="center"
                         android:textSize="18sp"/>
 
@@ -68,8 +70,6 @@
                         <ImageView
                             android:layout_width="80dp"
                             android:layout_height="wrap_content"
-                            android:scaleY="0.7"
-                            android:scaleX="0.7"
                             android:src="@drawable/people"
                             android:layout_gravity="center"/>
 
@@ -78,6 +78,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
+                            android:theme="@style/NumberPickerText"
                             android:descendantFocusability="blocksDescendants"/>
 
                     </LinearLayout>
@@ -88,13 +89,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginStart="30dp">
+                    android:layout_marginStart="20dp">
 
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="No conocen objetivos"
+                        android:text="No conocen el Rol"
+                        android:layout_gravity="center"
                         android:textAlignment="center"
                         android:textSize="18sp"/>
 
@@ -106,7 +108,7 @@
                         <ImageView
                             android:layout_width="80dp"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/fail"
+                            android:src="@drawable/people_fail"
                             android:layout_gravity="center"/>
 
                         <NumberPicker
@@ -114,6 +116,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
+                            android:theme="@style/NumberPickerText"
                             android:descendantFocusability="blocksDescendants"/>
 
                     </LinearLayout>

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,10 +13,12 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
@@ -23,6 +26,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -167,6 +171,8 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
     private Auditoria AuditoriaDB = new Auditoria();
     private Button btnGuardarDB;
     private String currentPhotoName;
+    private Vibrator vibe;
+    private final int TIEMPO_VIBRACION = 50;
 
     //endregion
 
@@ -206,17 +212,10 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
                              Bundle savedInstanceState) {
         vista = inflater.inflate(R.layout.fragment_fragment_calificar, container, false);
 
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            Toast.makeText(getContext(), "La division es: " + String.valueOf(bundle.getInt("division")), Toast.LENGTH_LONG).show();
-            Toast.makeText(getContext(), "La planta es: " + String.valueOf(bundle.getInt("planta")), Toast.LENGTH_LONG).show();
-            Toast.makeText(getContext(), "El gerente es: " + String.valueOf(bundle.getInt("gerente")), Toast.LENGTH_LONG).show();
-            Toast.makeText(getContext(), "El area es: " + String.valueOf(bundle.getInt("area")), Toast.LENGTH_LONG).show();
-            Toast.makeText(getContext(), "El auditor es: " + String.valueOf(bundle.getInt("auditor")), Toast.LENGTH_LONG).show();
-            Toast.makeText(getContext(), "El turno es: " + String.valueOf(bundle.getInt("turno")), Toast.LENGTH_LONG).show();
-            Toast.makeText(getContext(), "La fecha es: " + bundle.getString("fecha"), Toast.LENGTH_LONG).show();
-
-
             AuditoriaDB.setAuditor(bundle.getInt("auditor"));
             AuditoriaDB.setArea(bundle.getInt("area"));
             AuditoriaDB.setTurno(bundle.getInt("turno"));
@@ -364,6 +363,8 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
 
         //endregion
 
+        vibe = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+
         for (int i=0; i<19; i++){
             matrizHallazgos.add(new HashMap<String, Integer>());
             mapaHallazgoReferencia.add(new HashMap<Integer,Integer>());
@@ -378,10 +379,10 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
 
     public int obtenerID() {
         int id = 0;
-        String fecha = new SimpleDateFormat("HHmmss").format(new Date());
+        String hora = new SimpleDateFormat("HHmmss").format(new Date());
         String area = String.valueOf(AuditoriaDB.getArea());
         String auditor = String.valueOf(AuditoriaDB.getAuditor());
-        id = Integer.parseInt(area+auditor+fecha);
+        id = Integer.parseInt(area+auditor+hora);
         return id;
     }
 
@@ -732,12 +733,14 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
                     toastOK.show();
 
                     //Toast.makeText(getContext(), "Se agrego un hallazgo", Toast.LENGTH_SHORT).show();
-                }else if(spHallazgo.getSelectedItem().toString().equals("Seleccione el Hallazgo")){
+                }else if(spHallazgo.getSelectedItem() == null || spHallazgo.getSelectedItem().toString().equals("Seleccione el Hallazgo")){
+                    vibe.vibrate(TIEMPO_VIBRACION);
                     txtToastFail.setText("Seleccione un hallazgo");
                     toastFail.setGravity(Gravity.CENTER, 0, -100);
                     toastFail.setDuration(Toast.LENGTH_SHORT);
                     toastFail.show();
                 }else if(!hallazgoSelect){
+                    vibe.vibrate(TIEMPO_VIBRACION);
                     txtToastFail.setText("Tome una fotografia");
                     toastFail.setGravity(Gravity.CENTER, 0, -100);
                     toastFail.setDuration(Toast.LENGTH_SHORT);
@@ -753,7 +756,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
                     builder.setTitle("No ha almacenado el hallazgo")
                             .setMessage("¿Desea almecenar el hallazgo?")
-                            .setPositiveButton("Almacenar el hallazgo y salir", new DialogInterface.OnClickListener() {
+                            .setPositiveButton("Almacenar el hallazgo", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     matrizHallazgos.get(GetIndex(b)).put(mCurrentPhotoPath, spHallazgo.getSelectedItemPosition());
                                     spHallazgo.setSelection(-1);
@@ -763,7 +766,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
                                     alertHallazgo.dismiss();
                                 }
                             })
-                            .setNegativeButton("No guardar y Salir", new DialogInterface.OnClickListener() {
+                            .setNegativeButton("No guardar", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     hallazgoSelect = false;
                                     alertHallazgo.dismiss();
@@ -771,6 +774,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
+                    vibe.vibrate(TIEMPO_VIBRACION);
                 }else {
                     alertHallazgo.dismiss();
                 }
@@ -791,7 +795,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         int indice = GetIndex(button);
 
         final List<Integer> lista_Ref_hallazgo = new ArrayList<>();
-
+        listaImagenes.clear();
         Iterator it = matrizHallazgos.get(GetIndex(button)).keySet().iterator();
         while(it.hasNext()){
             String key = it.next().toString();
@@ -839,68 +843,56 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
 
     private void GuardarDatosEnDB(){
 
-        boolean calificacionCompleta = true;
+        SQLiteDatabase db = conn.getWritableDatabase();
 
-        for(boolean calificado: estaCalificado){
-            if(!calificado) calificacionCompleta = false;
+        Object[] datos = new Object[]{
+                AuditoriaDB.getId_auditoria(),
+                AuditoriaDB.getArea(),
+                AuditoriaDB.getAuditor(),
+                AuditoriaDB.getTurno(),
+                AuditoriaDB.getFecha(),
+                AuditoriaDB.getS1_obs_1(),
+                AuditoriaDB.getS1_obs_2(),
+                AuditoriaDB.getS1_obs_3(),
+                AuditoriaDB.getS2_obs_1(),
+                AuditoriaDB.getS2_obs_2(),
+                AuditoriaDB.getS2_obs_3(),
+                AuditoriaDB.getS2_obs_4(),
+                AuditoriaDB.getS3_obs_1(),
+                AuditoriaDB.getS3_obs_2(),
+                AuditoriaDB.getS3_obs_3(),
+                AuditoriaDB.getS3_obs_4(),
+                AuditoriaDB.getS4_obs_1(),
+                AuditoriaDB.getS4_obs_2(),
+                AuditoriaDB.getS4_obs_3(),
+                AuditoriaDB.getS4_obs_4(),
+                AuditoriaDB.getS5_obs_1(),
+                AuditoriaDB.getS5_obs_2(),
+                AuditoriaDB.getS5_obs_3(),
+                AuditoriaDB.getS5_obs_4(),
+                AuditoriaDB.getRes_s1(),
+                AuditoriaDB.getRes_s2(),
+                AuditoriaDB.getRes_s3(),
+                AuditoriaDB.getRes_s4(),
+                AuditoriaDB.getRes_s5(),
+                AuditoriaDB.getRes_total(),
+                0
+        };
+
+        String sql = "INSERT INTO " + Utilidades.TABLA_AUDITORIA + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        db.execSQL(sql, datos);
+
+        for(Encontrado encontrado: hallazgosEncontrados){
+            String consulta = "INSERT INTO " + Utilidades.TABLA_ENCONTRADO + " VALUES (?,?,?)";
+            Object[] listaDatos = new Object[]{ encontrado.getId_detalle(), encontrado.getImagen(), AuditoriaDB.getId_auditoria()};
+            db.execSQL(consulta, listaDatos);
         }
 
-        Random r = new Random();
+        db.close();
+        conn.close();
 
-        if(calificacionCompleta){
-            SQLiteDatabase db = conn.getWritableDatabase();
+        Toast.makeText(getContext(), "Datos almacenados correctamente", Toast.LENGTH_SHORT).show();
 
-            Object[] datos = new Object[]{
-                    AuditoriaDB.getId_auditoria(),
-                    AuditoriaDB.getArea(),
-                    AuditoriaDB.getAuditor(),
-                    AuditoriaDB.getTurno(),
-                    AuditoriaDB.getFecha(),
-                    AuditoriaDB.getS1_obs_1(),
-                    AuditoriaDB.getS1_obs_2(),
-                    AuditoriaDB.getS1_obs_3(),
-                    AuditoriaDB.getS2_obs_1(),
-                    AuditoriaDB.getS2_obs_2(),
-                    AuditoriaDB.getS2_obs_3(),
-                    AuditoriaDB.getS2_obs_4(),
-                    AuditoriaDB.getS3_obs_1(),
-                    AuditoriaDB.getS3_obs_2(),
-                    AuditoriaDB.getS3_obs_3(),
-                    AuditoriaDB.getS3_obs_4(),
-                    AuditoriaDB.getS4_obs_1(),
-                    AuditoriaDB.getS4_obs_2(),
-                    AuditoriaDB.getS4_obs_3(),
-                    AuditoriaDB.getS4_obs_4(),
-                    AuditoriaDB.getS5_obs_1(),
-                    AuditoriaDB.getS5_obs_2(),
-                    AuditoriaDB.getS5_obs_3(),
-                    AuditoriaDB.getS5_obs_4(),
-                    AuditoriaDB.getRes_s1(),
-                    AuditoriaDB.getRes_s2(),
-                    AuditoriaDB.getRes_s3(),
-                    AuditoriaDB.getRes_s4(),
-                    AuditoriaDB.getRes_s5(),
-                    AuditoriaDB.getRes_total(),
-                    0
-            };
-
-            String sql = "INSERT INTO " + Utilidades.TABLA_AUDITORIA + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-            db.execSQL(sql, datos);
-
-            for(Encontrado encontrado: hallazgosEncontrados){
-                String consulta = "INSERT INTO " + Utilidades.TABLA_ENCONTRADO + " VALUES (?,?,?)";
-                Object[] listaDatos = new Object[]{ encontrado.getId_detalle(), encontrado.getImagen(), AuditoriaDB.getId_auditoria()};
-                db.execSQL(consulta, listaDatos);
-            }
-
-            db.close();
-            conn.close();
-
-            Toast.makeText(getContext(), "Datos almacenados correctamente", Toast.LENGTH_SHORT).show();
-
-        }else{
-            Toast.makeText(getContext(), "No ha terminado de calificar", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void dispatchTakePictureIntent() {
@@ -938,8 +930,75 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
 
         // Se guarda la direccion de la imagen
         mCurrentPhotoPath = image.getAbsolutePath();
-        currentPhotoName = imageFileName + ".jpg";
+        currentPhotoName = image.getName();
         return image;
+    }
+
+    private void LanzarMensajeFinalizar() {
+
+        final View alertFormView = getLayoutInflater().inflate(R.layout.alert_dialog_finalizar, null);
+
+        Button btnCerrarFin = alertFormView.findViewById(R.id.btnCerrarFin);
+        Button btnGuardarFin = alertFormView.findViewById(R.id.btnGuardarFin);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setCancelable(true);
+        builder.setView(alertFormView);
+        final AlertDialog alertDialog = builder.create();
+
+        alertDialog.show();
+
+        btnCerrarFin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        btnGuardarFin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GuardarDatosEnDB();
+                alertDialog.dismiss();
+
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.contenerdorFragment, new FragmentHome());
+                ft.commit();
+            }
+        });
+
+    }
+
+    public void ConfirmacionSalida(){
+        final View alertFormView = getLayoutInflater().inflate(R.layout.alert_dialog_confirmar_salir, null);
+
+        Button btnNoAbortarCalificacion = alertFormView.findViewById(R.id.btnNoAbortarCalificacion);
+        Button btnAbortarCalificacion = alertFormView.findViewById(R.id.btnAbortarCalificacion);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setCancelable(true);
+        builder.setView(alertFormView);
+        final AlertDialog alertDialog = builder.create();
+
+        alertDialog.show();
+
+        btnNoAbortarCalificacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        btnAbortarCalificacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.replace(R.id.contenerdorFragment, new FragmentHome());
+                ft.commit();
+            }
+        });
     }
 
     @Override
@@ -1099,7 +1158,16 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
             LanzarGaleriaHallazgo(fab_n19);
         }
         else if(v.getId() == R.id.btnGuardarDB){
-            GuardarDatosEnDB();
+            boolean calificacionCompleta = true;
+            for(boolean calificado: estaCalificado){
+                if(!calificado) calificacionCompleta = false;
+            }
+            if(calificacionCompleta){
+                LanzarMensajeFinalizar();
+            }else {
+                vibe.vibrate(TIEMPO_VIBRACION);
+                Toast.makeText(getContext(), "No ha terminado de calificar", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

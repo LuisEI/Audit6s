@@ -1,22 +1,32 @@
 package fragments;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -30,6 +40,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,10 +92,22 @@ public class FragmentSincronizar extends Fragment {
     //private Auditoria auditParams;
 
     private ConexionSQLiteHelper conn;
+    private boolean registroPendientes;
+    //private String url_base = "http://web01.avxslv.com/lean/";    http://192.168.100.7/WebServiceApp/
+    private String url_base = "";
+
+    private int numberOfRequestsToMake = 0;
+    private boolean hasRequestFail = false;
 
     private OnFragmentInteractionListener mListener;
     private TextView txtResgistrosNoSyn;
-    //private StringRequest stringRequest;
+    private ProgressBar pbUpload;
+    //Chekear red wifi
+    private NetworkInfo wifiCheck;
+    private ImageView imageWifi;
+
+    private int cantidadHallazgos = 0;
+    private int acumulador = 0;
 
 
     public FragmentSincronizar() {
@@ -125,22 +149,85 @@ public class FragmentSincronizar extends Fragment {
         btnSyncLocal = vista.findViewById(R.id.btnSyncLocal);
         btnSyncRemoto = vista.findViewById(R.id.btnSyncRemoto);
         txtResgistrosNoSyn = vista.findViewById(R.id.txtRegistroNoSync);
+        pbUpload = vista.findViewById(R.id.pbUpload);
         pbDownload = vista.findViewById(R.id.pbDownload);
+        imageWifi = vista.findViewById(R.id.logo_wifi);
+
+        url_base = CargarUrlWeb();
+
         btnSyncLocal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SincronizacionLocal();
+                if(url_base.equals("")){
+                    Toast.makeText(getContext(), "Revise en Ajustes la direccion de los Web Services", Toast.LENGTH_SHORT).show();
+                }else {
+                    if(existeConexionWifi(getContext())){
+                        SincronizacionLocal();
+                    }else{
+                        startActivity(new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK));
+                    }
+                }
             }
         });
         btnSyncRemoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SincronizacionRemota();
+                if(url_base.equals("")){
+                    Toast.makeText(getContext(), "Revise en Ajustes la direccion de los Web Services", Toast.LENGTH_SHORT).show();
+                }else{
+                    if(registroPendientes){
+                        if(existeConexionWifi(getContext())){
+                            SincronizacionRemota();
+                        }else{
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+                            builder.setTitle("No esta conectado a la red WIFI")
+                                    .setMessage("¿Desea abrir los ajustes para conectarse a la red WIFI?")
+                                    .setPositiveButton("Abrir menu WIFI", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            startActivity(new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK));
+                                        }
+                                    })
+                                    .setNegativeButton("Cerrar", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
+                        }
+                    }else {
+                        Toast.makeText(getContext(), "Todas las auditorias se han enviado", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
         request = Volley.newRequestQueue(getContext());
         RegistrosNoSincronizados();
+        CantidadDeHallazgos();
+        if(existeConexionWifi(getContext())){
+            imageWifi.setImageResource(R.drawable.wifi_area_small);
+        } else {
+            imageWifi.setImageResource(R.drawable.wifi_area_small_stop);
+        }
+
         return vista;
+    }
+
+    public boolean existeConexionWifi(Context context) {
+        int[] networkTypes = {ConnectivityManager.TYPE_WIFI};
+        try {
+            ConnectivityManager connectivityManager =
+                    (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            for (int networkType : networkTypes) {
+                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                if (activeNetworkInfo != null &&
+                        activeNetworkInfo.getType() == networkType)
+                    return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
     }
 
     private void RegistrosNoSincronizados() {
@@ -151,21 +238,38 @@ public class FragmentSincronizar extends Fragment {
         int registros = cursor.getCount();
         db.close();
         cursor.close();
+        conn.close();
 
         if(registros > 0){
             txtResgistrosNoSyn.setText(String.valueOf(registros));
             txtResgistrosNoSyn.setVisibility(View.VISIBLE);
             btnSyncRemoto.setBackgroundResource(R.drawable.button_background_pink);
+            registroPendientes = true;
         }else {
             txtResgistrosNoSyn.setText(String.valueOf(registros));
             txtResgistrosNoSyn.setVisibility(View.INVISIBLE);
             btnSyncRemoto.setBackgroundResource(R.drawable.button_background_blue);
+            registroPendientes = false;
         }
+    }
+
+    private void CantidadDeHallazgos() {
+        conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null, 1);
+        SQLiteDatabase db = conn.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM "
+                + Utilidades.TABLA_AUDITORIA +" JOIN "+ Utilidades.TABLA_ENCONTRADO
+                +" ON "+ Utilidades.TABLA_AUDITORIA +"."+Utilidades.CAMPO_ID_AUDITORIA+" = "+ Utilidades.TABLA_ENCONTRADO +"."+ Utilidades.CAMPO_ID_AUDITORIA
+                +" WHERE "+ Utilidades.CAMPO_SYNC +" = ?", new String[]{"0"});
+        cantidadHallazgos = cursor.getCount();
+        db.close();
+        cursor.close();
+        conn.close();
     }
 
     private void SincronizacionRemota() {
 
-        String url_base = "http://web01.avxslv.com/lean/";
+        pbUpload.setVisibility(View.VISIBLE);
+        pbUpload.setMax(cantidadHallazgos);
 
         List<Auditoria> listaAuditorias = obtenerListaAuditorias();
         for(Auditoria auditParams: listaAuditorias){
@@ -173,25 +277,38 @@ public class FragmentSincronizar extends Fragment {
         }
     }
 
-    private void EnviarAuditoria(String url_base, final Auditoria auditParams) {
+    private void EnviarAuditoria(final String url_base, final Auditoria auditParams) {
 
         String url = url_base + "GuardarAuditoria.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                //Toast.makeText(getContext(), "OK todo en orden " + String.valueOf(auditParams.getId_auditoria()), Toast.LENGTH_SHORT).show();
-                List<Encontrado> listaE = obtenerListaEncontrado(auditParams.getId_auditoria());
-                StringBuilder texto = new StringBuilder();
-                texto.append("ID Detalle: ").append(listaE.get(0).getId_detalle()).append("\n");
-                texto.append("Nombre foto: ").append(listaE.get(0).getImagen()).append("\n");
-                texto.append("ID Auditoria: ").append(listaE.get(0).getId_auditoria());
-                Toast.makeText(getContext(), texto.toString(), Toast.LENGTH_SHORT).show();
+                if(response.equals("OK")){
+                    numberOfRequestsToMake--;
+                    List<Encontrado> listaE = obtenerListaEncontrado(auditParams.getId_auditoria());
+                    for(Encontrado encontrado: listaE){
+                        EnviarEncontradoServidor(url_base,encontrado);
+                    }
+                    if(listaE.size() == 0) ActualizarEstadoSync(auditParams.getId_auditoria());
+                    if(numberOfRequestsToMake == 0){
+                        Toast.makeText(getContext(), "Tarea completada", Toast.LENGTH_SHORT).show();
+                        pbUpload.setVisibility(View.INVISIBLE);
+                        RegistrosNoSincronizados();
+                    }
+                }else {
+                    Toast.makeText(getContext(), response, Toast.LENGTH_SHORT).show();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getContext(), "Ocurrio un error", Toast.LENGTH_SHORT).show();
+                numberOfRequestsToMake--;
+                if(numberOfRequestsToMake == 0){
+                    pbUpload.setVisibility(View.INVISIBLE);
+                    RegistrosNoSincronizados();
+                }
+                Toast.makeText(getContext(), "Error al enviar tabla Auditoria " + error.toString(), Toast.LENGTH_SHORT).show();
             }
         }){
             @Override
@@ -232,6 +349,87 @@ public class FragmentSincronizar extends Fragment {
         };
 
         request.add(stringRequest);
+        numberOfRequestsToMake++;
+    }
+
+    private void ActualizarEstadoSync(int id_auditoria){
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null,1);
+        SQLiteDatabase db = conn.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(Utilidades.CAMPO_SYNC, 1);
+        db.update(Utilidades.TABLA_AUDITORIA, values, Utilidades.CAMPO_ID_AUDITORIA+" = ?",new String[]{String.valueOf(id_auditoria)});
+
+        db.close();
+        conn.close();
+    }
+
+    private void EnviarEncontradoServidor(String url_base, final Encontrado e) {
+
+        String url = url_base + "GuardarEncontrado.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                numberOfRequestsToMake--;
+                pbUpload.setProgress(acumulador++, true);
+                if(response.replace("\t","").equals("OK")){
+                    ActualizarEstadoSync(e.getId_auditoria());
+                }else{
+                    Toast.makeText(getContext(), response.toString(), Toast.LENGTH_LONG).show();
+                }
+                if(numberOfRequestsToMake == 0){
+                    pbUpload.setVisibility(View.INVISIBLE);
+                    RegistrosNoSincronizados();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                numberOfRequestsToMake--;
+                pbUpload.setProgress(acumulador++, true);
+                Toast.makeText(getContext(), "Error al enviar tabla Encontrado " + error.toString(), Toast.LENGTH_SHORT).show();
+                if(numberOfRequestsToMake == 0){
+                    pbUpload.setVisibility(View.INVISIBLE);
+                    RegistrosNoSincronizados();
+                }
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() {
+
+                String imagenString = ConvertirImagenString(e.getImagen());
+
+                Map<String, String> parametros = new HashMap<>();
+                parametros.put("id_detalle", String.valueOf(e.getId_detalle()));
+                parametros.put("imagen", imagenString);
+                parametros.put("nombre_img", e.getImagen());
+                parametros.put("id_auditoria", String.valueOf(e.getId_auditoria()));
+
+                return parametros;
+            }
+        };
+
+        request.add(stringRequest);
+        numberOfRequestsToMake++;
+    }
+
+    private String ConvertirImagenString(String imagen) {
+
+        String rutaImagen = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "/" + imagen;
+        String imgString = null;
+        File f = new File(rutaImagen);
+        if(f.exists()){
+            Bitmap bm = BitmapFactory.decodeFile(rutaImagen);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] byteArrayImage = baos.toByteArray();
+
+            imgString = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
+        }else{
+            Toast.makeText(getContext(), "La imagen no se encontro en la tablet", Toast.LENGTH_SHORT).show();
+        }
+        return imgString;
     }
 
     private List<Auditoria> obtenerListaAuditorias() {
@@ -282,6 +480,7 @@ public class FragmentSincronizar extends Fragment {
 
         db.close();
         cursor.close();
+        conn.close();
 
         return listaAuditorias;
     }
@@ -301,13 +500,14 @@ public class FragmentSincronizar extends Fragment {
 
             e.setId_detalle(cursor.getInt(0));
             e.setImagen(cursor.getString(1));
-            e.setId_detalle(cursor.getInt(2));
+            e.setId_auditoria(cursor.getInt(2));
 
             listaEncontrados.add(e);
         }
 
         db.close();
         cursor.close();
+        conn.close();
 
         return listaEncontrados;
     }
@@ -315,7 +515,6 @@ public class FragmentSincronizar extends Fragment {
     private void SincronizacionLocal(){
 
         pbDownload.setVisibility(View.VISIBLE);
-        String url_base = "http://web01.avxslv.com/lean/";
 
         jsonArrayRequestDivision = new JsonArrayRequest(Request.Method.GET, url_base + "CargarDivision.php", null, new Response.Listener<JSONArray>() {
             @Override
@@ -682,6 +881,11 @@ public class FragmentSincronizar extends Fragment {
         Toast.makeText(getContext(), "Se ha actualizado la base de datos local", Toast.LENGTH_LONG).show();
     }
 
+    private String CargarUrlWeb(){
+        SharedPreferences preferences = getActivity().getSharedPreferences("opciones", Context.MODE_PRIVATE);
+        String url = preferences.getString("url_web", "");
+        return url;
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

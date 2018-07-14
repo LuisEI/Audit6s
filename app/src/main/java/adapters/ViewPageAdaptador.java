@@ -1,27 +1,24 @@
 package adapters;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.example.liraheta.audit6s.R;
+
 
 import java.util.List;
 
 public class ViewPageAdaptador extends PagerAdapter {
 
-    Context mContext;
-    LayoutInflater mLayoutInflater;
+    private Context mContext;
+    private LayoutInflater mLayoutInflater;
 
-    List<String> mImagenes;
+    private List<String> mImagenes;
 
     public ViewPageAdaptador(Context mContext, List<String> mImagenes) {
         this.mContext = mContext;
@@ -44,9 +41,12 @@ public class ViewPageAdaptador extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         View itemView = mLayoutInflater.inflate(R.layout.pager_item, container, false);
         ImageView imageViewPager = itemView.findViewById(R.id.imagenViewPager);
-        Bitmap mImage = BitmapFactory.decodeFile(mImagenes.get(position));
-        Bitmap mImageBitmap = Bitmap.createScaledBitmap(mImage, 500, 400, true);
-        imageViewPager.setImageBitmap(mImageBitmap);
+
+        GlideApp
+                .with(itemView)
+                .load(mImagenes.get(position))
+                .centerCrop()
+                .into(imageViewPager);
         container.addView(itemView);
 
         return itemView;

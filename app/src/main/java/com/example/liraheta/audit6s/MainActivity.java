@@ -1,13 +1,12 @@
 package com.example.liraheta.audit6s;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,18 +22,22 @@ import fragments.FragmentHome;
 import fragments.FragmentIngreso;
 import fragments.FragmentSetting;
 import fragments.FragmentSincronizar;
+import fragments.Fragment_Informacion;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         FragmentHome.OnFragmentInteractionListener, FragmentAuditoria.OnFragmentInteractionListener,
         FragmentConsulta.OnFragmentInteractionListener, FragmentSetting.OnFragmentInteractionListener,
         FragmentIngreso.OnFragmentInteractionListener, FragmentCalificar.OnFragmentInteractionListener,
-        FragmentSincronizar.OnFragmentInteractionListener {
+        FragmentSincronizar.OnFragmentInteractionListener, Fragment_Informacion.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -46,8 +49,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.contenerdorFragment, new FragmentHome()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.contenerdorFragment, new FragmentHome()).addToBackStack(null).commit();
     }
 
     @Override
@@ -56,7 +60,15 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            Fragment f = this.getSupportFragmentManager().findFragmentById(R.id.contenerdorFragment);
+            if(f instanceof FragmentCalificar){
+                ((FragmentCalificar) f).ConfirmacionSalida();
+            }else if(f instanceof FragmentHome){
+                ((FragmentHome) f).SalirdeApp();
+            }
+            else{
+                super.onBackPressed();
+            }
         }
     }
 
@@ -75,8 +87,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_info) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.contenerdorFragment, new Fragment_Informacion()).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
         }
 
         return super.onOptionsItemSelected(item);
@@ -98,21 +110,26 @@ public class MainActivity extends AppCompatActivity
             myFragment = new FragmentIngreso();
             fragmentSelecionado = true;
         } else if (id == R.id.nav_consulta) {
-            myFragment = new FragmentAuditoria();
-            fragmentSelecionado = true;
-        } else if (id == R.id.nav_actualizacion) {
             myFragment = new FragmentConsulta();
             fragmentSelecionado = true;
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_sincronizacion) {
+            myFragment = new FragmentSincronizar();
+            fragmentSelecionado = true;
+        } else if (id == R.id.nav_informacion) {
+            myFragment = new Fragment_Informacion();
+            fragmentSelecionado = true;
+        } else if (id == R.id.nav_setting) {
             myFragment = new FragmentSetting();
             fragmentSelecionado = true;
         } else if (id == R.id.nav_about) {
-            myFragment = new FragmentSincronizar();
+            myFragment = new FragmentAuditoria();
             fragmentSelecionado = true;
+        } else if (id == R.id.nav_exit) {
+            this.finish();
         }
 
         if(fragmentSelecionado){
-            getSupportFragmentManager().beginTransaction().replace(R.id.contenerdorFragment, myFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.contenerdorFragment, myFragment).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -129,4 +146,5 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
+
 }

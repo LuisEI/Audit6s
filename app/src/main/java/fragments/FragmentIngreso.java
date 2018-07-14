@@ -26,7 +26,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.liraheta.audit6s.R;
 
@@ -332,9 +331,6 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
 
         conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null, 1);
 
-        //LLenado de Spinner Division
-        //consultarDatosSQLite();
-
         return vista;
     }
 
@@ -347,9 +343,8 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
         ListView listView = alertFormView.findViewById(R.id.lvIngreso);
         TextView txtLvTitulo = alertFormView.findViewById(R.id.txtLvTitulo);
 
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, listaSpinner);
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, listaSpinner);
         listView.setAdapter(arrayAdapter);
-
         txtLvTitulo.setText(titulo);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -447,14 +442,14 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
 
     private void LlenarLista(String tabla){
         SQLiteDatabase db;
-        listaSpinner = new ArrayList<String>();
+        listaSpinner = new ArrayList<>();
         Cursor cursor;
 
         if(tabla.equals(Utilidades.TABLA_AREA)){
             int id = LlamarIDplanta(txtPlanta.getEditText().getText().toString());
             db = conn.getReadableDatabase();
             if(id != 0){
-                cursor = db.rawQuery("SELECT * FROM "+ tabla+" WHERE id_planta like ?", new String[]{String.valueOf(id)+ "%"});
+                cursor = db.rawQuery("SELECT * FROM "+ tabla +" WHERE id_planta like ?", new String[]{String.valueOf(id)+ "%"});
             }else{
                 cursor = db.rawQuery("SELECT * FROM "+ tabla, null);
             }
@@ -534,7 +529,7 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
         SQLiteDatabase db = conn.getReadableDatabase();
 
         Division division;
-        divisionLista = new ArrayList<Division>();
+        divisionLista = new ArrayList<>();
         Cursor cursor = db.rawQuery("SELECT * FROM "+ Utilidades.TABLA_DIVISION, null);
 
         while (cursor.moveToNext()){
@@ -553,7 +548,7 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
     }
 
     private void obtenerLista() {
-        listaSpinner = new ArrayList<String>();
+        listaSpinner = new ArrayList<>();
 
         for(int i=0; i<divisionLista.size(); i++){
             listaSpinner.add(divisionLista.get(i).getDivision());
@@ -587,8 +582,6 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
 
-        //vibe.vibrate(20);
-
         if(v.getId() == R.id.btnDivision){
             txtDivision.getEditText().requestFocus();
             LanzarListaSeleccionable(txtDivision, Utilidades.TABLA_DIVISION, "Seleccione la Division");
@@ -610,7 +603,6 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
             LanzarListaSeleccionable(txtAuditor, Utilidades.TABLA_AUDITOR, "Seleccione el Auditor");
         }else if (v.getId() == R.id.btnValidar){
             if (Validar()) {
-                Toast.makeText(getContext(), "Es valido", Toast.LENGTH_SHORT).show();
 
                 Bundle bundle = new Bundle();
                 bundle.putInt("division", mapaDivision.get(txtDivision.getEditText().getText().toString()));
@@ -626,8 +618,10 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener{
 
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.contenerdorFragment, fragmentCalificar, "calificar");
-                ft.addToBackStack(null);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.commit();
+            }else{
+                vibe.vibrate(50);
             }
         }
 

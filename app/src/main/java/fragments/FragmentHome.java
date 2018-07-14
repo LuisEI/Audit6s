@@ -1,5 +1,6 @@
 package fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.liraheta.audit6s.R;
@@ -37,6 +39,7 @@ public class FragmentHome extends Fragment implements View.OnClickListener {
     CardView card1;
     CardView card2;
     CardView card3;
+    CardView card4;
     View view;
 
 
@@ -80,10 +83,12 @@ public class FragmentHome extends Fragment implements View.OnClickListener {
         card1 = view.findViewById(R.id.card1);
         card2 = view.findViewById(R.id.card2);
         card3 = view.findViewById(R.id.card3);
+        card4 = view.findViewById(R.id.card4);
 
         card1.setOnClickListener(this);
         card2.setOnClickListener(this);
         card3.setOnClickListener(this);
+        card4.setOnClickListener(this);
 
         return view;
     }
@@ -118,20 +123,59 @@ public class FragmentHome extends Fragment implements View.OnClickListener {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.contenerdorFragment, new FragmentIngreso());
             ft.addToBackStack(null);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.commit();
         }
         else if(v.getId() == card2.getId()){
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            ft.replace(R.id.contenerdorFragment, new FragmentCalificar(), "calificar");
+            ft.replace(R.id.contenerdorFragment, new FragmentConsulta());
             ft.addToBackStack(null);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.commit();
         }
         else if(v.getId() == card3.getId()){
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             ft.replace(R.id.contenerdorFragment, new FragmentSincronizar());
             ft.addToBackStack(null);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.commit();
         }
+        else if(v.getId() == card4.getId()){
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.contenerdorFragment, new FragmentSetting());
+            ft.addToBackStack(null);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.commit();
+        }
+    }
+
+    public void SalirdeApp(){
+        final View alertFormView = getLayoutInflater().inflate(R.layout.alert_dialog_exit_app, null);
+
+        Button btnExitAppNo = alertFormView.findViewById(R.id.btnExitAppNo);
+        Button btnExitAppSi = alertFormView.findViewById(R.id.btnExitAppSi);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setCancelable(true);
+        builder.setView(alertFormView);
+        final AlertDialog alertDialog = builder.create();
+
+        alertDialog.show();
+
+        btnExitAppNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        btnExitAppSi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                getActivity().finish();
+            }
+        });
     }
 
     @Override
@@ -142,6 +186,7 @@ public class FragmentHome extends Fragment implements View.OnClickListener {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
     }
+
 
     /**
      * This interface must be implemented by activities that contain this

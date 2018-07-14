@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:backgroundTint="@color/colorCard"
     tools:context="fragments.FragmentCalificar">
@@ -14,7 +13,13 @@
         android:layout_height="wrap_content"
         android:textSize="36sp"
         android:textAlignment="center"
-        android:text="CALIFICACION" />
+        android:text="CALIFICACION"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+        android:shadowRadius="5"
+        android:shadowDy="5"
+        android:shadowDx="5"
+        android:shadowColor="@color/colorCard"/>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -22,7 +27,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginTop="20dp"
         android:layout_height="165dp"
-        app:cardElevation="5dp">
+        app:cardElevation="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,7 +37,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="2">
+                android:layout_weight="2"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -260,7 +266,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
-        app:cardElevation="5dp">
+        app:cardElevation="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -530,7 +536,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
-        app:cardElevation="5dp">
+        app:cardElevation="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -800,7 +806,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
-        app:cardElevation="5dp">
+        app:cardElevation="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -1070,7 +1076,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
-        app:cardElevation="5dp">
+        app:cardElevation="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -1353,8 +1359,8 @@
                 android:layout_height="80dp"
                 android:layout_gravity="center"
                 android:backgroundTint="#FFF"
-                android:elevation="5dp"
-                android:text="Guardar Nota"
+                android:elevation="2dp"
+                android:text="Finalizar"
                 android:textSize="24sp" />
 
 

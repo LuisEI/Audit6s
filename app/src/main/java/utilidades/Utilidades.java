@@ -98,7 +98,7 @@ public class Utilidades {
     public static final String CAMPO_SYNC = "sincronizado";
 
     public static final String CREAR_TABLA_AUDITORIA = "CREATE TABLE " + TABLA_AUDITORIA + " (" +
-            CAMPO_ID_AUDITORIA + " INTEGER, " +
+            CAMPO_ID_AUDITORIA + " INTEGER PRIMARY KEY, " +
             CAMPO_AREA + " INTEGER, " +
             CAMPO_AUDITOR + " INTEGER, " +
             CAMPO_TURNO + " INTEGER, " +
@@ -138,5 +138,6 @@ public class Utilidades {
     public static final String CREAR_TABLA_ENCONTRADO =  "CREATE TABLE " + TABLA_ENCONTRADO + " (" +
             CAMPO_ID_DETALLE + " INTEGER, " +
             CAMPO_RUTA_IMAGEN + " TEXT, " +
-            CAMPO_ID_AUDITORIA + " INTEGER)";
+            CAMPO_ID_AUDITORIA + " INTEGER," +
+            "FOREIGN KEY(" + CAMPO_ID_AUDITORIA + ") REFERENCES " + TABLA_AUDITORIA + "("+ CAMPO_ID_AUDITORIA +"))";
 }
