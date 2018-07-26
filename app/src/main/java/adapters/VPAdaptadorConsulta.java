@@ -3,6 +3,7 @@ package adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AlertDialog;
@@ -13,6 +14,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.liraheta.audit6s.R;
 
 import java.util.List;
@@ -50,6 +53,7 @@ public class VPAdaptadorConsulta extends PagerAdapter {
                 .with(itemView)
                 .load(mImagenes.get(position))
                 .centerCrop()
+                .dontAnimate()
                 .into(imageViewPager);
 
         container.addView(itemView);
@@ -61,20 +65,6 @@ public class VPAdaptadorConsulta extends PagerAdapter {
             }
         });
 
-
-//        final Bitmap mImage = BitmapFactory.decodeFile(mImagenes.get(position));
-//        if(mImage != null){
-//            final Bitmap mImageBitmap = Bitmap.createScaledBitmap(mImage, 500, 400, true);
-//            imageViewPager.setImageBitmap(mImageBitmap);
-//            container.addView(itemView);
-//
-//            imageViewPager.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    LanzarImagenFull(mImage);
-//                }
-//            });
-//        }
         return itemView;
     }
 
@@ -85,13 +75,10 @@ public class VPAdaptadorConsulta extends PagerAdapter {
         ImageView imageFull = alertFullImage.findViewById(R.id.imageViewFull);
         Button botonSalir = alertFullImage.findViewById(R.id.btnSalirConsulta);
 
-//        Bitmap mImage = BitmapFactory.decodeFile(mImagenes.get(pos));
-//        imageFull.setImageBitmap(mImage);
+        Bitmap mImage = BitmapFactory.decodeFile(mImagenes.get(pos));
+        imageFull.setImageBitmap(mImage);
 
-        GlideApp
-                .with(alertFullImage)
-                .load(mImagenes.get(pos))
-                .into(imageFull);
+        //GlideApp.with(alertFullImage).load(mImagenes.get(pos)).into(imageFull);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setCancelable(true);

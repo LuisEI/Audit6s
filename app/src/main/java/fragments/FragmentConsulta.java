@@ -140,7 +140,7 @@ public class FragmentConsulta extends Fragment {
         adapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Seleccionado ID: " + String.valueOf(listaAuditorias.get(recyclerAuditoria.getChildAdapterPosition(v)).getId_auditoria()), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "Seleccionado ID: " + String.valueOf(listaAuditorias.get(recyclerAuditoria.getChildAdapterPosition(v)).getId_auditoria()), Toast.LENGTH_SHORT).show();
                 MostrarDatosAuditoria(ObtenerAuditoriaPorID(listaAuditorias.get(recyclerAuditoria.getChildAdapterPosition(v)).getId_auditoria()));
             }
         });
@@ -160,7 +160,6 @@ public class FragmentConsulta extends Fragment {
         txtNotaTotal_consulta.setText(String.valueOf(auditoria.getRes_total()));
         txtFecha_consulta.setText(ConvertidorFecha(auditoria.getFecha()));
         txtSemana_consulta.setText(ObtenerSemana(auditoria.getFecha()));
-
 
         CargarImagenes(auditoria.getId_auditoria());
     }
@@ -193,7 +192,7 @@ public class FragmentConsulta extends Fragment {
             VPAdaptadorConsulta adaptador = new VPAdaptadorConsulta(getContext(), listaImagenes);
             auditoriaViewPager.setAdapter(adaptador);
             auditoriaViewPager.clearOnPageChangeListeners();
-//            auditoriaViewPager.setOffscreenPageLimit(3);
+            //auditoriaViewPager.setOffscreenPageLimit(3);
             auditoriaViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

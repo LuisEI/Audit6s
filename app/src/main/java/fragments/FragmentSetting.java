@@ -1,9 +1,7 @@
 package fragments;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,9 +15,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.liraheta.audit6s.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import sqlite.ConexionSQLiteHelper;
 import utilidades.Utilidades;
@@ -53,7 +48,6 @@ public class FragmentSetting extends Fragment implements View.OnClickListener{
     private View vista;
     private Button btnBorrarRegistros;
     private ConexionSQLiteHelper conn;
-
 
     /**
      * Use this factory method to create a new instance of
@@ -100,8 +94,9 @@ public class FragmentSetting extends Fragment implements View.OnClickListener{
         return vista;
     }
 
-    private void BorrarRegistrosAuditoria(){
-        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null,1);
+
+    private void BorrarRegistrosAuditoria() {
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null, 1);
         SQLiteDatabase db = conn.getWritableDatabase();
         db.delete(Utilidades.TABLA_AUDITORIA, null, null);
         db.delete(Utilidades.TABLA_ENCONTRADO, null, null);
@@ -160,6 +155,7 @@ public class FragmentSetting extends Fragment implements View.OnClickListener{
         String url = preferences.getString("url_web", "");
         urlWebServices.setText(url);
     }
+
 
     /**
      * This interface must be implemented by activities that contain this

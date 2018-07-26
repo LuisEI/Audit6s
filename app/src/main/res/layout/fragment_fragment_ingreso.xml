@@ -6,24 +6,42 @@
     android:orientation="vertical"
     tools:context="fragments.FragmentIngreso">
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/ingreso_de_datos"
-        android:textSize="36sp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:textAlignment="center"
+        android:orientation="horizontal"
         android:layout_gravity="center"
-        android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"/>
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="50dp">
 
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="20dp"
-        android:src="@drawable/input"
-        android:layout_gravity="center"/>
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/input"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ingreso_de_datos"
+            android:textSize="36sp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimaryDark"/>
+
+        <ImageButton
+            android:id="@+id/btnQR"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="#FFF"
+            android:src="@drawable/qr_code"/>
+    </LinearLayout>
+
+
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"

@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Imagen del Hallazgo"
+        android:text="Vista completa de la imagen"
         android:textSize="24sp"
         android:textColor="@color/colorCard"
         android:textAlignment="center"
@@ -26,6 +26,7 @@
         android:id="@+id/btnSalirConsulta"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:text="Cerrar"
         android:textSize="20sp"
         android:textColor="@color/colorCard"

@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import adapters.GlideApp;
 import entidades.Area;
 import entidades.Auditor;
 import entidades.Auditoria;

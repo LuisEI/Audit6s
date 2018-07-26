@@ -63,324 +63,316 @@
                     <android.support.v7.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="2"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="5dp">
+                        android:layout_weight="1"
+                        android:layout_margin="10dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="vertical">
+                            android:orientation="horizontal">
 
                             <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:layout_marginTop="20dp">
+                                android:layout_width="500dp"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="24dp"
-                                    android:layout_gravity="center_vertical"
-                                    android:text="ID Auditoria"
-                                    android:textSize="16sp"
-                                    android:textColor="@color/cardview_dark_background"/>
-
-                                <TextView
-                                    android:id="@+id/id_auditoria_consulta"
+                                <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="center_vertical"
-                                    android:layout_marginStart="12dp"
-                                    android:textColor="@color/colorPrimary"
-                                    android:textSize="18sp" />
+                                    android:orientation="vertical"
+                                    android:layout_marginTop="20dp">
 
-                            </LinearLayout>
+                                    <TextView
+                                        android:id="@+id/area_consulta"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:layout_marginTop="8dp"
+                                        android:text="Area"
+                                        android:textSize="24sp"
+                                        android:textColor="@color/colorPrimary"/>
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="12dp"
-                                android:orientation="vertical">
+                                    <TextView
+                                        android:id="@+id/lider_consulta"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:layout_marginBottom="8dp"
+                                        android:text="Lider"
+                                        android:textColor="@color/colorAccent"/>
+
+                                </LinearLayout>
 
                                 <TextView
-                                    android:id="@+id/txtFecha_consulta"
+                                    android:id="@+id/textView19"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
-                                    android:text="- -"
-                                    android:textColor="@color/colorPrimary"
+                                    android:layout_marginTop="24dp"
+                                    android:text="Galeria de Imagenes"
                                     android:textSize="18sp" />
 
-                                <TextView
-                                    android:id="@+id/txtSemana_consulta"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:text="--"
-                                    android:textSize="18sp" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="24dp">
+                                <android.support.v4.view.ViewPager
+                                    android:id="@+id/auditoriaViewPager"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="300dp"
+                                    android:layout_marginEnd="24dp"
+                                    android:layout_marginStart="24dp"
+                                    android:layout_marginTop="12dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:background="@color/colorCard"/>
 
                                 <TextView
-                                    android:layout_width="100dp"
+                                    android:id="@+id/txtDescripcion_consulta"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="24dp"
-                                    android:text="Seleccionar"
-                                    android:textAlignment="textEnd"
-                                    android:textColor="@color/colorPrimary"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:id="@+id/txtNotaS1_consulta"
-                                    android:layout_width="45dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="12dp"
-                                    android:text="0%"
-                                    android:textAlignment="textEnd"
-                                    android:textSize="18sp" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="12dp">
-
-                                <TextView
-                                    android:layout_width="100dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="24dp"
-                                    android:text="Organizar"
-                                    android:textAlignment="textEnd"
-                                    android:textColor="@color/colorPrimary"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:id="@+id/txtNotaS2_consulta"
-                                    android:layout_width="45dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="12dp"
-                                    android:text="0%"
+                                    android:textAlignment="center"
                                     android:textSize="18sp"
-                                    android:textAlignment="textEnd" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="12dp">
-
-                                <TextView
-                                    android:layout_width="100dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="24dp"
-                                    android:text="Limpieza"
-                                    android:textAlignment="textEnd"
-                                    android:textColor="@color/colorPrimary"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:id="@+id/txtNotaS3_consulta"
-                                    android:layout_width="45dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="12dp"
-                                    android:text="0%"
-                                    android:textAlignment="textEnd"
-                                    android:textSize="18sp" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="12dp">
-
-                                <TextView
-                                    android:layout_width="100dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="24dp"
-                                    android:text="Estandar"
-                                    android:textAlignment="textEnd"
-                                    android:textColor="@color/colorPrimary"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:id="@+id/txtNotaS4_consulta"
-                                    android:layout_width="45dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="12dp"
-                                    android:text="0%"
-                                    android:textAlignment="textEnd"
-                                    android:textSize="18sp" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="12dp">
-
-                                <TextView
-                                    android:layout_width="100dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="24dp"
-                                    android:text="Sostener"
-                                    android:textAlignment="textEnd"
-                                    android:textColor="@color/colorPrimary"
-                                    android:textSize="18sp" />
-
-                                <TextView
-                                    android:id="@+id/txtNotaS5_consulta"
-                                    android:layout_width="45dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="12dp"
-                                    android:text="0%"
-                                    android:textAlignment="textEnd"
-                                    android:textSize="18sp" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="50dp"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:text="Nota"
-                                    android:textSize="18sp"
-                                    android:textColor="@color/colorPrimary"/>
-
-                                <TextView
-                                    android:id="@+id/txtNotaTotal_consulta"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:text="0%"
                                     android:textColor="@color/colorAccent"
-                                    android:textSize="34sp" />
+                                    android:text="Descripcion"/>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="24dp"
+                                    android:textAlignment="center"
+                                    android:text="Detalle de hallazgo"/>
 
                             </LinearLayout>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="30dp"
+                                android:layout_height="match_parent"
                                 android:orientation="vertical">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
+                                <LinearLayout
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:text="Hallazgos"
-                                    android:textSize="18sp"
-                                    android:textColor="@color/colorPrimary"/>
+                                    android:orientation="horizontal"
+                                    android:layout_marginTop="20dp">
 
-                                <TextView
-                                    android:id="@+id/txtCantidadHallazgos"
-                                    android:layout_width="wrap_content"
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="24dp"
+                                        android:layout_gravity="center_vertical"
+                                        android:text="ID Auditoria"
+                                        android:textSize="16sp"
+                                        android:textColor="@color/cardview_dark_background"/>
+
+                                    <TextView
+                                        android:id="@+id/id_auditoria_consulta"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:layout_marginStart="12dp"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textSize="18sp" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:text="0"
-                                    android:textColor="@color/colorAccent"
-                                    android:textSize="34sp" />
+                                    android:layout_marginTop="12dp"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/txtFecha_consulta"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="- -"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textSize="18sp" />
+
+                                    <TextView
+                                        android:id="@+id/txtSemana_consulta"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="--"
+                                        android:textSize="18sp" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="24dp">
+
+                                    <TextView
+                                        android:layout_width="100dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="24dp"
+                                        android:text="Seleccionar"
+                                        android:textAlignment="textEnd"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textSize="18sp" />
+
+                                    <TextView
+                                        android:id="@+id/txtNotaS1_consulta"
+                                        android:layout_width="45dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="12dp"
+                                        android:text="0%"
+                                        android:textAlignment="textEnd"
+                                        android:textSize="18sp" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="12dp">
+
+                                    <TextView
+                                        android:layout_width="100dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="24dp"
+                                        android:text="Organizar"
+                                        android:textAlignment="textEnd"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textSize="18sp" />
+
+                                    <TextView
+                                        android:id="@+id/txtNotaS2_consulta"
+                                        android:layout_width="45dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="12dp"
+                                        android:text="0%"
+                                        android:textSize="18sp"
+                                        android:textAlignment="textEnd" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="12dp">
+
+                                    <TextView
+                                        android:layout_width="100dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="24dp"
+                                        android:text="Limpieza"
+                                        android:textAlignment="textEnd"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textSize="18sp" />
+
+                                    <TextView
+                                        android:id="@+id/txtNotaS3_consulta"
+                                        android:layout_width="45dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="12dp"
+                                        android:text="0%"
+                                        android:textAlignment="textEnd"
+                                        android:textSize="18sp" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="12dp">
+
+                                    <TextView
+                                        android:layout_width="100dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="24dp"
+                                        android:text="Estandar"
+                                        android:textAlignment="textEnd"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textSize="18sp" />
+
+                                    <TextView
+                                        android:id="@+id/txtNotaS4_consulta"
+                                        android:layout_width="45dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="12dp"
+                                        android:text="0%"
+                                        android:textAlignment="textEnd"
+                                        android:textSize="18sp" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="12dp">
+
+                                    <TextView
+                                        android:layout_width="100dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="24dp"
+                                        android:text="Sostener"
+                                        android:textAlignment="textEnd"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textSize="18sp" />
+
+                                    <TextView
+                                        android:id="@+id/txtNotaS5_consulta"
+                                        android:layout_width="45dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="12dp"
+                                        android:text="0%"
+                                        android:textAlignment="textEnd"
+                                        android:textSize="18sp" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="50dp"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="Nota"
+                                        android:textSize="18sp"
+                                        android:textColor="@color/colorPrimary"/>
+
+                                    <TextView
+                                        android:id="@+id/txtNotaTotal_consulta"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="0%"
+                                        android:textColor="@color/colorAccent"
+                                        android:textSize="34sp" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="30dp"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="Hallazgos"
+                                        android:textSize="18sp"
+                                        android:textColor="@color/colorPrimary"/>
+
+                                    <TextView
+                                        android:id="@+id/txtCantidadHallazgos"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="0"
+                                        android:textColor="@color/colorAccent"
+                                        android:textSize="34sp" />
+
+                                </LinearLayout>
 
                             </LinearLayout>
-
-                        </LinearLayout>
-
-                    </android.support.v7.widget.CardView>
-
-                    <android.support.v7.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="10dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:layout_marginTop="20dp">
-
-                                <TextView
-                                    android:id="@+id/area_consulta"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginTop="8dp"
-                                    android:text="Area"
-                                    android:textSize="24sp"
-                                    android:textColor="@color/colorPrimary"/>
-
-                                <TextView
-                                    android:id="@+id/lider_consulta"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginBottom="8dp"
-                                    android:text="Lider"
-                                    android:textColor="@color/colorAccent"/>
-
-                            </LinearLayout>
-
-                            <TextView
-                                android:id="@+id/textView19"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginTop="24dp"
-                                android:text="Galeria de Imagenes"
-                                android:textSize="18sp" />
-
-                            <android.support.v4.view.ViewPager
-                                android:id="@+id/auditoriaViewPager"
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:layout_marginEnd="24dp"
-                                android:layout_marginStart="24dp"
-                                android:layout_marginTop="12dp"
-                                android:layout_marginBottom="10dp"/>
-
-
-
-                            <TextView
-                                android:id="@+id/txtDescripcion_consulta"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="24dp"
-                                android:textAlignment="center"
-                                android:textSize="18sp"
-                                android:textColor="@color/colorAccent"
-                                android:text="Se encontro herramienta en el area de trabajo"/>
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="24dp"
-                                android:textAlignment="center"
-                                android:text="Detalle de hallazgo"/>
 
                         </LinearLayout>
 
@@ -388,16 +380,7 @@
 
                 </LinearLayout>
 
-
             </LinearLayout>
-
-
-
-
-
-
-
-
 
         </LinearLayout>
 

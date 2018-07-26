@@ -20,16 +20,23 @@ import fragments.FragmentCalificar;
 import fragments.FragmentConsulta;
 import fragments.FragmentHome;
 import fragments.FragmentIngreso;
+import fragments.FragmentLogin;
 import fragments.FragmentSetting;
 import fragments.FragmentSincronizar;
 import fragments.Fragment_Informacion;
+import interfaces.DrawerLocker;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         FragmentHome.OnFragmentInteractionListener, FragmentAuditoria.OnFragmentInteractionListener,
         FragmentConsulta.OnFragmentInteractionListener, FragmentSetting.OnFragmentInteractionListener,
         FragmentIngreso.OnFragmentInteractionListener, FragmentCalificar.OnFragmentInteractionListener,
-        FragmentSincronizar.OnFragmentInteractionListener, Fragment_Informacion.OnFragmentInteractionListener {
+        FragmentSincronizar.OnFragmentInteractionListener, Fragment_Informacion.OnFragmentInteractionListener,
+        FragmentLogin.OnFragmentInteractionListener, DrawerLocker {
+
+    private static int auditor;
+    DrawerLayout drawer;
+    ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +48,8 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -51,7 +58,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setItemIconTintList(null);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.contenerdorFragment, new FragmentHome()).addToBackStack(null).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.contenerdorFragment, new FragmentLogin()).addToBackStack(null).commit();
     }
 
     @Override
@@ -147,4 +154,19 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    public void setAuditor(int a){
+        auditor=a;
+    }
+
+    public int getAuditor(){
+        return auditor;
+    }
+
+    @Override
+    public void setDrawerEnabled(boolean enabled) {
+        int lockMode = enabled ? DrawerLayout.LOCK_MODE_UNLOCKED :
+                DrawerLayout.LOCK_MODE_LOCKED_CLOSED;
+        drawer.setDrawerLockMode(lockMode);
+        toggle.setDrawerIndicatorEnabled(enabled);
+    }
 }
