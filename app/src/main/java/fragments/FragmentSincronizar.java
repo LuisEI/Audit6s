@@ -27,6 +27,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -47,7 +48,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import adapters.GlideApp;
 import entidades.Area;
 import entidades.Auditor;
 import entidades.Auditoria;
@@ -56,7 +56,9 @@ import entidades.Encontrado;
 import entidades.Gerente;
 import entidades.HallazgoDetalle;
 import entidades.Hallazgos;
+import entidades.Lider;
 import entidades.Planta;
+import entidades.Responsable;
 import sqlite.ConexionSQLiteHelper;
 import utilidades.Utilidades;
 
@@ -89,6 +91,8 @@ public class FragmentSincronizar extends Fragment {
     private JsonArrayRequest jsonArrayRequestAuditor;
     private JsonArrayRequest jsonArrayRequestHallazgos;
     private JsonArrayRequest jsonArrayRequestDetalles;
+    private JsonArrayRequest jsonArrayRequestLider;
+    private JsonArrayRequest jsonArrayRequestResponsable;
     private ProgressBar pbDownload;
     //private Auditoria auditParams;
 
@@ -517,7 +521,7 @@ public class FragmentSincronizar extends Fragment {
 
         pbDownload.setVisibility(View.VISIBLE);
 
-        jsonArrayRequestDivision = new JsonArrayRequest(Request.Method.GET, url_base + "CargarDivision.php", null, new Response.Listener<JSONArray>() {
+        jsonArrayRequestDivision = new JsonArrayRequest(Request.Method.POST, url_base + "CargarDivision.php", null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 GuardarDivisionLocal(ListaObjetosDivision(response));
@@ -525,12 +529,19 @@ public class FragmentSincronizar extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getContext(), "No se pudo conectar al servidor", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "No se pudo conectar al servidor " + error.toString(), Toast.LENGTH_LONG).show();
             }
-        });
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> parametros = new HashMap<>();
+                parametros.put("login","true");
+                return parametros;
+            }
+        };
         request.add(jsonArrayRequestDivision);
 
-        jsonArrayRequestPlanta = new JsonArrayRequest(Request.Method.GET, url_base + "CargarPlanta.php", null, new Response.Listener<JSONArray>() {
+        jsonArrayRequestPlanta = new JsonArrayRequest(Request.Method.POST, url_base + "CargarPlanta.php", null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 GuardarPlantaLocal(ListaObjetosPlanta(response));
@@ -540,10 +551,17 @@ public class FragmentSincronizar extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(getContext(), "No se pudo conectar al servidor", Toast.LENGTH_LONG).show();
             }
-        });
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> parametros = new HashMap<>();
+                parametros.put("login","true");
+                return parametros;
+            }
+        };
         request.add(jsonArrayRequestPlanta);
 
-        jsonArrayRequestArea = new JsonArrayRequest(Request.Method.GET, url_base + "CargarArea.php", null, new Response.Listener<JSONArray>() {
+        jsonArrayRequestArea = new JsonArrayRequest(Request.Method.POST, url_base + "CargarArea.php", null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 GuardarAreaLocal(ListaObjetosArea(response));
@@ -553,10 +571,57 @@ public class FragmentSincronizar extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(getContext(), "No se pudo conectar al servidor", Toast.LENGTH_LONG).show();
             }
-        });
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> parametros = new HashMap<>();
+                parametros.put("login","true");
+                return parametros;
+            }
+        };
         request.add(jsonArrayRequestArea);
 
-        jsonArrayRequestGerente = new JsonArrayRequest(Request.Method.GET, url_base + "CargarGerente.php", null, new Response.Listener<JSONArray>() {
+        jsonArrayRequestLider = new JsonArrayRequest(Request.Method.POST, url_base + "CargarLider.php", null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                GuardarLiderLocal(ListaObjetosLider(response));
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(), "No se pudo conectar al servidor", Toast.LENGTH_LONG).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> parametros = new HashMap<>();
+                parametros.put("login","true");
+                return parametros;
+            }
+        };
+        request.add(jsonArrayRequestLider);
+
+        jsonArrayRequestResponsable = new JsonArrayRequest(Request.Method.POST, url_base + "CargarResponsable.php", null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                GuardarResponsableLocal(ListaObjetosResponsable(response));
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(), "No se pudo conectar al servidor", Toast.LENGTH_LONG).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> parametros = new HashMap<>();
+                parametros.put("login","true");
+                return parametros;
+            }
+        };
+        request.add(jsonArrayRequestResponsable);
+
+        jsonArrayRequestGerente = new JsonArrayRequest(Request.Method.POST, url_base + "CargarGerente.php", null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 GuardarGerenteLocal(ListaObjetosGerente(response));
@@ -566,10 +631,17 @@ public class FragmentSincronizar extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(getContext(), "No se pudo conectar al servidor", Toast.LENGTH_LONG).show();
             }
-        });
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> parametros = new HashMap<>();
+                parametros.put("login","true");
+                return parametros;
+            }
+        };
         request.add(jsonArrayRequestGerente);
 
-        jsonArrayRequestAuditor = new JsonArrayRequest(Request.Method.GET, url_base + "CargarAuditor.php", null, new Response.Listener<JSONArray>() {
+        jsonArrayRequestAuditor = new JsonArrayRequest(Request.Method.POST, url_base + "CargarAuditor.php", null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 GuardarAuditorLocal(ListaObjetosAuditor(response));
@@ -579,10 +651,17 @@ public class FragmentSincronizar extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(getContext(), "No se pudo conectar al servidor", Toast.LENGTH_LONG).show();
             }
-        });
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> parametros = new HashMap<>();
+                parametros.put("login","true");
+                return parametros;
+            }
+        };
         request.add(jsonArrayRequestAuditor);
 
-        jsonArrayRequestHallazgos = new JsonArrayRequest(Request.Method.GET, url_base + "CargarHallazgos.php", null, new Response.Listener<JSONArray>() {
+        jsonArrayRequestHallazgos = new JsonArrayRequest(Request.Method.POST, url_base + "CargarHallazgos.php", null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 GuardarHallazgosLocal(ListaObjetosHallazgo(response));
@@ -592,10 +671,17 @@ public class FragmentSincronizar extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(getContext(), "No se pudo conectar al servidor", Toast.LENGTH_LONG).show();
             }
-        });
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> parametros = new HashMap<>();
+                parametros.put("login","true");
+                return parametros;
+            }
+        };
         request.add(jsonArrayRequestHallazgos);
 
-        jsonArrayRequestDetalles = new JsonArrayRequest(Request.Method.GET, url_base + "CargarDetalle.php", null, new Response.Listener<JSONArray>() {
+        jsonArrayRequestDetalles = new JsonArrayRequest(Request.Method.POST, url_base + "CargarDetalle.php", null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 GuardarDetalleLocal(ListaObjetosDetalle(response));
@@ -605,7 +691,14 @@ public class FragmentSincronizar extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(getContext(), "No se pudo conectar al servidor", Toast.LENGTH_LONG).show();
             }
-        });
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> parametros = new HashMap<>();
+                parametros.put("login","true");
+                return parametros;
+            }
+        };
         request.add(jsonArrayRequestDetalles);
 
     }
@@ -657,10 +750,45 @@ public class FragmentSincronizar extends Fragment {
                 Area area = new Area();
                 area.setId_area(object.getInt("id_area"));
                 area.setArea(object.getString("area"));
-                area.setLider(object.getString("lider"));
                 area.setId_planta(object.getInt("id_planta"));
                 area.setId_gerente(object.getInt("id_gerente"));
                 lista.add(area);
+            }
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+    private List<Lider> ListaObjetosLider(JSONArray jsonArray){
+
+        List<Lider> lista= new ArrayList<>();
+        try {
+            JSONArray json = jsonArray;
+            for(int i=0; i<json.length(); i++){
+                JSONObject object = new JSONObject(json.getString(i));
+                Lider lider = new Lider();
+                lider.setId_lider(object.getInt("id_lider"));
+                lider.setLider(object.getString("lider"));
+                lista.add(lider);
+            }
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+    private List<Responsable> ListaObjetosResponsable(JSONArray jsonArray){
+
+        List<Responsable> lista= new ArrayList<>();
+        try {
+            JSONArray json = jsonArray;
+            for(int i=0; i<json.length(); i++){
+                JSONObject object = new JSONObject(json.getString(i));
+                Responsable responsable = new Responsable();
+                responsable.setId_area(object.getInt("id_area"));
+                responsable.setId_lider(object.getInt("id_lider"));
+                lista.add(responsable);
             }
         }catch (JSONException e) {
             e.printStackTrace();
@@ -791,11 +919,47 @@ public class FragmentSincronizar extends Fragment {
         for(Area dato: lista){
             values.put(Utilidades.CAMPO_ID_AREA, dato.getId_area());
             values.put(Utilidades.CAMPO_AREA, dato.getArea());
-            values.put(Utilidades.CAMPO_LIDER, dato.getLider());
             values.put(Utilidades.CAMPO_ID_PLANTA, dato.getId_planta());
             values.put(Utilidades.CAMPO_ID_GERENTE, dato.getId_gerente());
 
             Long idResultante = db.insert(Utilidades.TABLA_AREA, Utilidades.CAMPO_ID_AREA, values);
+        }
+
+        db.close();
+        conn.close();
+    }
+
+    private void GuardarLiderLocal(List<Lider> lista){
+
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null,1);
+        SQLiteDatabase db = conn.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        db.delete(Utilidades.TABLA_LIDER, null, null);
+
+        for(Lider dato: lista){
+            values.put(Utilidades.CAMPO_ID_LIDER, dato.getId_lider());
+            values.put(Utilidades.CAMPO_LIDER, dato.getLider());
+
+            Long idResultante = db.insert(Utilidades.TABLA_LIDER, Utilidades.CAMPO_ID_LIDER, values);
+        }
+
+        db.close();
+        conn.close();
+    }
+
+    private void GuardarResponsableLocal(List<Responsable> lista){
+
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null,1);
+        SQLiteDatabase db = conn.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        db.delete(Utilidades.TABLA_RESPONSABLE, null, null);
+
+        for(Responsable dato: lista){
+            values.put(Utilidades.CAMPO_ID_AREA, dato.getId_area());
+            values.put(Utilidades.CAMPO_ID_LIDER, dato.getId_lider());
+            Long idResultante = db.insert(Utilidades.TABLA_RESPONSABLE, Utilidades.CAMPO_ID_AREA, values);
         }
 
         db.close();

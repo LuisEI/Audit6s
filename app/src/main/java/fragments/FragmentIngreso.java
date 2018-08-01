@@ -10,6 +10,7 @@ import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PointF;
+import android.icu.util.UniversalTimeScale;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -44,11 +45,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import entidades.Division;
+import entidades.Lider;
 import sqlite.ConexionSQLiteHelper;
 import utilidades.CalculaTurno;
 import utilidades.Utilidades;
@@ -95,8 +98,10 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
     private FloatingActionButton btnTurno;
     private FloatingActionButton btnFecha;
     private FloatingActionButton btnAuditor;
+    private FloatingActionButton btnLider;
 
     private int turno = 0;
+    private boolean liderUnico;
     private String fechaMySQL;
     private AlertDialog dialogTurno;
 
@@ -247,6 +252,29 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
             }
         });
 
+        txtLider.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(count > 0) {
+                    btnLider.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
+                    btnLider.setImageResource(R.drawable.ic_done);
+                }else {
+                    btnLider.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorBtnDesactivado)));
+                    btnLider.setImageResource(R.drawable.ic_touch_ingreso);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         txtTurno.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -324,6 +352,7 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
         btnFecha = vista.findViewById(R.id.btnFecha);
         btnAuditor = vista.findViewById(R.id.btnAuditor);
         btnValidar = vista.findViewById(R.id.btnValidar);
+        btnLider = vista.findViewById(R.id.btnLider);
 
         btnDivision.setOnClickListener(this);
         btnPlanta.setOnClickListener(this);
@@ -333,6 +362,7 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
         btnFecha.setOnClickListener(this);
         btnAuditor.setOnClickListener(this);
         btnValidar.setOnClickListener(this);
+        btnLider.setOnClickListener(this);
 
         //Deshabilitar el teclado
         txtDivision.getEditText().setShowSoftInputOnFocus(false);
@@ -375,7 +405,6 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 txtInput.getEditText().setText(arrayAdapter.getItem(position));
-                if(txtInput.getId() == R.id.txtArea) LlamarLider(arrayAdapter.getItem(position));
                 alertDialog.dismiss();
             }
         });
@@ -460,7 +489,7 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
     private void LlenarLista(String tabla){
         SQLiteDatabase db;
         listaSpinner = new ArrayList<>();
-        Cursor cursor;
+        Cursor cursor = null;
 
         if(tabla.equals(Utilidades.TABLA_AREA)){
             int id = LlamarIDplanta(txtPlanta.getEditText().getText().toString());
@@ -470,17 +499,33 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
             }else{
                 cursor = db.rawQuery("SELECT * FROM "+ tabla, null);
             }
+        }else if(tabla.equals(Utilidades.TABLA_LIDER)){
+            int id = LlamarIDarea(txtArea.getEditText().getText().toString());
+            db = conn.getReadableDatabase();
+            if(id != 0){
+                cursor = db.rawQuery("SELECT * FROM " + Utilidades.TABLA_LIDER + " AS l" +
+                                " JOIN " + Utilidades.TABLA_RESPONSABLE + " AS r" +
+                                " ON l." + Utilidades.CAMPO_ID_LIDER + " = r." + Utilidades.CAMPO_ID_LIDER +
+                                " JOIN " + Utilidades.TABLA_AREA + " AS a" +
+                                " ON r." + Utilidades.CAMPO_ID_AREA + " = a." + Utilidades.CAMPO_ID_AREA +
+                                " WHERE a."+ Utilidades.CAMPO_ID_AREA +" = ?", new String[]{String.valueOf(id)});
+            }else{
+                Toast.makeText(getContext(), "Seleccione el area primero", Toast.LENGTH_SHORT).show();
+            }
         }else{
             db = conn.getReadableDatabase();
             cursor = db.rawQuery("SELECT * FROM "+ tabla, null);
         }
 
-        while (cursor.moveToNext()){
-            listaSpinner.add(cursor.getString(1));
-        }
+        if(cursor != null){
 
-        db.close();
-        cursor.close();
+            while (cursor.moveToNext()){
+                listaSpinner.add(cursor.getString(1));
+            }
+
+            db.close();
+            cursor.close();
+        }
     }
 
     private int LlamarIDplanta(String planta){
@@ -495,16 +540,16 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
         return id;
     }
 
-    private void LlamarLider(String area){
+    private int LlamarIDarea(String area){
         SQLiteDatabase db = conn.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT lider FROM "+ Utilidades.TABLA_AREA +" WHERE area = ?", new String[]{area});
-
+        Cursor cursor = db.rawQuery("SELECT id_area FROM "+ Utilidades.TABLA_AREA +" WHERE area = ?", new String[]{area});
+        int id = 0;
         while (cursor.moveToNext()){
-            txtLider.getEditText().setText(cursor.getString(0));
+            id = cursor.getInt(0);
         }
-
         db.close();
         cursor.close();
+        return id;
     }
 
     private Bundle CrearBundleDatos() {
@@ -516,6 +561,7 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
         bundle.putInt("planta", getIDTable(db, cursor, Utilidades.CAMPO_ID_PLANTA, Utilidades.TABLA_PLANTA, Utilidades.CAMPO_PLANTA, txtPlanta.getEditText().getText().toString()));
         bundle.putInt("gerente", getIDTable(db, cursor, Utilidades.CAMPO_ID_GERENTE, Utilidades.TABLA_GERENTE, Utilidades.CAMPO_GERENTE, txtGerente.getEditText().getText().toString()));
         bundle.putInt("area", getIDTable(db, cursor, Utilidades.CAMPO_ID_AREA, Utilidades.TABLA_AREA, Utilidades.CAMPO_AREA, txtArea.getEditText().getText().toString()));
+        bundle.putInt("lider", getIDTable(db, cursor, Utilidades.CAMPO_ID_LIDER, Utilidades.TABLA_LIDER, Utilidades.CAMPO_LIDER, txtLider.getEditText().getText().toString()));
         bundle.putInt("auditor", getIDTable(db, cursor, Utilidades.CAMPO_ID_AUDITOR, Utilidades.TABLA_AUDITOR, Utilidades.CAMPO_AUDITOR, txtAuditor.getEditText().getText().toString()));
         bundle.putInt("turno", turno);
         bundle.putString("fecha", fechaMySQL);
@@ -571,7 +617,7 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
         if (m.find( )) {
 
             SQLiteDatabase db = conn.getReadableDatabase();
-            Cursor cursor = db.rawQuery("SELECT area, lider, id_planta, id_gerente FROM "+ Utilidades.TABLA_AREA +" WHERE "+ Utilidades.CAMPO_ID_AREA +" = ?", new String[]{String.valueOf(id_area)});
+            Cursor cursor = db.rawQuery("SELECT area, id_planta, id_gerente FROM "+ Utilidades.TABLA_AREA +" WHERE "+ Utilidades.CAMPO_ID_AREA +" = ?", new String[]{String.valueOf(id_area)});
 
             if(cursor.getCount() > 0){
                 int id_planta = 0;
@@ -579,11 +625,27 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
 
                 while (cursor.moveToNext()){
                     txtArea.getEditText().setText(cursor.getString(0));
-                    txtLider.getEditText().setText(cursor.getString(1));
                     id_planta = cursor.getInt(2);
                     id_gerente = cursor.getInt(3);
                 }
                 cursor.close();
+
+                cursor = db.rawQuery("SELECT lider FROM " + Utilidades.TABLA_LIDER + " AS l" +
+                        " JOIN " + Utilidades.TABLA_RESPONSABLE + " AS r" +
+                        " ON l." + Utilidades.CAMPO_ID_LIDER + " = r." + Utilidades.CAMPO_ID_LIDER +
+                        " JOIN " + Utilidades.TABLA_AREA + " AS a" +
+                        " ON r." + Utilidades.CAMPO_ID_AREA + " = a." + Utilidades.CAMPO_ID_AREA +
+                        " WHERE "+ Utilidades.CAMPO_ID_AREA +" = ?", new String[]{String.valueOf(id_area)});
+                List<String> lideres = new ArrayList<>();
+                while (cursor.moveToNext()){
+                    lideres.add(cursor.getString(0));
+                }
+                cursor.close();
+                if(lideres.size() == 1){
+                    txtLider.getEditText().setText(lideres.get(0));
+                }else{
+
+                }
 
                 cursor = db.rawQuery("SELECT gerente FROM "+ Utilidades.TABLA_GERENTE +" WHERE "+ Utilidades.CAMPO_ID_GERENTE +" = ?", new String[]{String.valueOf(id_gerente)});
                 while (cursor.moveToNext()){
@@ -696,6 +758,9 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
         }else if (v.getId() == R.id.btnArea){
             txtArea.getEditText().requestFocus();
             LanzarListaSeleccionable(txtArea, Utilidades.TABLA_AREA, "Seleccione el Area");
+        }else if (v.getId() == R.id.btnLider){
+            txtLider.getEditText().requestFocus();
+            LanzarListaSeleccionable(txtLider, Utilidades.TABLA_LIDER, "Seleccione el Lider");
         }else if (v.getId() == R.id.btnTurno){
             SeleccionarTurno();
         }else if (v.getId() == R.id.btnFecha){
