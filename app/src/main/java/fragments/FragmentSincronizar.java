@@ -94,7 +94,6 @@ public class FragmentSincronizar extends Fragment {
     private JsonArrayRequest jsonArrayRequestLider;
     private JsonArrayRequest jsonArrayRequestResponsable;
     private ProgressBar pbDownload;
-    //private Auditoria auditParams;
 
     private ConexionSQLiteHelper conn;
     private boolean registroPendientes;
@@ -107,7 +106,7 @@ public class FragmentSincronizar extends Fragment {
     private OnFragmentInteractionListener mListener;
     private TextView txtResgistrosNoSyn;
     private ProgressBar pbUpload;
-    //Chekear red wifi
+    //Chequear red wifi
     private NetworkInfo wifiCheck;
     private ImageView imageWifi;
 
@@ -321,6 +320,7 @@ public class FragmentSincronizar extends Fragment {
                 Map<String, String> parametros = new HashMap<>();
                 parametros.put("id_auditoria", String.valueOf(auditParams.getId_auditoria()));
                 parametros.put("area", String.valueOf(auditParams.getArea()));
+                parametros.put("lider", String.valueOf(auditParams.getLider()));
                 parametros.put("auditor", String.valueOf(auditParams.getAuditor()));
                 parametros.put("turno", String.valueOf(auditParams.getTurno()));
                 parametros.put("fecha", auditParams.getFecha());
@@ -451,34 +451,35 @@ public class FragmentSincronizar extends Fragment {
             a = new Auditoria();
             a.setId_auditoria(cursor.getInt(0));
             a.setArea(cursor.getInt(1));
-            a.setAuditor(cursor.getInt(2));
-            a.setTurno(cursor.getInt(3));
-            a.setFecha(cursor.getString(4));
-            a.setS1_obs_1(cursor.getInt(5));
-            a.setS1_obs_2(cursor.getInt(6));
-            a.setS1_obs_3(cursor.getInt(7));
-            a.setS2_obs_1(cursor.getInt(8));
-            a.setS2_obs_2(cursor.getInt(9));
-            a.setS2_obs_3(cursor.getInt(10));
-            a.setS2_obs_4(cursor.getInt(11));
-            a.setS3_obs_1(cursor.getInt(12));
-            a.setS3_obs_2(cursor.getInt(13));
-            a.setS3_obs_3(cursor.getInt(14));
-            a.setS3_obs_4(cursor.getInt(15));
-            a.setS4_obs_1(cursor.getInt(16));
-            a.setS4_obs_2(cursor.getInt(17));
-            a.setS4_obs_3(cursor.getInt(18));
-            a.setS4_obs_4(cursor.getInt(19));
-            a.setS5_obs_1(cursor.getInt(20));
-            a.setS5_obs_2(cursor.getInt(21));
-            a.setS5_obs_3(cursor.getInt(22));
-            a.setS5_obs_4(cursor.getInt(23));
-            a.setRes_s1(cursor.getInt(24));
-            a.setRes_s2(cursor.getInt(25));
-            a.setRes_s3(cursor.getInt(26));
-            a.setRes_s4(cursor.getInt(27));
-            a.setRes_s5(cursor.getInt(28));
-            a.setRes_total(cursor.getInt(29));
+            a.setLider(cursor.getInt(2));
+            a.setAuditor(cursor.getInt(3));
+            a.setTurno(cursor.getInt(4));
+            a.setFecha(cursor.getString(5));
+            a.setS1_obs_1(cursor.getInt(6));
+            a.setS1_obs_2(cursor.getInt(7));
+            a.setS1_obs_3(cursor.getInt(8));
+            a.setS2_obs_1(cursor.getInt(9));
+            a.setS2_obs_2(cursor.getInt(10));
+            a.setS2_obs_3(cursor.getInt(11));
+            a.setS2_obs_4(cursor.getInt(12));
+            a.setS3_obs_1(cursor.getInt(13));
+            a.setS3_obs_2(cursor.getInt(14));
+            a.setS3_obs_3(cursor.getInt(15));
+            a.setS3_obs_4(cursor.getInt(16));
+            a.setS4_obs_1(cursor.getInt(17));
+            a.setS4_obs_2(cursor.getInt(18));
+            a.setS4_obs_3(cursor.getInt(19));
+            a.setS4_obs_4(cursor.getInt(20));
+            a.setS5_obs_1(cursor.getInt(21));
+            a.setS5_obs_2(cursor.getInt(22));
+            a.setS5_obs_3(cursor.getInt(23));
+            a.setS5_obs_4(cursor.getInt(24));
+            a.setRes_s1(cursor.getInt(25));
+            a.setRes_s2(cursor.getInt(26));
+            a.setRes_s3(cursor.getInt(27));
+            a.setRes_s4(cursor.getInt(28));
+            a.setRes_s5(cursor.getInt(29));
+            a.setRes_total(cursor.getInt(30));
 
             listaAuditorias.add(a);
         }

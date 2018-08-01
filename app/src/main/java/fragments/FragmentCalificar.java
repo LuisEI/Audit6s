@@ -218,6 +218,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         if (bundle != null) {
             AuditoriaDB.setAuditor(bundle.getInt("auditor"));
             AuditoriaDB.setArea(bundle.getInt("area"));
+            AuditoriaDB.setLider(bundle.getInt("lider"));
             AuditoriaDB.setTurno(bundle.getInt("turno"));
             AuditoriaDB.setFecha(bundle.getString("fecha"));
             AuditoriaDB.setId_auditoria(obtenerID());
@@ -725,9 +726,6 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
                     mImageView.setImageResource(R.drawable.cam512);
                     hallazgoSelect = false;
 
-
-
-
                     toastOK.setGravity(Gravity.CENTER, 0, -100);
                     toastOK.setDuration(Toast.LENGTH_SHORT);
                     toastOK.show();
@@ -759,6 +757,12 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
                             .setPositiveButton("Almacenar el hallazgo", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     matrizHallazgos.get(GetIndex(b)).put(mCurrentPhotoPath, spHallazgo.getSelectedItemPosition());
+
+                                    Encontrado encontrado = new Encontrado();
+                                    encontrado.setId_detalle(mapaHallazgoReferencia.get(indice).get(spHallazgo.getSelectedItemPosition()));
+                                    encontrado.setImagen(currentPhotoName);
+                                    hallazgosEncontrados.add(encontrado);
+
                                     spHallazgo.setSelection(-1);
                                     mImageView.setImageResource(R.drawable.cam);
                                     hallazgoSelect = false;
@@ -848,6 +852,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         Object[] datos = new Object[]{
                 AuditoriaDB.getId_auditoria(),
                 AuditoriaDB.getArea(),
+                AuditoriaDB.getLider(),
                 AuditoriaDB.getAuditor(),
                 AuditoriaDB.getTurno(),
                 AuditoriaDB.getFecha(),
@@ -879,7 +884,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
                 0
         };
 
-        String sql = "INSERT INTO " + Utilidades.TABLA_AUDITORIA + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO " + Utilidades.TABLA_AUDITORIA + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         db.execSQL(sql, datos);
 
         for(Encontrado encontrado: hallazgosEncontrados){

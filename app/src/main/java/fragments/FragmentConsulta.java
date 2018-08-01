@@ -151,7 +151,7 @@ public class FragmentConsulta extends Fragment {
     private void MostrarDatosAuditoria(Auditoria auditoria) {
         id_auditoria.setText(String.valueOf(auditoria.getId_auditoria()));
         area_consulta.setText(ObtenerArea(auditoria.getArea()));
-        lider_consulta.setText(ObtenerLider(auditoria.getArea()));
+        lider_consulta.setText(ObtenerLider(auditoria.getLider()));
         txtNotaS1_consulta.setText(String.valueOf(auditoria.getRes_s1()));
         txtNotaS2_consulta.setText(String.valueOf(auditoria.getRes_s2()));
         txtNotaS3_consulta.setText(String.valueOf(auditoria.getRes_s3()));
@@ -262,12 +262,12 @@ public class FragmentConsulta extends Fragment {
         return String.format("Week %d", week);
     }
 
-    private String ObtenerLider(int area) {
+    private String ObtenerLider(int id) {
         String lider = "";
 
         conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null, 1);
         db = conn.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT " + Utilidades.CAMPO_LIDER +" FROM "+ Utilidades.TABLA_AREA +" WHERE "+ Utilidades.CAMPO_ID_AREA +" = ?", new String[]{String.valueOf(area)});
+        Cursor cursor = db.rawQuery("SELECT " + Utilidades.CAMPO_LIDER +" FROM "+ Utilidades.TABLA_LIDER +" WHERE "+ Utilidades.CAMPO_ID_LIDER +" = ?", new String[]{String.valueOf(id)});
 
         while (cursor.moveToNext()){
             lider = cursor.getString(0);
@@ -311,34 +311,35 @@ public class FragmentConsulta extends Fragment {
             a = new Auditoria();
             a.setId_auditoria(cursor.getInt(0));
             a.setArea(cursor.getInt(1));
-            a.setAuditor(cursor.getInt(2));
-            a.setTurno(cursor.getInt(3));
-            a.setFecha(cursor.getString(4));
-            a.setS1_obs_1(cursor.getInt(5));
-            a.setS1_obs_2(cursor.getInt(6));
-            a.setS1_obs_3(cursor.getInt(7));
-            a.setS2_obs_1(cursor.getInt(8));
-            a.setS2_obs_2(cursor.getInt(9));
-            a.setS2_obs_3(cursor.getInt(10));
-            a.setS2_obs_4(cursor.getInt(11));
-            a.setS3_obs_1(cursor.getInt(12));
-            a.setS3_obs_2(cursor.getInt(13));
-            a.setS3_obs_3(cursor.getInt(14));
-            a.setS3_obs_4(cursor.getInt(15));
-            a.setS4_obs_1(cursor.getInt(16));
-            a.setS4_obs_2(cursor.getInt(17));
-            a.setS4_obs_3(cursor.getInt(18));
-            a.setS4_obs_4(cursor.getInt(19));
-            a.setS5_obs_1(cursor.getInt(20));
-            a.setS5_obs_2(cursor.getInt(21));
-            a.setS5_obs_3(cursor.getInt(22));
-            a.setS5_obs_4(cursor.getInt(23));
-            a.setRes_s1(cursor.getInt(24));
-            a.setRes_s2(cursor.getInt(25));
-            a.setRes_s3(cursor.getInt(26));
-            a.setRes_s4(cursor.getInt(27));
-            a.setRes_s5(cursor.getInt(28));
-            a.setRes_total(cursor.getInt(29));
+            a.setLider(cursor.getInt(2));
+            a.setAuditor(cursor.getInt(3));
+            a.setTurno(cursor.getInt(4));
+            a.setFecha(cursor.getString(5));
+            a.setS1_obs_1(cursor.getInt(6));
+            a.setS1_obs_2(cursor.getInt(7));
+            a.setS1_obs_3(cursor.getInt(8));
+            a.setS2_obs_1(cursor.getInt(9));
+            a.setS2_obs_2(cursor.getInt(10));
+            a.setS2_obs_3(cursor.getInt(11));
+            a.setS2_obs_4(cursor.getInt(12));
+            a.setS3_obs_1(cursor.getInt(13));
+            a.setS3_obs_2(cursor.getInt(14));
+            a.setS3_obs_3(cursor.getInt(15));
+            a.setS3_obs_4(cursor.getInt(16));
+            a.setS4_obs_1(cursor.getInt(17));
+            a.setS4_obs_2(cursor.getInt(18));
+            a.setS4_obs_3(cursor.getInt(19));
+            a.setS4_obs_4(cursor.getInt(20));
+            a.setS5_obs_1(cursor.getInt(21));
+            a.setS5_obs_2(cursor.getInt(22));
+            a.setS5_obs_3(cursor.getInt(23));
+            a.setS5_obs_4(cursor.getInt(24));
+            a.setRes_s1(cursor.getInt(25));
+            a.setRes_s2(cursor.getInt(26));
+            a.setRes_s3(cursor.getInt(27));
+            a.setRes_s4(cursor.getInt(28));
+            a.setRes_s5(cursor.getInt(29));
+            a.setRes_total(cursor.getInt(30));
 
             listaAuditorias.add(a);
         }
@@ -360,34 +361,35 @@ public class FragmentConsulta extends Fragment {
             a = new Auditoria();
             a.setId_auditoria(cursor.getInt(0));
             a.setArea(cursor.getInt(1));
-            a.setAuditor(cursor.getInt(2));
-            a.setTurno(cursor.getInt(3));
-            a.setFecha(cursor.getString(4));
-            a.setS1_obs_1(cursor.getInt(5));
-            a.setS1_obs_2(cursor.getInt(6));
-            a.setS1_obs_3(cursor.getInt(7));
-            a.setS2_obs_1(cursor.getInt(8));
-            a.setS2_obs_2(cursor.getInt(9));
-            a.setS2_obs_3(cursor.getInt(10));
-            a.setS2_obs_4(cursor.getInt(11));
-            a.setS3_obs_1(cursor.getInt(12));
-            a.setS3_obs_2(cursor.getInt(13));
-            a.setS3_obs_3(cursor.getInt(14));
-            a.setS3_obs_4(cursor.getInt(15));
-            a.setS4_obs_1(cursor.getInt(16));
-            a.setS4_obs_2(cursor.getInt(17));
-            a.setS4_obs_3(cursor.getInt(18));
-            a.setS4_obs_4(cursor.getInt(19));
-            a.setS5_obs_1(cursor.getInt(20));
-            a.setS5_obs_2(cursor.getInt(21));
-            a.setS5_obs_3(cursor.getInt(22));
-            a.setS5_obs_4(cursor.getInt(23));
-            a.setRes_s1(cursor.getInt(24));
-            a.setRes_s2(cursor.getInt(25));
-            a.setRes_s3(cursor.getInt(26));
-            a.setRes_s4(cursor.getInt(27));
-            a.setRes_s5(cursor.getInt(28));
-            a.setRes_total(cursor.getInt(29));
+            a.setLider(cursor.getInt(2));
+            a.setAuditor(cursor.getInt(3));
+            a.setTurno(cursor.getInt(4));
+            a.setFecha(cursor.getString(5));
+            a.setS1_obs_1(cursor.getInt(6));
+            a.setS1_obs_2(cursor.getInt(7));
+            a.setS1_obs_3(cursor.getInt(8));
+            a.setS2_obs_1(cursor.getInt(9));
+            a.setS2_obs_2(cursor.getInt(10));
+            a.setS2_obs_3(cursor.getInt(11));
+            a.setS2_obs_4(cursor.getInt(12));
+            a.setS3_obs_1(cursor.getInt(13));
+            a.setS3_obs_2(cursor.getInt(14));
+            a.setS3_obs_3(cursor.getInt(15));
+            a.setS3_obs_4(cursor.getInt(16));
+            a.setS4_obs_1(cursor.getInt(17));
+            a.setS4_obs_2(cursor.getInt(18));
+            a.setS4_obs_3(cursor.getInt(19));
+            a.setS4_obs_4(cursor.getInt(20));
+            a.setS5_obs_1(cursor.getInt(21));
+            a.setS5_obs_2(cursor.getInt(22));
+            a.setS5_obs_3(cursor.getInt(23));
+            a.setS5_obs_4(cursor.getInt(24));
+            a.setRes_s1(cursor.getInt(25));
+            a.setRes_s2(cursor.getInt(26));
+            a.setRes_s3(cursor.getInt(27));
+            a.setRes_s4(cursor.getInt(28));
+            a.setRes_s5(cursor.getInt(29));
+            a.setRes_total(cursor.getInt(30));
 
         }
 

@@ -4,6 +4,7 @@ public class Auditoria {
 
     private int id_auditoria;
     private int area;
+    private int lider;
     private int turno;
     private int auditor;
     private String fecha;
@@ -51,6 +52,14 @@ public class Auditoria {
 
     public void setArea(int area) {
         this.area = area;
+    }
+
+    public int getLider() {
+        return lider;
+    }
+
+    public void setLider(int lider) {
+        this.lider = lider;
     }
 
     public int getTurno() {

@@ -45,16 +45,16 @@ public class AdaptadorAuditorias extends RecyclerView.Adapter<AdaptadorAuditoria
     public void onBindViewHolder(@NonNull AuditoriasViewHolder holder, int position) {
         holder.id_auditoria.setText(String.valueOf(listaAuditorias.get(position).getId_auditoria()));
         holder.nombre_area.setText(ObtenerArea(listaAuditorias.get(position).getArea()));
-        holder.nombre_lider.setText(ObtenerLider(listaAuditorias.get(position).getArea()));
+        holder.nombre_lider.setText(ObtenerLider(listaAuditorias.get(position).getLider()));
         holder.nota_final.setText(String.valueOf(listaAuditorias.get(position).getRes_total())+"%");
     }
 
-    private String ObtenerLider(int area) {
+    private String ObtenerLider(int id) {
         String lider = "";
 
         conn = new ConexionSQLiteHelper(context, "db_audit6s", null, 1);
         db = conn.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT " + Utilidades.CAMPO_LIDER +" FROM "+ Utilidades.TABLA_AREA +" WHERE "+ Utilidades.CAMPO_ID_AREA +" = ?", new String[]{String.valueOf(area)});
+        Cursor cursor = db.rawQuery("SELECT " + Utilidades.CAMPO_LIDER +" FROM "+ Utilidades.TABLA_LIDER +" WHERE "+ Utilidades.CAMPO_ID_LIDER +" = ?", new String[]{String.valueOf(id)});
 
         while (cursor.moveToNext()){
             lider = cursor.getString(0);
