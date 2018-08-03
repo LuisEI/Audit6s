@@ -625,17 +625,17 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
 
                 while (cursor.moveToNext()){
                     txtArea.getEditText().setText(cursor.getString(0));
-                    id_planta = cursor.getInt(2);
-                    id_gerente = cursor.getInt(3);
+                    id_planta = cursor.getInt(1);
+                    id_gerente = cursor.getInt(2);
                 }
                 cursor.close();
 
-                cursor = db.rawQuery("SELECT lider FROM " + Utilidades.TABLA_LIDER + " AS l" +
+                cursor = db.rawQuery("SELECT l.lider FROM " + Utilidades.TABLA_LIDER + " AS l" +
                         " JOIN " + Utilidades.TABLA_RESPONSABLE + " AS r" +
                         " ON l." + Utilidades.CAMPO_ID_LIDER + " = r." + Utilidades.CAMPO_ID_LIDER +
                         " JOIN " + Utilidades.TABLA_AREA + " AS a" +
                         " ON r." + Utilidades.CAMPO_ID_AREA + " = a." + Utilidades.CAMPO_ID_AREA +
-                        " WHERE "+ Utilidades.CAMPO_ID_AREA +" = ?", new String[]{String.valueOf(id_area)});
+                        " WHERE a."+ Utilidades.CAMPO_ID_AREA +" = ?", new String[]{String.valueOf(id_area)});
                 List<String> lideres = new ArrayList<>();
                 while (cursor.moveToNext()){
                     lideres.add(cursor.getString(0));

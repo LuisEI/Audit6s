@@ -38,6 +38,8 @@ import android.widget.Toast;
 
 import com.example.liraheta.audit6s.R;
 
+import net.cachapa.expandablelayout.ExpandableLayout;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -174,6 +176,12 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
     private Vibrator vibe;
     private final int TIEMPO_VIBRACION = 50;
 
+    private ExpandableLayout expandableLayout0;
+    private ExpandableLayout expandableLayout1;
+    private ExpandableLayout expandableLayout2;
+    private ExpandableLayout expandableLayout3;
+    private ExpandableLayout expandableLayout4;
+
     //endregion
 
     public FragmentCalificar() {
@@ -297,6 +305,12 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         btnHallazgoN18 = vista.findViewById(R.id.btnHallazgoN18);
         btnHallazgoN19 = vista.findViewById(R.id.btnHallazgoN19);
 
+        expandableLayout0 = vista.findViewById(R.id.expandable_layout_0);
+        expandableLayout1 = vista.findViewById(R.id.expandable_layout_1);
+        expandableLayout2 = vista.findViewById(R.id.expandable_layout_2);
+        expandableLayout3 = vista.findViewById(R.id.expandable_layout_3);
+        expandableLayout4 = vista.findViewById(R.id.expandable_layout_4);
+
         fab_n1.setOnClickListener(this);
         fab_n2.setOnClickListener(this);
         fab_n3.setOnClickListener(this);
@@ -358,6 +372,12 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         btnHallazgoN19.setOnClickListener(this);
 
         btnGuardarDB.setOnClickListener(this);
+
+        vista.findViewById(R.id.expand_button_0).setOnClickListener(this);
+        vista.findViewById(R.id.expand_button_1).setOnClickListener(this);
+        vista.findViewById(R.id.expand_button_2).setOnClickListener(this);
+        vista.findViewById(R.id.expand_button_3).setOnClickListener(this);
+        vista.findViewById(R.id.expand_button_4).setOnClickListener(this);
 
         matrizHallazgos = new ArrayList<>();
         mapaHallazgoReferencia = new ArrayList<>();
@@ -1173,6 +1193,41 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
                 vibe.vibrate(TIEMPO_VIBRACION);
                 Toast.makeText(getContext(), "No ha terminado de calificar", Toast.LENGTH_SHORT).show();
             }
+        }
+        else if (v.getId() == R.id.expand_button_0) {
+            expandableLayout0.expand();
+            expandableLayout1.collapse();
+            expandableLayout2.collapse();
+            expandableLayout3.collapse();
+            expandableLayout4.collapse();
+        }
+        else if (v.getId() == R.id.expand_button_1) {
+            expandableLayout0.collapse();
+            expandableLayout1.expand();
+            expandableLayout2.collapse();
+            expandableLayout3.collapse();
+            expandableLayout4.collapse();
+        }
+        else if (v.getId() == R.id.expand_button_2) {
+            expandableLayout0.collapse();
+            expandableLayout1.collapse();
+            expandableLayout2.expand();
+            expandableLayout3.collapse();
+            expandableLayout4.collapse();
+        }
+        else if (v.getId() == R.id.expand_button_3) {
+            expandableLayout0.collapse();
+            expandableLayout1.collapse();
+            expandableLayout2.collapse();
+            expandableLayout3.expand();
+            expandableLayout4.collapse();
+        }
+        else if (v.getId() == R.id.expand_button_4) {
+            expandableLayout0.collapse();
+            expandableLayout1.collapse();
+            expandableLayout2.collapse();
+            expandableLayout3.collapse();
+            expandableLayout4.expand();
         }
     }
 

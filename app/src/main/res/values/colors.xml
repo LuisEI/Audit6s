@@ -7,4 +7,6 @@
     <color name="colorActivado">#FF4081</color>
     <color name="colorBtnDesactivado">#AAAAAA</color>
     <color name="colorTitulos">#29B6F6</color>
+    <color name="colorTitulosCal">#d9f3ff</color>
+    <color name="textoTituloCal">#212121</color>
 </resources>
