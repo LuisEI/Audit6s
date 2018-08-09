@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -35,6 +36,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.util.Util;
 import com.example.liraheta.audit6s.R;
 
 import org.json.JSONArray;
@@ -112,6 +114,7 @@ public class FragmentSincronizar extends Fragment {
 
     private int cantidadHallazgos = 0;
     private int acumulador = 0;
+    private boolean sonido;
 
 
     public FragmentSincronizar() {
@@ -150,6 +153,10 @@ public class FragmentSincronizar extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         vista = inflater.inflate(R.layout.fragment_fragment_sincronizar, container, false);
+
+        SharedPreferences preferences = getActivity().getSharedPreferences("opciones", Context.MODE_PRIVATE);
+        sonido = preferences.getBoolean("sonido", false);
+
         btnSyncLocal = vista.findViewById(R.id.btnSyncLocal);
         btnSyncRemoto = vista.findViewById(R.id.btnSyncRemoto);
         txtResgistrosNoSyn = vista.findViewById(R.id.txtRegistroNoSync);
@@ -183,6 +190,10 @@ public class FragmentSincronizar extends Fragment {
                         if(existeConexionWifi(getContext())){
                             SincronizacionRemota();
                         }else{
+                            if(sonido){
+                                MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.wifi);
+                                mp.start();
+                            }
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_DeviceDefault_Light_Dialog_Alert);
                             builder.setTitle("No esta conectado a la red WIFI")
                                     .setMessage("¿Desea abrir los ajustes para conectarse a la red WIFI?")
@@ -825,6 +836,7 @@ public class FragmentSincronizar extends Fragment {
                 Auditor auditor = new Auditor();
                 auditor.setId_auditor(object.getInt("id_auditor"));
                 auditor.setAuditor(object.getString("auditor"));
+                auditor.setClave((object.getString("clave")));
                 lista.add(auditor);
             }
         }catch (JSONException e) {
@@ -997,6 +1009,7 @@ public class FragmentSincronizar extends Fragment {
         for(Auditor dato: lista){
             values.put(Utilidades.CAMPO_ID_AUDITOR, dato.getId_auditor());
             values.put(Utilidades.CAMPO_AUDITOR, dato.getAuditor());
+            values.put(Utilidades.CAMPO_CLAVE, dato.getClave());
 
             Long idResultante = db.insert(Utilidades.TABLA_AUDITOR, Utilidades.CAMPO_ID_AUDITOR, values);
         }

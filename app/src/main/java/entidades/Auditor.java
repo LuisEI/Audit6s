@@ -5,6 +5,8 @@ public class Auditor {
     private int id_auditor;
     private String auditor;
 
+    private String clave;
+
     public Auditor() {
 
     }
@@ -24,4 +26,13 @@ public class Auditor {
     public void setAuditor(String auditor) {
         this.auditor = auditor;
     }
+
+    public String getClave() {
+        return clave;
+    }
+
+    public void setClave(String clave) {
+        this.clave = clave;
+    }
+
 }

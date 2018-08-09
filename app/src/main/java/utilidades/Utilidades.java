@@ -40,9 +40,10 @@ public class Utilidades {
     public static final String TABLA_AUDITOR = "t_auditor";
     public static final String CAMPO_ID_AUDITOR = "id_auditor";
     public static final String CAMPO_AUDITOR = "auditor";
+    public static final String CAMPO_CLAVE = "clave";
 
     public static final String CREAR_TABLA_AUDITOR = "CREATE TABLE " + TABLA_AUDITOR + " (" + CAMPO_ID_AUDITOR + " INTEGER PRIMARY KEY, "+
-            CAMPO_AUDITOR + " TEXTO)";
+            CAMPO_AUDITOR + " TEXTO, "+ CAMPO_CLAVE + " TEXTO)";
 
 
     //Constantes de la tabla Planta

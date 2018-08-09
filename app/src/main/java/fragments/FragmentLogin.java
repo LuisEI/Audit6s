@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,6 +25,8 @@ import com.example.liraheta.audit6s.MainActivity;
 import com.example.liraheta.audit6s.R;
 import com.github.clans.fab.FloatingActionButton;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import adapters.SpinnerAdaptador;
@@ -104,7 +108,55 @@ public class FragmentLogin extends Fragment {
 
         LlenarLista();
         ((DrawerLocker) getActivity()).setDrawerEnabled(false);
+
         return vista;
+    }
+
+    private String md5(String s) {
+        final String MD5 = "MD5";
+        try {
+            MessageDigest digest = java.security.MessageDigest
+                    .getInstance(MD5);
+            digest.update(s.getBytes());
+            byte messageDigest[] = digest.digest();
+
+            StringBuilder hexString = new StringBuilder();
+            for (byte aMessageDigest : messageDigest) {
+                String h = Integer.toHexString(0xFF & aMessageDigest);
+                while (h.length() < 2)
+                    h = "0" + h;
+                hexString.append(h);
+            }
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    private boolean CompararClave(String auditor, String clave){
+
+        SQLiteOpenHelper conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null, 1);
+        SQLiteDatabase db = conn.getReadableDatabase();
+
+        String pass = "";
+        Boolean autorizado = false;
+
+        Cursor cursor = db.rawQuery("SELECT clave FROM "+ Utilidades.TABLA_AUDITOR +" WHERE "+ Utilidades.CAMPO_AUDITOR +" = ?", new String[]{auditor});
+
+        while (cursor.moveToNext()){
+            pass = cursor.getString(0);
+        }
+
+        cursor.close();
+        conn.close();
+
+        if(pass.equals(md5(clave))){
+            autorizado = true;
+        }
+
+        return autorizado;
     }
 
     public void login() {
@@ -142,25 +194,35 @@ public class FragmentLogin extends Fragment {
     }
 
     public boolean validate() {
+
         boolean valid = true;
 
         String password = txtPassLogin.getText().toString();
 
-        if (spinnerLogin.getSelectedItem().toString().equals("Seleccione el auditor")) {
-            valid = false;
-            Toast.makeText(getContext(), "No ha seleccionado un auditor", Toast.LENGTH_LONG).show();
-        }else{
-            ((MainActivity)getActivity()).setAuditor(spinnerLogin.getSelectedItemPosition() + 1);
-        }
+        if(spinnerLogin.getCount() != 0){
+            if (spinnerLogin.getSelectedItem().toString().equals("Seleccione el auditor")) {
+                valid = false;
+                Toast.makeText(getContext(), "No ha seleccionado un auditor", Toast.LENGTH_LONG).show();
+            }else{
+                if(CompararClave(spinnerLogin.getSelectedItem().toString(), password)){
+                    ((MainActivity)getActivity()).setAuditor(spinnerLogin.getSelectedItemPosition() + 1);
+                    txtPassLogin.setError(null);
+                }else{
+                    txtPassLogin.setError("La contraseña no es valida");
+                    valid = false;
+                    MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.error);
+                    mp.start();
+                }
+            }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            txtPassLogin.setError("La contraseña no es valida");
-            valid = false;
+            return valid;
+
         } else {
-            txtPassLogin.setError(null);
+            Toast.makeText(getContext(), "No hay datos en la base, sincronize!", Toast.LENGTH_LONG).show();
+            valid = false;
+            return valid;
         }
 
-        return valid;
     }
 
     private void LlenarLista(){

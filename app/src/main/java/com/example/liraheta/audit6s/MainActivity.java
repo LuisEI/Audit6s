@@ -1,5 +1,6 @@
 package com.example.liraheta.audit6s;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
@@ -14,6 +15,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import fragments.FragmentAuditoria;
 import fragments.FragmentCalificar;
@@ -37,6 +41,7 @@ public class MainActivity extends AppCompatActivity
     private static int auditor;
     DrawerLayout drawer;
     ActionBarDrawerToggle toggle;
+    TextView txtAuditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,9 +98,47 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_info) {
             getSupportFragmentManager().beginTransaction().replace(R.id.contenerdorFragment, new Fragment_Informacion()).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+        } else if (id == R.id.action_logout){
+
+            Fragment f = this.getSupportFragmentManager().findFragmentById(R.id.contenerdorFragment);
+
+            if(!(f instanceof FragmentLogin)){
+
+                final View alertFormView = getLayoutInflater().inflate(R.layout.alert_dialog_cerrar_sesion, null);
+
+                Button btnCancelar = alertFormView.findViewById(R.id.btnNoAbortarCalificacion);
+                Button btnCerrarSesion = alertFormView.findViewById(R.id.btnAbortarCalificacion);
+                TextView txtTitulo = alertFormView.findViewById(R.id.txtTituloMensajeAbortar);
+                TextView txtMensaje = alertFormView.findViewById(R.id.txtMensajeAbortar);
+
+                txtTitulo.setText("Cerrar Sesion");
+                txtMensaje.setText("¿Desea cerrar la sesion?");
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setCancelable(true);
+                builder.setView(alertFormView);
+                final AlertDialog alertDialog = builder.create();
+
+                alertDialog.show();
+
+                btnCancelar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                    }
+                });
+
+                btnCerrarSesion.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.contenerdorFragment, new FragmentLogin()).addToBackStack(null).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+                    }
+                });
+            }
+
         }
 
         return super.onOptionsItemSelected(item);

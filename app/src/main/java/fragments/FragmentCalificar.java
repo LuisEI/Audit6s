@@ -4,12 +4,15 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -182,6 +185,15 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
     private ExpandableLayout expandableLayout3;
     private ExpandableLayout expandableLayout4;
 
+    private ImageView icon_s1;
+    private ImageView icon_s2;
+    private ImageView icon_s3;
+    private ImageView icon_s4;
+    private ImageView icon_s5;
+
+    private TextView txtNumeroHallazgos;
+    boolean sonido;
+
     //endregion
 
     public FragmentCalificar() {
@@ -219,8 +231,9 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         vista = inflater.inflate(R.layout.fragment_fragment_calificar, container, false);
-
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        SharedPreferences preferences = getActivity().getSharedPreferences("opciones", Context.MODE_PRIVATE);
+        sonido = preferences.getBoolean("sonido", false);
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -310,6 +323,14 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         expandableLayout2 = vista.findViewById(R.id.expandable_layout_2);
         expandableLayout3 = vista.findViewById(R.id.expandable_layout_3);
         expandableLayout4 = vista.findViewById(R.id.expandable_layout_4);
+
+        icon_s1 = vista.findViewById(R.id.icon_s1);
+        icon_s2 = vista.findViewById(R.id.icon_s2);
+        icon_s3 = vista.findViewById(R.id.icon_s3);
+        icon_s4 = vista.findViewById(R.id.icon_s4);
+        icon_s5 = vista.findViewById(R.id.icon_s5);
+
+        txtNumeroHallazgos = vista.findViewById(R.id.txtNumeroHallazgos);
 
         fab_n1.setOnClickListener(this);
         fab_n2.setOnClickListener(this);
@@ -434,6 +455,8 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         AuditoriaDB.setRes_s4(arrayNotas[4]);
         AuditoriaDB.setRes_s5(arrayNotas[5]);
         AuditoriaDB.setRes_total(arrayNotas[0]);
+
+        txtNumeroHallazgos.setText(String.valueOf(hallazgosEncontrados.size()));
     }
 
     private static void CalculoNota(TextView txtEstrallas1, TextView txtEstrallas2, TextView txtEstrallas3, TextView txtEstrallas4, TextView txtNota) {
@@ -646,6 +669,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
                 GuardarPuntosDB(rb.getRating(), indice);
                 button.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
                 alertDialog.dismiss();
+                ComprobacionIconoOK();
             }
         });
 
@@ -659,7 +683,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         estaCalificado[indice] = true;
         GuardarPuntosDB(5f, indice);
         button.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
-
+        ComprobacionIconoOK();
     }
 
     private void GuardarPuntosDB(float rating, int index) {
@@ -752,13 +776,19 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
 
                     //Toast.makeText(getContext(), "Se agrego un hallazgo", Toast.LENGTH_SHORT).show();
                 }else if(spHallazgo.getSelectedItem() == null || spHallazgo.getSelectedItem().toString().equals("Seleccione el Hallazgo")){
-                    vibe.vibrate(TIEMPO_VIBRACION);
+                    if(sonido){
+                        MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.no_ha_seleccionado_hallazgo);
+                        mp.start();
+                    }
                     txtToastFail.setText("Seleccione un hallazgo");
                     toastFail.setGravity(Gravity.CENTER, 0, -100);
                     toastFail.setDuration(Toast.LENGTH_SHORT);
                     toastFail.show();
                 }else if(!hallazgoSelect){
-                    vibe.vibrate(TIEMPO_VIBRACION);
+                    if(sonido){
+                        MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.tome_foto);
+                        mp.start();
+                    }
                     txtToastFail.setText("Tome una fotografia");
                     toastFail.setGravity(Gravity.CENTER, 0, -100);
                     toastFail.setDuration(Toast.LENGTH_SHORT);
@@ -905,19 +935,24 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         };
 
         String sql = "INSERT INTO " + Utilidades.TABLA_AUDITORIA + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        db.execSQL(sql, datos);
 
-        for(Encontrado encontrado: hallazgosEncontrados){
-            String consulta = "INSERT INTO " + Utilidades.TABLA_ENCONTRADO + " VALUES (?,?,?)";
-            Object[] listaDatos = new Object[]{ encontrado.getId_detalle(), encontrado.getImagen(), AuditoriaDB.getId_auditoria()};
-            db.execSQL(consulta, listaDatos);
+        try{
+            db.execSQL(sql, datos);
+
+            for(Encontrado encontrado: hallazgosEncontrados){
+                String consulta = "INSERT INTO " + Utilidades.TABLA_ENCONTRADO + " VALUES (?,?,?)";
+                Object[] listaDatos = new Object[]{ encontrado.getId_detalle(), encontrado.getImagen(), AuditoriaDB.getId_auditoria()};
+                db.execSQL(consulta, listaDatos);
+            }
+
+            db.close();
+            conn.close();
+
+            Toast.makeText(getContext(), "Datos almacenados correctamente", Toast.LENGTH_SHORT).show();
+
+        } catch (SQLiteConstraintException ex){
+            Toast.makeText(getContext(), "La auditoria no se almaceno porque ya existia ese indice", Toast.LENGTH_LONG).show();
         }
-
-        db.close();
-        conn.close();
-
-        Toast.makeText(getContext(), "Datos almacenados correctamente", Toast.LENGTH_SHORT).show();
-
     }
 
     private void dispatchTakePictureIntent() {
@@ -986,6 +1021,11 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
                 GuardarDatosEnDB();
                 alertDialog.dismiss();
 
+                if(sonido){
+                    MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.fin_auditoria);
+                    mp.start();
+                }
+
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.contenerdorFragment, new FragmentHome());
                 ft.commit();
@@ -1024,6 +1064,38 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
                 ft.commit();
             }
         });
+    }
+
+    public void ComprobacionIconoOK(){
+        boolean s_ok = true;
+        for (int i = 0; i < 3; i++) {
+            if(!estaCalificado[i]) s_ok = false;
+        }
+        if (s_ok) icon_s1.setImageResource(R.drawable.check_50);
+
+        s_ok = true;
+        for (int i = 3; i < 7; i++) {
+            if(!estaCalificado[i]) s_ok = false;
+        }
+        if (s_ok) icon_s2.setImageResource(R.drawable.check_50);
+
+        s_ok = true;
+        for (int i = 7; i < 11; i++) {
+            if(!estaCalificado[i]) s_ok = false;
+        }
+        if (s_ok) icon_s3.setImageResource(R.drawable.check_50);
+
+        s_ok = true;
+        for (int i = 11; i < 15; i++) {
+            if(!estaCalificado[i]) s_ok = false;
+        }
+        if (s_ok) icon_s4.setImageResource(R.drawable.check_50);
+
+        s_ok = true;
+        for (int i = 15; i < 19; i++) {
+            if(!estaCalificado[i]) s_ok = false;
+        }
+        if (s_ok) icon_s5.setImageResource(R.drawable.check_50);
     }
 
     @Override
@@ -1190,7 +1262,8 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
             if(calificacionCompleta){
                 LanzarMensajeFinalizar();
             }else {
-                vibe.vibrate(TIEMPO_VIBRACION);
+                MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.faltan_puntos);
+                mp.start();
                 Toast.makeText(getContext(), "No ha terminado de calificar", Toast.LENGTH_SHORT).show();
             }
         }

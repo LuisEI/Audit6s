@@ -13,7 +13,7 @@
         android:padding="30dp" >
 
         <LinearLayout
-            android:layout_width="450dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center">
 
@@ -30,7 +30,7 @@
                 android:id="@+id/txtTituloMensajeAbortar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Abortar Auditoria"
+                android:text="Cerrar Sesion"
                 android:textSize="34sp"
                 android:textStyle="bold"
                 android:layout_gravity="center"
@@ -40,9 +40,9 @@
 
         <TextView
             android:id="@+id/txtMensajeAbortar"
-            android:layout_width="400dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="¿Desea abandonar la auditoria y salir al menu principal?"
+            android:text="¿Desea cerrar la sesion?"
             android:textSize="24sp"
             android:layout_margin="30dp"
             android:textAlignment="center"

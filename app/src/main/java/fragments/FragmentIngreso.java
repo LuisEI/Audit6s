@@ -5,12 +5,14 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PointF;
 import android.icu.util.UniversalTimeScale;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -110,6 +112,7 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
 
     private static final int MY_PERMISSION_REQUEST_CAMERA = 0;
     private QRCodeReaderView qrCodeReaderView;
+    private boolean sonido;
 
     public FragmentIngreso() {
         // Required empty public constructor
@@ -146,6 +149,9 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         vista = inflater.inflate(R.layout.fragment_fragment_ingreso, container, false);
+
+        SharedPreferences preferences = getActivity().getSharedPreferences("opciones", Context.MODE_PRIVATE);
+        sonido = preferences.getBoolean("sonido", false);
 
         txtDivision = vista.findViewById(R.id.txtDivision);
         txtPlanta = vista.findViewById(R.id.txtPlanta);
@@ -420,6 +426,10 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
                 txtInput.getEditText().setText(new StringBuilder().append(dayOfMonth).append("-").append(month+1).append("-").append(year));
             }
         });
+        
+        datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
+        datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
+
         datePickerDialog.show();
     }
 
@@ -787,7 +797,10 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.commit();
             }else{
-                vibe.vibrate(50);
+                if(sonido){
+                    MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.llenar_campos);
+                    mp.start();
+                }
             }
         }
 

@@ -9,6 +9,6 @@
     <dimen name="fab_heigth">40dp</dimen>
     <dimen name="text_start_size">24sp</dimen>
     <dimen name="text_titulo_s">24sp</dimen>
-    <dimen name="text_result_s">24sp</dimen>
+    <dimen name="text_result_s">28sp</dimen>
     <dimen name="alto_de_menu">60dp</dimen>
 </resources>

@@ -5,16 +5,22 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.liraheta.audit6s.R;
+
+import java.io.File;
 
 import sqlite.ConexionSQLiteHelper;
 import utilidades.Utilidades;
@@ -47,6 +53,7 @@ public class FragmentSetting extends Fragment implements View.OnClickListener{
 
     private View vista;
     private Button btnBorrarRegistros;
+    private CheckBox chkSonido;
     private ConexionSQLiteHelper conn;
 
     /**
@@ -82,6 +89,7 @@ public class FragmentSetting extends Fragment implements View.OnClickListener{
         vista = inflater.inflate(R.layout.fragment_fragment_setting, container, false);
         btnBorrarRegistros = vista.findViewById(R.id.btnBorrarRegistros);
         btnGuardarPreferencias = vista.findViewById(R.id.btnGuardarPreferencias);
+        chkSonido = vista.findViewById(R.id.chkSonidos);
 
         urlWebServices = vista.findViewById(R.id.urlWebServices);
         urlWebServices.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
@@ -90,6 +98,8 @@ public class FragmentSetting extends Fragment implements View.OnClickListener{
         btnGuardarPreferencias.setOnClickListener(this);
 
         CargarPreferencias();
+        TextView txtMemory = vista.findViewById(R.id.txtMemoriaUtilizada);
+        txtMemory.setText(CantidadImagenes() + " MB");
 
         return vista;
     }
@@ -102,8 +112,26 @@ public class FragmentSetting extends Fragment implements View.OnClickListener{
         db.delete(Utilidades.TABLA_ENCONTRADO, null, null);
         db.close();
         conn.close();
+
+        BorrarImagenes();
     }
 
+    private void BorrarImagenes(){
+        File dir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        for(File file: dir.listFiles())
+            if (!file.isDirectory())
+                file.delete();
+    }
+
+    private String CantidadImagenes(){
+        File dir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        long length = 0;
+        for (File file : dir.listFiles()) {
+            if (file.isFile())
+                length += file.length();
+        }
+        return String.valueOf(length/1048576);
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -143,17 +171,26 @@ public class FragmentSetting extends Fragment implements View.OnClickListener{
         SharedPreferences preferences = getActivity().getSharedPreferences("opciones", Context.MODE_PRIVATE);
 
         String url_web_services = urlWebServices.getText().toString();
+        boolean sonido = chkSonido.isChecked();
 
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("url_web", url_web_services);
+        editor.putBoolean("sonido", sonido);
 
-        editor.commit();
+        editor.apply();
+
+        Toast toast = Toast.makeText(getContext(), "Se guardaron los ajustes", Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 40);
+        toast.show();
     }
 
     private void CargarPreferencias(){
         SharedPreferences preferences = getActivity().getSharedPreferences("opciones", Context.MODE_PRIVATE);
         String url = preferences.getString("url_web", "");
         urlWebServices.setText(url);
+        if(preferences.getBoolean("sonido", false)){
+            chkSonido.setChecked(true);
+        }
     }
 
 

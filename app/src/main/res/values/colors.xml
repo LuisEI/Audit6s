@@ -4,9 +4,12 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorCard">#f5f5f5</color>
+    <color name="colorCardDark">#eeeeee</color>
+    <color name="colorCardCal">#FFE2FCFF</color>
     <color name="colorActivado">#FF4081</color>
     <color name="colorBtnDesactivado">#AAAAAA</color>
     <color name="colorTitulos">#29B6F6</color>
-    <color name="colorTitulosCal">#d9f3ff</color>
+    <!--<color name="colorTitulosCal">#d9f3ff</color>-->
+    <color name="colorTitulosCal">#ffffff</color>
     <color name="textoTituloCal">#212121</color>
 </resources>

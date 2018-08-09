@@ -43,7 +43,7 @@ public class AdaptadorAuditorias extends RecyclerView.Adapter<AdaptadorAuditoria
 
     @Override
     public void onBindViewHolder(@NonNull AuditoriasViewHolder holder, int position) {
-        holder.id_auditoria.setText(String.valueOf(listaAuditorias.get(position).getId_auditoria()));
+        holder.txtFechaAudi.setText(String.valueOf(listaAuditorias.get(position).getFecha()));
         holder.nombre_area.setText(ObtenerArea(listaAuditorias.get(position).getArea()));
         holder.nombre_lider.setText(ObtenerLider(listaAuditorias.get(position).getLider()));
         holder.nota_final.setText(String.valueOf(listaAuditorias.get(position).getRes_total())+"%");
@@ -103,11 +103,11 @@ public class AdaptadorAuditorias extends RecyclerView.Adapter<AdaptadorAuditoria
 
     public class AuditoriasViewHolder extends RecyclerView.ViewHolder {
 
-        TextView id_auditoria, nombre_area, nombre_lider, nota_final;
+        TextView txtFechaAudi, nombre_area, nombre_lider, nota_final;
 
         public AuditoriasViewHolder(View itemView) {
             super(itemView);
-            id_auditoria = itemView.findViewById(R.id.id_auditoria);
+            txtFechaAudi = itemView.findViewById(R.id.fecha_audi_pager);
             nombre_area = itemView.findViewById(R.id.nombre_area);
             nombre_lider = itemView.findViewById(R.id.nombre_lider);
             nota_final = itemView.findViewById(R.id.nota_total);
