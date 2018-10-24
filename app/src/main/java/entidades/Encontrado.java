@@ -5,6 +5,7 @@ public class Encontrado {
     private int id_detalle;
     private String imagen;
     private int id_auditoria;
+    private String comentario = "";
 
 
     public Encontrado() {
@@ -36,4 +37,11 @@ public class Encontrado {
         this.id_auditoria = id_auditoria;
     }
 
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
 }

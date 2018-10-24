@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.liraheta.audit6s.R;
@@ -47,6 +48,11 @@ public class AdaptadorAuditorias extends RecyclerView.Adapter<AdaptadorAuditoria
         holder.nombre_area.setText(ObtenerArea(listaAuditorias.get(position).getArea()));
         holder.nombre_lider.setText(ObtenerLider(listaAuditorias.get(position).getLider()));
         holder.nota_final.setText(String.valueOf(listaAuditorias.get(position).getRes_total())+"%");
+        holder.imaSync.setImageResource(ObtenerEstadoSync(listaAuditorias.get(position).getSync()));
+    }
+
+    private int ObtenerEstadoSync(int sync) {
+        return (sync == 0) ? R.drawable.sync_no : R.drawable.sync_yes;
     }
 
     private String ObtenerLider(int id) {
@@ -104,6 +110,7 @@ public class AdaptadorAuditorias extends RecyclerView.Adapter<AdaptadorAuditoria
     public class AuditoriasViewHolder extends RecyclerView.ViewHolder {
 
         TextView txtFechaAudi, nombre_area, nombre_lider, nota_final;
+        ImageView imaSync;
 
         public AuditoriasViewHolder(View itemView) {
             super(itemView);
@@ -111,6 +118,7 @@ public class AdaptadorAuditorias extends RecyclerView.Adapter<AdaptadorAuditoria
             nombre_area = itemView.findViewById(R.id.nombre_area);
             nombre_lider = itemView.findViewById(R.id.nombre_lider);
             nota_final = itemView.findViewById(R.id.nota_total);
+            imaSync = itemView.findViewById(R.id.imaSycn);
         }
     }
 }

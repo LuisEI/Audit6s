@@ -149,6 +149,11 @@ public class FragmentConsulta extends Fragment {
     }
 
     private void MostrarDatosAuditoria(Auditoria auditoria) {
+
+        auditoriaViewPager.setAdapter(null);
+        txtHallazgo.setText("");
+        txtCantidadHallazgos.setText("0");
+
         id_auditoria.setText(String.valueOf(auditoria.getId_auditoria()));
         area_consulta.setText(ObtenerArea(auditoria.getArea()));
         lider_consulta.setText(ObtenerLider(auditoria.getLider()));
@@ -167,6 +172,7 @@ public class FragmentConsulta extends Fragment {
     private void CargarImagenes(int id) {
 
         final List<Integer> lista_id_detalle = new ArrayList<>();
+        final List<String> lista_comentarios = new ArrayList<>();
         List<String> listaImagenes = new ArrayList<>();
         final List<String> descripciones;
 
@@ -178,9 +184,10 @@ public class FragmentConsulta extends Fragment {
         while (cursor.moveToNext()){
             lista_id_detalle.add(cursor.getInt(0));
             listaImagenes.add(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "/" + cursor.getString(1));
+            lista_comentarios.add(cursor.getString(3));
         }
 
-        descripciones = ObtenerDescripcionListaDetalle(lista_id_detalle);
+        descripciones = ObtenerDescripcionListaDetalle(lista_id_detalle, lista_comentarios);
 
         db.close();
         cursor.close();
@@ -201,7 +208,8 @@ public class FragmentConsulta extends Fragment {
 
                 @Override
                 public void onPageSelected(int position) {
-                    txtHallazgo.setText(descripciones.get(position));
+                    if(position < descripciones.size()) txtHallazgo.setText(descripciones.get(position));
+                    else txtHallazgo.setText("Hallazgo perdido");
                 }
 
                 @Override
@@ -209,12 +217,10 @@ public class FragmentConsulta extends Fragment {
 
                 }
             });
-
-
         }
     }
 
-    private List<String> ObtenerDescripcionListaDetalle(List<Integer> id_detalle){
+    private List<String> ObtenerDescripcionListaDetalle(List<Integer> id_detalle, List<String> comentarios){
         conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null, 1);
         SQLiteDatabase db = conn.getReadableDatabase();
         List<String> descripcion = new ArrayList<>();
@@ -222,10 +228,15 @@ public class FragmentConsulta extends Fragment {
         Cursor cursor = null;
 
         for(int id: id_detalle){
-            cursor = db.rawQuery("SELECT " + Utilidades.CAMPO_DESCRIPCION + " FROM "+ Utilidades.TABLA_DETALLE +" WHERE "+ Utilidades.CAMPO_ID_DETALLE +" = ?", new String[]{String.valueOf(id)});
-            while (cursor.moveToNext()){
-                descripcion.add(cursor.getString(0));
+            if(id != 0){
+                cursor = db.rawQuery("SELECT " + Utilidades.CAMPO_DESCRIPCION + " FROM "+ Utilidades.TABLA_DETALLE +" WHERE "+ Utilidades.CAMPO_ID_DETALLE +" = ?", new String[]{String.valueOf(id)});
+                while (cursor.moveToNext()){
+                    descripcion.add(cursor.getString(0));
+                }
+            } else {
+                descripcion.add(comentarios.get(descripcion.size()));
             }
+
         }
 
         if(cursor != null) cursor.close();
@@ -340,6 +351,7 @@ public class FragmentConsulta extends Fragment {
             a.setRes_s4(cursor.getInt(28));
             a.setRes_s5(cursor.getInt(29));
             a.setRes_total(cursor.getInt(30));
+            a.setSync(cursor.getInt(31));
 
             listaAuditorias.add(a);
         }

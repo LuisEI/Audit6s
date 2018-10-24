@@ -5,14 +5,15 @@
     <string name="nav_header_title">AVX El Salvador</string>
     <string name="nav_header_subtitle">Departamento de Sistemas</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Informacion 6s</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="action_sync">Sincronizar</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Pantalla Inicial</string>
     <string name="titulo_home">Auditoria 6S\'s</string>
     <string name="ingreso_de_datos">INGRESO DE DATOS</string>
-    <string name="division">Division</string>
-    <string name="planta">Planta</string>
+    <string name="division">Planta</string>
+    <string name="planta">Proceso</string>
     <string name="gerente">Gerente</string>
     <string name="area">Area</string>
     <string name="lider">Lider</string>

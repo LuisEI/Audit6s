@@ -427,8 +427,8 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
             }
         });
         
-        datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
-        datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
+//        datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
+//        datePickerDialog.getDatePicker().setMinDate(new Date().getTime());
 
         datePickerDialog.show();
     }
@@ -501,7 +501,23 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
         listaSpinner = new ArrayList<>();
         Cursor cursor = null;
 
-        if(tabla.equals(Utilidades.TABLA_AREA)){
+        if(tabla.equals(Utilidades.TABLA_PLANTA)){
+            int id = LlamarIDdivision(txtDivision.getEditText().getText().toString());
+            db = conn.getReadableDatabase();
+            if(id != 0){
+                cursor = db.rawQuery("SELECT * FROM "+ tabla +" WHERE id_division like ?", new String[]{String.valueOf(id)+ "%"});
+            }else{
+                cursor = db.rawQuery("SELECT * FROM "+ tabla, null);
+            }
+        } else if(tabla.equals(Utilidades.TABLA_GERENTE)){
+            int id = LlamarIDgerente(txtArea.getEditText().getText().toString());
+            db = conn.getReadableDatabase();
+            if(id != 0){
+                cursor = db.rawQuery("SELECT * FROM "+ tabla +" WHERE id_gerente like ?", new String[]{String.valueOf(id)+ "%"});
+            }else{
+                cursor = db.rawQuery("SELECT * FROM "+ tabla, null);
+            }
+        } else if(tabla.equals(Utilidades.TABLA_AREA)){
             int id = LlamarIDplanta(txtPlanta.getEditText().getText().toString());
             db = conn.getReadableDatabase();
             if(id != 0){
@@ -509,7 +525,7 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
             }else{
                 cursor = db.rawQuery("SELECT * FROM "+ tabla, null);
             }
-        }else if(tabla.equals(Utilidades.TABLA_LIDER)){
+        } else if(tabla.equals(Utilidades.TABLA_LIDER)){
             int id = LlamarIDarea(txtArea.getEditText().getText().toString());
             db = conn.getReadableDatabase();
             if(id != 0){
@@ -536,6 +552,30 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
             db.close();
             cursor.close();
         }
+    }
+
+    private int LlamarIDgerente(String area){
+        SQLiteDatabase db = conn.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT id_gerente FROM "+ Utilidades.TABLA_AREA +" WHERE area = ?", new String[]{area});
+        int id = 0;
+        while (cursor.moveToNext()){
+            id = cursor.getInt(0);
+        }
+        db.close();
+        cursor.close();
+        return id;
+    }
+
+    private int LlamarIDdivision(String division){
+        SQLiteDatabase db = conn.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT id_division FROM "+ Utilidades.TABLA_DIVISION +" WHERE division = ?", new String[]{division});
+        int id = 0;
+        while (cursor.moveToNext()){
+            id = cursor.getInt(0);
+        }
+        db.close();
+        cursor.close();
+        return id;
     }
 
     private int LlamarIDplanta(String planta){

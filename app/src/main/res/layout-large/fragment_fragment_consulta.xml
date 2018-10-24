@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context="fragments.FragmentConsulta">
+    tools:context="fragments.FragmentConsulta"
+    android:background="#FFF">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -24,7 +25,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
         app:cardBackgroundColor="@color/colorCard"
-        app:cardElevation="5dp">
+        app:cardElevation="3dp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerID"
@@ -42,7 +43,8 @@
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
-        app:cardBackgroundColor="@color/colorCard">
+        app:cardBackgroundColor="@color/colorCard"
+        app:cardElevation="3dp">
 
 
         <LinearLayout
@@ -53,317 +55,295 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="350dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="10dp">
+
+                        <TextView
+                            android:id="@+id/area_consulta"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="8dp"
+                            android:text="Area"
+                            android:textSize="18sp"
+                            android:textColor="@color/colorPrimary"/>
+
+                        <TextView
+                            android:id="@+id/lider_consulta"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="8dp"
+                            android:text="Lider"
+                            android:textColor="@color/colorAccent"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/textView19"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Galeria de Imagenes"
+                        android:textSize="14sp" />
+
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/auditoriaViewPager"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/colorCard"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:textAlignment="center"
+                        android:text="Detalle de hallazgo"/>
+
+                    <TextView
+                        android:id="@+id/txtDescripcion_consulta"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:textAlignment="center"
+                        android:textSize="14sp"
+                        android:textColor="@color/colorAccent"
+                        android:text="Descripcion"/>
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <android.support.v7.widget.CardView
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:layout_margin="10dp">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="10dp">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="ID Auditoria"
+                            android:textSize="14sp"
+                            android:textColor="@color/cardview_dark_background"/>
 
-                            <LinearLayout
-                                android:layout_width="350dp"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/id_auditoria_consulta"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14sp" />
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="vertical"
-                                    android:layout_marginTop="10dp">
+                    </LinearLayout>
 
-                                    <TextView
-                                        android:id="@+id/area_consulta"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:layout_marginTop="8dp"
-                                        android:text="Area"
-                                        android:textSize="18sp"
-                                        android:textColor="@color/colorPrimary"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="vertical">
 
-                                    <TextView
-                                        android:id="@+id/lider_consulta"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:layout_marginBottom="8dp"
-                                        android:text="Lider"
-                                        android:textColor="@color/colorAccent"/>
+                        <TextView
+                            android:id="@+id/txtFecha_consulta"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="- -"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14sp" />
 
-                                </LinearLayout>
+                        <TextView
+                            android:id="@+id/txtSemana_consulta"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="--"
+                            android:textSize="14sp" />
 
-                                <TextView
-                                    android:id="@+id/textView19"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:text="Galeria de Imagenes"
-                                    android:textSize="14sp" />
+                    </LinearLayout>
 
-                                <android.support.v4.view.ViewPager
-                                    android:id="@+id/auditoriaViewPager"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="250dp"
-                                    android:layout_marginEnd="24dp"
-                                    android:layout_marginStart="24dp"
-                                    android:layout_marginTop="12dp"
-                                    android:layout_marginBottom="10dp"
-                                    android:background="@color/colorCard"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp">
 
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="24dp"
-                                    android:textAlignment="center"
-                                    android:text="Detalle de hallazgo"/>
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="Seleccionar"
+                            android:textAlignment="textEnd"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14sp" />
 
-                                <TextView
-                                    android:id="@+id/txtDescripcion_consulta"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="24dp"
-                                    android:textAlignment="center"
-                                    android:textSize="14sp"
-                                    android:textColor="@color/colorAccent"
-                                    android:text="Descripcion"/>
+                        <TextView
+                            android:id="@+id/txtNotaS1_consulta"
+                            android:layout_width="45dp"
+                            android:layout_height="wrap_content"
+                            android:text="0%"
+                            android:textAlignment="textEnd"
+                            android:textSize="14sp" />
 
-                            </LinearLayout>
+                    </LinearLayout>
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp">
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="vertical"
-                                    android:layout_marginTop="10dp">
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="Organizar"
+                            android:textAlignment="textEnd"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14sp" />
 
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:text="ID Auditoria"
-                                        android:textSize="14sp"
-                                        android:textColor="@color/cardview_dark_background"/>
+                        <TextView
+                            android:id="@+id/txtNotaS2_consulta"
+                            android:layout_width="45dp"
+                            android:layout_height="wrap_content"
+                            android:text="0%"
+                            android:textSize="14sp"
+                            android:textAlignment="textEnd" />
 
-                                    <TextView
-                                        android:id="@+id/id_auditoria_consulta"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:textColor="@color/colorPrimary"
-                                        android:textSize="14sp" />
+                    </LinearLayout>
 
-                                </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp">
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="12dp"
-                                    android:orientation="vertical">
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="Limpieza"
+                            android:textAlignment="textEnd"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14sp" />
 
-                                    <TextView
-                                        android:id="@+id/txtFecha_consulta"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:text="- -"
-                                        android:textColor="@color/colorPrimary"
-                                        android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/txtNotaS3_consulta"
+                            android:layout_width="45dp"
+                            android:layout_height="wrap_content"
+                            android:text="0%"
+                            android:textAlignment="textEnd"
+                            android:textSize="14sp" />
 
-                                    <TextView
-                                        android:id="@+id/txtSemana_consulta"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:text="--"
-                                        android:textSize="14sp" />
+                    </LinearLayout>
 
-                                </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp">
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="24dp">
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="Estandar"
+                            android:textAlignment="textEnd"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14sp" />
 
-                                    <TextView
-                                        android:layout_width="100dp"
-                                        android:layout_height="wrap_content"
-                                        android:text="Seleccionar"
-                                        android:textAlignment="textEnd"
-                                        android:textColor="@color/colorPrimary"
-                                        android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/txtNotaS4_consulta"
+                            android:layout_width="45dp"
+                            android:layout_height="wrap_content"
+                            android:text="0%"
+                            android:textAlignment="textEnd"
+                            android:textSize="14sp" />
 
-                                    <TextView
-                                        android:id="@+id/txtNotaS1_consulta"
-                                        android:layout_width="45dp"
-                                        android:layout_height="wrap_content"
-                                        android:text="0%"
-                                        android:textAlignment="textEnd"
-                                        android:textSize="14sp" />
+                    </LinearLayout>
 
-                                </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp">
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="12dp">
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="Sostener"
+                            android:textAlignment="textEnd"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="14sp" />
 
-                                    <TextView
-                                        android:layout_width="100dp"
-                                        android:layout_height="wrap_content"
-                                        android:text="Organizar"
-                                        android:textAlignment="textEnd"
-                                        android:textColor="@color/colorPrimary"
-                                        android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/txtNotaS5_consulta"
+                            android:layout_width="45dp"
+                            android:layout_height="wrap_content"
+                            android:text="0%"
+                            android:textAlignment="textEnd"
+                            android:textSize="14sp" />
 
-                                    <TextView
-                                        android:id="@+id/txtNotaS2_consulta"
-                                        android:layout_width="45dp"
-                                        android:layout_height="wrap_content"
-                                        android:text="0%"
-                                        android:textSize="14sp"
-                                        android:textAlignment="textEnd" />
+                    </LinearLayout>
 
-                                </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:orientation="vertical">
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="12dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Hallazgos"
+                            android:textSize="14sp"
+                            android:textColor="@color/colorPrimary"/>
 
-                                    <TextView
-                                        android:layout_width="100dp"
-                                        android:layout_height="wrap_content"
-                                        android:text="Limpieza"
-                                        android:textAlignment="textEnd"
-                                        android:textColor="@color/colorPrimary"
-                                        android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/txtCantidadHallazgos"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="0"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="24sp" />
 
-                                    <TextView
-                                        android:id="@+id/txtNotaS3_consulta"
-                                        android:layout_width="45dp"
-                                        android:layout_height="wrap_content"
-                                        android:text="0%"
-                                        android:textAlignment="textEnd"
-                                        android:textSize="14sp" />
+                    </LinearLayout>
 
-                                </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
 
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="12dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Nota"
+                            android:textSize="14sp"
+                            android:textColor="@color/colorPrimary"/>
 
-                                    <TextView
-                                        android:layout_width="100dp"
-                                        android:layout_height="wrap_content"
-                                        android:text="Estandar"
-                                        android:textAlignment="textEnd"
-                                        android:textColor="@color/colorPrimary"
-                                        android:textSize="14sp" />
+                        <TextView
+                            android:id="@+id/txtNotaTotal_consulta"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="0%"
+                            android:textColor="@color/colorAccent"
+                            android:textSize="24sp" />
 
-                                    <TextView
-                                        android:id="@+id/txtNotaS4_consulta"
-                                        android:layout_width="45dp"
-                                        android:layout_height="wrap_content"
-                                        android:text="0%"
-                                        android:textAlignment="textEnd"
-                                        android:textSize="14sp" />
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="12dp">
-
-                                    <TextView
-                                        android:layout_width="100dp"
-                                        android:layout_height="wrap_content"
-                                        android:text="Sostener"
-                                        android:textAlignment="textEnd"
-                                        android:textColor="@color/colorPrimary"
-                                        android:textSize="14sp" />
-
-                                    <TextView
-                                        android:id="@+id/txtNotaS5_consulta"
-                                        android:layout_width="45dp"
-                                        android:layout_height="wrap_content"
-                                        android:text="0%"
-                                        android:textAlignment="textEnd"
-                                        android:textSize="14sp" />
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="20dp"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:text="Hallazgos"
-                                        android:textSize="14sp"
-                                        android:textColor="@color/colorPrimary"/>
-
-                                    <TextView
-                                        android:id="@+id/txtCantidadHallazgos"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:text="0"
-                                        android:textColor="@color/colorAccent"
-                                        android:textSize="24sp" />
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:text="Nota"
-                                        android:textSize="14sp"
-                                        android:textColor="@color/colorPrimary"/>
-
-                                    <TextView
-                                        android:id="@+id/txtNotaTotal_consulta"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:text="0%"
-                                        android:textColor="@color/colorAccent"
-                                        android:textSize="24sp" />
-
-                                </LinearLayout>
-
-                            </LinearLayout>
-
-                        </LinearLayout>
-
-                    </android.support.v7.widget.CardView>
+                    </LinearLayout>
 
                 </LinearLayout>
 

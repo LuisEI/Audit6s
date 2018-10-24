@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <TextView
@@ -29,95 +29,142 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:textAlignment="center"
-                android:text="Seleccione de la lista"
-                android:textSize="24sp" />
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp">
 
-            <Spinner
-                android:id="@+id/spHallazgo"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1. "
+                    android:textColor="@color/colorBtnDesactivado"
+                    android:layout_gravity="center"
+                    android:textSize="24sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:text="Seleccione de la lista o edite"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="24sp" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/btnAgregarDescripcion"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_descripcion"
+                    app:backgroundTint="@color/colorBtnDesactivado"
+                    app:fab_elevationCompat="2dp"
+                    app:fab_size="mini"/>
+
+            </LinearLayout>
+
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_margin="20dp"
-                android:layout_marginBottom="50dp">
+                android:layout_height="wrap_content">
 
+                <Spinner
+                    android:id="@+id/spHallazgo"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_margin="20dp">
+                </Spinner>
 
-            </Spinner>
+                <TextView
+                    android:id="@+id/txtComentarioSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="20dp"
+                    android:background="@color/colorCardCal"
+                    android:inputType="textCapSentences"
+                    android:textAlignment="center"
+                    android:textColor="#121212"
+                    android:textSize="22sp"
+                    android:visibility="invisible" />
+
+            </FrameLayout>
+
 
             <ImageView
                 android:id="@+id/imaFoto"
                 android:layout_width="450dp"
                 android:layout_height="300dp"
                 android:layout_gravity="center"
-                android:background="@drawable/cam512" />
+                app:srcCompat="@drawable/cam512" />
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:layout_marginBottom="50dp"
                 android:layout_gravity="center">
 
-                <LinearLayout
-                    android:layout_width="90dp"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginEnd="30dp">
+                    android:text="2."
+                    android:textColor="@color/colorBtnDesactivado"
+                    android:textSize="24sp"
+                    android:layout_marginTop="33dp"/>
 
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/btnTomarFoto"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
-                        android:layout_gravity="center"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:src="@drawable/ic_camera"
-                        android:tint="@color/colorCard"
-                        android:backgroundTint="@color/colorTitulos"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:textAlignment="center"
-                        android:text="Foto"
-                        android:textSize="24sp"
-                        android:textColor="#4b000000"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="90dp"
+                <Button
+                    android:id="@+id/btnTomarFoto"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="30dp">
+                    android:layout_gravity="center"
+                    android:text="Tomar Fotografia"
+                    android:textColor="#FFF"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:textSize="18sp"
+                    android:drawableStart="@drawable/ic_camera"
+                    android:background="@drawable/button_background_bluelight"/>
 
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/btnAgregarHallazgo"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
-                        android:layout_gravity="center"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:src="@drawable/ic_save"
-                        android:tint="@color/colorCard"
-                        android:backgroundTint="@color/colorTitulos"/>
+            </FrameLayout>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:textAlignment="center"
-                        android:text="Guardar"
-                        android:textSize="24sp"
-                        android:textColor="#4b000000"/>
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
 
-                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3."
+                    android:textColor="@color/colorBtnDesactivado"
+                    android:textSize="24sp"
+                    android:layout_marginTop="30dp"/>
 
-            </LinearLayout>
+                <Button
+                    android:id="@+id/btnAgregarHallazgo"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:text="Guardar Hallazgo"
+                    android:textColor="#FFF"
+                    android:textSize="18sp"
+                    android:drawableStart="@drawable/ic_save"
+                    android:background="@drawable/button_background_bluelight"/>
+
+            </FrameLayout>
 
         </LinearLayout>
 
@@ -127,14 +174,16 @@
 
     <Button
         android:id="@+id/btnOkHallazgo"
-        android:layout_width="250dp"
-        android:layout_height="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="40dp"
-        android:text="OK"
+        android:layout_marginBottom="15dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:text="Regresar"
         android:textSize="28sp"
-        android:background="@drawable/button_background_blue"
+        android:background="@drawable/button_background_pink"
         android:textColor="#FFF"/>
 
 </LinearLayout>

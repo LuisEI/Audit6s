@@ -10,14 +10,14 @@
     android:gravity="center">
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:src="@drawable/floppy"
         android:layout_margin="20dp"/>
 
     <TextView
         android:id="@+id/toastMessage"
-        android:layout_width="300dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:paddingLeft="15dip"
         android:paddingRight="15dip"

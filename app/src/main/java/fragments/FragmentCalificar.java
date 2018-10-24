@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
@@ -31,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
@@ -52,7 +52,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import adapters.SpinnerAdaptador;
 import adapters.ViewPageAdaptador;
@@ -156,7 +155,9 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
     private List<Map<String,Integer>> matrizHallazgos;
 
     private ConexionSQLiteHelper conn;
-    boolean hallazgoSelect = false;
+    private boolean hallazgoSelect = false;
+    private boolean comentarioSelect = false;
+    private String comentarioHallazgo = "";
 
     //Instancias de la activity foto
     static final int REQUEST_TAKE_PHOTO = 2;
@@ -423,8 +424,8 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         int id = 0;
         String hora = new SimpleDateFormat("HHmmss").format(new Date());
         String area = String.valueOf(AuditoriaDB.getArea());
-        String auditor = String.valueOf(AuditoriaDB.getAuditor());
-        id = Integer.parseInt(area+auditor+hora);
+        String auditor = String.valueOf(AuditoriaDB.getAuditor()).substring(4);
+        id = Integer.parseInt(area + auditor + hora);
         return id;
     }
 
@@ -725,9 +726,11 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
 
         //Instancia de los componentes
         final Spinner spHallazgo = alertFormView.findViewById(R.id.spHallazgo);
-        FloatingActionButton btnTomarFoto = alertFormView.findViewById(R.id.btnTomarFoto);
+        Button btnTomarFoto = alertFormView.findViewById(R.id.btnTomarFoto);
         Button btnOKHallazgo = alertFormView.findViewById(R.id.btnOkHallazgo);
-        FloatingActionButton btnAgregarHallazgo = alertFormView.findViewById(R.id.btnAgregarHallazgo);
+        Button btnAgregarHallazgo = alertFormView.findViewById(R.id.btnAgregarHallazgo);
+        final TextView txtComentarioSpinner = alertFormView.findViewById(R.id.txtComentarioSpinner);
+        final FloatingActionButton fabComentario = alertFormView.findViewById(R.id.btnAgregarDescripcion);
         mImageView = alertFormView.findViewById(R.id.imaFoto);
 
         final int indice = GetIndex(b);
@@ -744,7 +747,6 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
             @Override
             public void onClick(View v) {
                 dispatchTakePictureIntent();
-                hallazgoSelect = true;
             }
         });
 
@@ -755,22 +757,89 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
 
         listaImagenes = new ArrayList<>();
 
+        fabComentario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final View alertViewComentario = getLayoutInflater().inflate(R.layout.alert_dialog_descripcion, null);
+
+                Button btnCommentGuardar = alertViewComentario.findViewById(R.id.btnDescripcionOK);
+                Button btnCommentCancelar = alertViewComentario.findViewById(R.id.btnDescripcionCancelar);
+                final EditText txtComentario = alertViewComentario.findViewById(R.id.txtComentario);
+
+                txtComentario.setText(comentarioHallazgo);
+
+                AlertDialog.Builder builderComentario = new AlertDialog.Builder(getContext());
+                builderComentario.setCancelable(true);
+                builderComentario.setView(alertViewComentario);
+
+                final AlertDialog alertComentario = builderComentario.create();
+                alertComentario.show();
+
+                btnCommentGuardar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        comentarioHallazgo = txtComentario.getText().toString();
+                        if(comentarioHallazgo.equals("")){
+                            Toast.makeText(getContext(), "No puede guardar un comentario vacio", Toast.LENGTH_SHORT).show();
+                        } else {
+                            comentarioSelect = true;
+                            txtComentarioSpinner.setText(comentarioHallazgo);
+                            spHallazgo.setSelection(adaptador.getCount());
+                            spHallazgo.setVisibility(View.INVISIBLE);
+                            txtComentarioSpinner.setVisibility(View.VISIBLE);
+                            fabComentario.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorTitulos)));
+                            alertComentario.dismiss();
+                        }
+                    }
+                });
+
+                btnCommentCancelar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        comentarioSelect = false;
+                        comentarioHallazgo = "";
+                        txtComentarioSpinner.setText(comentarioHallazgo);
+                        spHallazgo.setVisibility(View.VISIBLE);
+                        txtComentarioSpinner.setVisibility(View.INVISIBLE);
+                        fabComentario.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorBtnDesactivado)));
+                        alertComentario.dismiss();
+                    }
+                });
+
+
+            }
+        });
+
         btnAgregarHallazgo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(hallazgoSelect && !spHallazgo.getSelectedItem().toString().equals("Seleccione el Hallazgo")){
-                    matrizHallazgos.get(indice).put(mCurrentPhotoPath, spHallazgo.getSelectedItemPosition());
+                if(hallazgoSelect && (!spHallazgo.getSelectedItem().toString().equals("Seleccione el Hallazgo") || comentarioSelect)){
 
                     Encontrado encontrado = new Encontrado();
-                    encontrado.setId_detalle(mapaHallazgoReferencia.get(indice).get(spHallazgo.getSelectedItemPosition()));
-                    encontrado.setImagen(currentPhotoName);
+
+                    if(comentarioSelect){
+                        matrizHallazgos.get(indice).put(mCurrentPhotoPath, -1);
+                        encontrado.setId_detalle(0);
+                        encontrado.setImagen(currentPhotoName);
+                        encontrado.setComentario(comentarioHallazgo);
+                    } else {
+                        matrizHallazgos.get(indice).put(mCurrentPhotoPath, spHallazgo.getSelectedItemPosition());
+                        encontrado.setId_detalle(mapaHallazgoReferencia.get(indice).get(spHallazgo.getSelectedItemPosition()));
+                        encontrado.setImagen(currentPhotoName);
+                        encontrado.setComentario(comentarioHallazgo);
+                    }
+
                     hallazgosEncontrados.add(encontrado);
 
                     spHallazgo.setSelection(adaptador.getCount());
-                    mImageView.setImageResource(R.drawable.cam512);
+                    txtComentarioSpinner.setVisibility(View.INVISIBLE);
+                    spHallazgo.setVisibility(View.VISIBLE);
+                    mImageView.setImageResource(R.drawable.like);
                     hallazgoSelect = false;
+                    comentarioSelect = false;
+                    comentarioHallazgo = "";
 
-                    toastOK.setGravity(Gravity.CENTER, 0, -100);
+                    toastOK.setGravity(Gravity.CENTER, 0, 0);
                     toastOK.setDuration(Toast.LENGTH_SHORT);
                     toastOK.show();
 
@@ -781,7 +850,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
                         mp.start();
                     }
                     txtToastFail.setText("Seleccione un hallazgo");
-                    toastFail.setGravity(Gravity.CENTER, 0, -100);
+                    toastFail.setGravity(Gravity.CENTER, 0, 0);
                     toastFail.setDuration(Toast.LENGTH_SHORT);
                     toastFail.show();
                 }else if(!hallazgoSelect){
@@ -790,7 +859,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
                         mp.start();
                     }
                     txtToastFail.setText("Tome una fotografia");
-                    toastFail.setGravity(Gravity.CENTER, 0, -100);
+                    toastFail.setGravity(Gravity.CENTER, 0, 0);
                     toastFail.setDuration(Toast.LENGTH_SHORT);
                     toastFail.show();
                 }
@@ -806,18 +875,30 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
                             .setMessage("¿Desea almecenar el hallazgo?")
                             .setPositiveButton("Almacenar el hallazgo", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    matrizHallazgos.get(GetIndex(b)).put(mCurrentPhotoPath, spHallazgo.getSelectedItemPosition());
+                                    if(!spHallazgo.getSelectedItem().toString().equals("Seleccione el Hallazgo")){
+                                        matrizHallazgos.get(GetIndex(b)).put(mCurrentPhotoPath, spHallazgo.getSelectedItemPosition());
 
-                                    Encontrado encontrado = new Encontrado();
-                                    encontrado.setId_detalle(mapaHallazgoReferencia.get(indice).get(spHallazgo.getSelectedItemPosition()));
-                                    encontrado.setImagen(currentPhotoName);
-                                    hallazgosEncontrados.add(encontrado);
+                                        Encontrado encontrado = new Encontrado();
+                                        encontrado.setId_detalle(mapaHallazgoReferencia.get(indice).get(spHallazgo.getSelectedItemPosition()));  //Revisar Error al guardar imagen
+                                        encontrado.setImagen(currentPhotoName);
+                                        hallazgosEncontrados.add(encontrado);
 
-                                    spHallazgo.setSelection(-1);
-                                    mImageView.setImageResource(R.drawable.cam);
-                                    hallazgoSelect = false;
-                                    Toast.makeText(getContext(), "Se agrego un hallazgo", Toast.LENGTH_SHORT).show();
-                                    alertHallazgo.dismiss();
+                                        spHallazgo.setSelection(-1);
+                                        mImageView.setImageResource(R.drawable.cam);
+                                        hallazgoSelect = false;
+                                        Toast.makeText(getContext(), "Se agrego un hallazgo", Toast.LENGTH_SHORT).show();
+                                        alertHallazgo.dismiss();
+                                    }else {
+                                        if(sonido){
+                                            MediaPlayer mp = MediaPlayer.create(getContext(), R.raw.no_ha_seleccionado_hallazgo);
+                                            mp.start();
+                                        }
+                                        txtToastFail.setText("Seleccione un hallazgo");
+                                        toastFail.setGravity(Gravity.CENTER, 0, 0);
+                                        toastFail.setDuration(Toast.LENGTH_SHORT);
+                                        toastFail.show();
+                                    }
+
                                 }
                             })
                             .setNegativeButton("No guardar", new DialogInterface.OnClickListener() {
@@ -857,7 +938,15 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
             lista_Ref_hallazgo.add(mapaHallazgoReferencia.get(indice).get(matrizHallazgos.get(indice).get(key)));
         }
 
-        txtHallazgo.setText(GetHallazgo(lista_Ref_hallazgo.get(0)));
+        if(lista_Ref_hallazgo.get(0) == null){
+            for (Encontrado e: hallazgosEncontrados) {
+                if(listaImagenes.get(0).contains(e.getImagen())){
+                    txtHallazgo.setText(e.getComentario());
+                }
+            }
+        } else {
+            txtHallazgo.setText(GetHallazgo(lista_Ref_hallazgo.get(0)));
+        }
 
         ViewPageAdaptador adaptador = new ViewPageAdaptador(getContext(), listaImagenes);
         viewPager.setAdapter(adaptador);
@@ -870,7 +959,15 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
 
             @Override
             public void onPageSelected(int position) {
-                txtHallazgo.setText(GetHallazgo(lista_Ref_hallazgo.get(position)));
+                if(lista_Ref_hallazgo.get(position) == null){
+                    for (Encontrado e: hallazgosEncontrados) {
+                        if(listaImagenes.get(position).contains(e.getImagen())){
+                            txtHallazgo.setText(e.getComentario());
+                        }
+                    }
+                } else {
+                    txtHallazgo.setText(GetHallazgo(lista_Ref_hallazgo.get(position)));
+                }
             }
 
             @Override
@@ -940,8 +1037,8 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
             db.execSQL(sql, datos);
 
             for(Encontrado encontrado: hallazgosEncontrados){
-                String consulta = "INSERT INTO " + Utilidades.TABLA_ENCONTRADO + " VALUES (?,?,?)";
-                Object[] listaDatos = new Object[]{ encontrado.getId_detalle(), encontrado.getImagen(), AuditoriaDB.getId_auditoria()};
+                String consulta = "INSERT INTO " + Utilidades.TABLA_ENCONTRADO + " VALUES (?,?,?,?)";
+                Object[] listaDatos = new Object[]{ encontrado.getId_detalle(), encontrado.getImagen(), AuditoriaDB.getId_auditoria(), encontrado.getComentario()};
                 db.execSQL(consulta, listaDatos);
             }
 
@@ -1071,31 +1168,31 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         for (int i = 0; i < 3; i++) {
             if(!estaCalificado[i]) s_ok = false;
         }
-        if (s_ok) icon_s1.setImageResource(R.drawable.check_50);
+        if (s_ok) icon_s1.setImageResource(R.drawable.one_green);
 
         s_ok = true;
         for (int i = 3; i < 7; i++) {
             if(!estaCalificado[i]) s_ok = false;
         }
-        if (s_ok) icon_s2.setImageResource(R.drawable.check_50);
+        if (s_ok) icon_s2.setImageResource(R.drawable.two_green);
 
         s_ok = true;
         for (int i = 7; i < 11; i++) {
             if(!estaCalificado[i]) s_ok = false;
         }
-        if (s_ok) icon_s3.setImageResource(R.drawable.check_50);
+        if (s_ok) icon_s3.setImageResource(R.drawable.tree_green);
 
         s_ok = true;
         for (int i = 11; i < 15; i++) {
             if(!estaCalificado[i]) s_ok = false;
         }
-        if (s_ok) icon_s4.setImageResource(R.drawable.check_50);
+        if (s_ok) icon_s4.setImageResource(R.drawable.four_green);
 
         s_ok = true;
         for (int i = 15; i < 19; i++) {
             if(!estaCalificado[i]) s_ok = false;
         }
-        if (s_ok) icon_s5.setImageResource(R.drawable.check_50);
+        if (s_ok) icon_s5.setImageResource(R.drawable.five_green);
     }
 
     @Override
@@ -1108,11 +1205,14 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            File file = new File(mCurrentPhotoPath);
-            if(file.exists()){
-                Bitmap mImage = BitmapFactory.decodeFile(mCurrentPhotoPath);
-                Bitmap mImageBitmap = Bitmap.createScaledBitmap(mImage, 500, 400, true);
-                mImageView.setImageBitmap(mImageBitmap);
+            if(mCurrentPhotoPath != null){
+                File file = new File(mCurrentPhotoPath);
+                if(file.exists()){
+                    Bitmap mImage = BitmapFactory.decodeFile(mCurrentPhotoPath);
+                    Bitmap mImageBitmap = Bitmap.createScaledBitmap(mImage, 500, 400, true);
+                    mImageView.setImageBitmap(mImageBitmap);
+                    hallazgoSelect = true;
+                }
             }
         }
     }

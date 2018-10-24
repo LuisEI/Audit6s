@@ -26,11 +26,26 @@
             android:shadowDx="3"
             android:shadowDy="3" />
 
-        <ImageView android:src="@drawable/login"
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp">
+
+            <ImageView
+                android:id="@+id/imaLogin"
+                android:src="@drawable/login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <com.dlazaro66.qrcodereaderview.QRCodeReaderView
+                android:id="@+id/qrViewQr"
+                android:layout_width="300dp"
+                android:layout_height="250dp"
+                android:layout_gravity="center"
+                android:visibility="invisible" />
+
+        </FrameLayout>
 
         <!--  Email Label -->
         <Spinner

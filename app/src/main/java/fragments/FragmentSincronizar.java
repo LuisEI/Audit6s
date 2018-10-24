@@ -14,14 +14,18 @@ import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -29,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -36,7 +41,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.util.Util;
+import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.example.liraheta.audit6s.R;
 
 import org.json.JSONArray;
@@ -49,6 +54,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import entidades.Area;
 import entidades.Auditor;
@@ -103,7 +110,7 @@ public class FragmentSincronizar extends Fragment {
     private String url_base = "";
 
     private int numberOfRequestsToMake = 0;
-    private boolean hasRequestFail = false;
+    private boolean manualUpdateData = true;
 
     private OnFragmentInteractionListener mListener;
     private TextView txtResgistrosNoSyn;
@@ -116,6 +123,11 @@ public class FragmentSincronizar extends Fragment {
     private int acumulador = 0;
     private boolean sonido;
 
+    private Timer myTimer;
+    private WifiInfo wifiInfo;
+    private TextView txtLevelWifi;
+    private WifiManager wifiManager;
+    private NumberProgressBar wifiBar;
 
     public FragmentSincronizar() {
         // Required empty public constructor
@@ -153,7 +165,7 @@ public class FragmentSincronizar extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         vista = inflater.inflate(R.layout.fragment_fragment_sincronizar, container, false);
-
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         SharedPreferences preferences = getActivity().getSharedPreferences("opciones", Context.MODE_PRIVATE);
         sonido = preferences.getBoolean("sonido", false);
 
@@ -163,6 +175,8 @@ public class FragmentSincronizar extends Fragment {
         pbUpload = vista.findViewById(R.id.pbUpload);
         pbDownload = vista.findViewById(R.id.pbDownload);
         imageWifi = vista.findViewById(R.id.logo_wifi);
+        txtLevelWifi = vista.findViewById(R.id.txtLevelWifi);
+        wifiBar = vista.findViewById(R.id.wifiBar);
 
         url_base = CargarUrlWeb();
 
@@ -173,6 +187,7 @@ public class FragmentSincronizar extends Fragment {
                     Toast.makeText(getContext(), "Revise en Ajustes la direccion de los Web Services", Toast.LENGTH_SHORT).show();
                 }else {
                     if(existeConexionWifi(getContext())){
+                        manualUpdateData = true;
                         SincronizacionLocal();
                     }else{
                         startActivity(new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK));
@@ -225,7 +240,40 @@ public class FragmentSincronizar extends Fragment {
             imageWifi.setImageResource(R.drawable.wifi_area_small_stop);
         }
 
+        wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
+        wifiBar.setMax(10);
+        myTimer = new Timer();
+        myTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                TimerMethod();
+            }
+
+        }, 0, 500);
+
+        new UpdateAuto().execute();
+
         return vista;
+    }
+
+    private void TimerMethod()
+    {
+        getActivity().runOnUiThread(Timer_Tick);
+    }
+
+    private Runnable Timer_Tick = new Runnable() {
+        public void run() {
+            wifiInfo = wifiManager.getConnectionInfo();
+            int numberOfLevels = 10;
+            int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
+            NivelWiFi(level);
+            Log.i("WIFI", String.valueOf(level));
+        }
+    };
+
+    private void NivelWiFi(int nivel){
+        txtLevelWifi.setText(nivel < 5 ? "La potencia de la señal es muy baja" : "La señal es muy buena, puede enviar Auditorias");
+        wifiBar.setProgress(nivel);
     }
 
     public boolean existeConexionWifi(Context context) {
@@ -302,6 +350,7 @@ public class FragmentSincronizar extends Fragment {
                 if(response.equals("OK")){
                     numberOfRequestsToMake--;
                     List<Encontrado> listaE = obtenerListaEncontrado(auditParams.getId_auditoria());
+
                     for(Encontrado encontrado: listaE){
                         EnviarEncontradoServidor(url_base,encontrado);
                     }
@@ -363,7 +412,7 @@ public class FragmentSincronizar extends Fragment {
                 return parametros;
             }
         };
-
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request.add(stringRequest);
         numberOfRequestsToMake++;
     }
@@ -383,16 +432,15 @@ public class FragmentSincronizar extends Fragment {
     private void EnviarEncontradoServidor(String url_base, final Encontrado e) {
 
         String url = url_base + "GuardarEncontrado.php";
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 numberOfRequestsToMake--;
-                pbUpload.setProgress(acumulador++, true);
+                pbUpload.setProgress(1 + acumulador++, true);
                 if(response.replace("\t","").equals("OK")){
                     ActualizarEstadoSync(e.getId_auditoria());
                 }else{
-                    Toast.makeText(getContext(), response.toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), response, Toast.LENGTH_LONG).show();
                 }
                 if(numberOfRequestsToMake == 0){
                     pbUpload.setVisibility(View.INVISIBLE);
@@ -421,11 +469,12 @@ public class FragmentSincronizar extends Fragment {
                 parametros.put("imagen", imagenString);
                 parametros.put("nombre_img", e.getImagen());
                 parametros.put("id_auditoria", String.valueOf(e.getId_auditoria()));
+                parametros.put("comentario", e.getComentario());
 
                 return parametros;
             }
         };
-
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request.add(stringRequest);
         numberOfRequestsToMake++;
     }
@@ -437,8 +486,12 @@ public class FragmentSincronizar extends Fragment {
         File f = new File(rutaImagen);
         if(f.exists()){
             Bitmap bm = BitmapFactory.decodeFile(rutaImagen);
+
+            Bitmap resized_1 = Bitmap.createScaledBitmap(bm, (int)(bm.getWidth() * 0.65), (int)(bm.getHeight() * 0.65), true);
+            Bitmap resized_2 = Bitmap.createScaledBitmap(resized_1, (int)(resized_1.getWidth() * 0.65), (int)(resized_1.getHeight() * 0.65), true);
+
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            resized_2.compress(Bitmap.CompressFormat.JPEG, 70, baos);
             byte[] byteArrayImage = baos.toByteArray();
 
             imgString = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
@@ -518,6 +571,7 @@ public class FragmentSincronizar extends Fragment {
             e.setId_detalle(cursor.getInt(0));
             e.setImagen(cursor.getString(1));
             e.setId_auditoria(cursor.getInt(2));
+            e.setComentario(cursor.getString(3));
 
             listaEncontrados.add(e);
         }
@@ -541,7 +595,7 @@ public class FragmentSincronizar extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getContext(), "No se pudo conectar al servidor " + error.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "No se pudo conectar al servidor" + error.toString(), Toast.LENGTH_LONG).show();
             }
         }){
             @Override
@@ -673,7 +727,7 @@ public class FragmentSincronizar extends Fragment {
         };
         request.add(jsonArrayRequestAuditor);
 
-        jsonArrayRequestHallazgos = new JsonArrayRequest(Request.Method.POST, url_base + "CargarHallazgos.php", null, new Response.Listener<JSONArray>() {
+        jsonArrayRequestHallazgos = new JsonArrayRequest(Request.Method.POST, url_base + "CargarHallazgo.php", null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 GuardarHallazgosLocal(ListaObjetosHallazgo(response));
@@ -1057,7 +1111,11 @@ public class FragmentSincronizar extends Fragment {
         conn.close();
 
         pbDownload.setVisibility(View.INVISIBLE);
-        Toast.makeText(getContext(), "Se ha actualizado la base de datos local", Toast.LENGTH_LONG).show();
+
+        if(manualUpdateData){
+            Toast.makeText(getContext(), "Se ha actualizado la base de datos local", Toast.LENGTH_LONG).show();
+            manualUpdateData = false;
+        }
     }
 
     private String CargarUrlWeb(){
@@ -1088,6 +1146,7 @@ public class FragmentSincronizar extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        myTimer.cancel();
     }
 
     /**
@@ -1103,5 +1162,25 @@ public class FragmentSincronizar extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private class UpdateAuto extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            if(!url_base.equals("")){
+                if(existeConexionWifi(getContext())){
+                    SincronizacionLocal();
+                    manualUpdateData = false;
+                }
+            }
+            return null;
+        }
+
     }
 }

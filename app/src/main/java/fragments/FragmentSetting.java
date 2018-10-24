@@ -186,7 +186,7 @@ public class FragmentSetting extends Fragment implements View.OnClickListener{
 
     private void CargarPreferencias(){
         SharedPreferences preferences = getActivity().getSharedPreferences("opciones", Context.MODE_PRIVATE);
-        String url = preferences.getString("url_web", "");
+        String url = preferences.getString("url_web", "https://sistemas.avxslv.com/lean/");
         urlWebServices.setText(url);
         if(preferences.getBoolean("sonido", false)){
             chkSonido.setChecked(true);

@@ -22,6 +22,7 @@
         android:shadowDx="5"
         android:shadowColor="@color/colorCard"/>
 
+    <!--Seccion Seleccionar-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,8 +34,7 @@
             android:id="@+id/expand_button_0"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:elevation="6dp"
+            android:elevation="1dp"
             android:gravity="center"
             app:cardBackgroundColor="@color/colorTitulosCal">
 
@@ -54,7 +54,7 @@
                         android:layout_height="40dp"
                         android:layout_marginStart="15dp"
                         android:layout_marginEnd="30dp"
-                        android:src="@drawable/no_check"/>
+                        android:src="@drawable/one_red"/>
 
                     <TextView
                         android:layout_width="0dp"
@@ -79,6 +79,14 @@
 
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_height="1dp"
+                android:layout_gravity="bottom"
+                android:background="?android:attr/listDivider" />
+
         </android.support.v7.widget.CardView>
 
         <net.cachapa.expandablelayout.ExpandableLayout
@@ -86,8 +94,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:el_duration="500"
-            app:el_expanded="true"
-            android:elevation="15dp">
+            app:el_expanded="true">
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -97,7 +104,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_height="165dp"
                 app:cardBackgroundColor="@color/colorCardCal"
-                app:cardElevation="8dp">
+                app:cardElevation="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -288,6 +295,7 @@
 
     </LinearLayout>
 
+    <!--Seccion Organizar-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -299,9 +307,8 @@
             android:id="@+id/expand_button_1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:background="#ffffff"
-            android:elevation="6dp"
+            android:elevation="0dp"
             android:gravity="center"
             app:cardBackgroundColor="@color/colorTitulosCal" >
 
@@ -321,7 +328,7 @@
                         android:layout_height="40dp"
                         android:layout_marginStart="15dp"
                         android:layout_marginEnd="30dp"
-                        android:src="@drawable/no_check"/>
+                        android:src="@drawable/two_red"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -345,6 +352,14 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_height="1dp"
+                android:layout_gravity="bottom"
+                android:background="?android:attr/listDivider" />
 
         </android.support.v7.widget.CardView>
 
@@ -605,6 +620,7 @@
 
     </LinearLayout>
 
+    <!--Seccion Limpieza-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -616,9 +632,8 @@
             android:id="@+id/expand_button_2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:background="#ffffff"
-            android:elevation="6dp"
+            android:elevation="0dp"
             android:gravity="center"
             app:cardBackgroundColor="@color/colorTitulosCal" >
 
@@ -638,7 +653,7 @@
                         android:layout_height="40dp"
                         android:layout_marginStart="15dp"
                         android:layout_marginEnd="30dp"
-                        android:src="@drawable/no_check"/>
+                        android:src="@drawable/tree_red"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -662,6 +677,14 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_height="1dp"
+                android:layout_gravity="bottom"
+                android:background="?android:attr/listDivider" />
 
         </android.support.v7.widget.CardView>
 
@@ -921,6 +944,7 @@
 
     </LinearLayout>
 
+    <!--Seccion Estandar-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -932,9 +956,8 @@
             android:id="@+id/expand_button_3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:background="#ffffff"
-            android:elevation="6dp"
+            android:elevation="0dp"
             android:gravity="center"
             app:cardBackgroundColor="@color/colorTitulosCal" >
 
@@ -954,7 +977,7 @@
                         android:layout_height="40dp"
                         android:layout_marginStart="15dp"
                         android:layout_marginEnd="30dp"
-                        android:src="@drawable/no_check"/>
+                        android:src="@drawable/four_red"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -978,6 +1001,14 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_height="1dp"
+                android:layout_gravity="bottom"
+                android:background="?android:attr/listDivider" />
 
         </android.support.v7.widget.CardView>
 
@@ -1237,6 +1268,7 @@
 
     </LinearLayout>
 
+    <!--Seccion Sostener-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -1248,9 +1280,8 @@
             android:id="@+id/expand_button_4"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
             android:background="#ffffff"
-            android:elevation="6dp"
+            android:elevation="0dp"
             android:gravity="center"
             app:cardBackgroundColor="@color/colorTitulosCal" >
 
@@ -1270,7 +1301,7 @@
                         android:layout_height="40dp"
                         android:layout_marginStart="15dp"
                         android:layout_marginEnd="30dp"
-                        android:src="@drawable/no_check"/>
+                        android:src="@drawable/five_red"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -1294,6 +1325,14 @@
                 </LinearLayout>
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_height="1dp"
+                android:layout_gravity="bottom"
+                android:background="?android:attr/listDivider" />
 
         </android.support.v7.widget.CardView>
 
@@ -1576,15 +1615,64 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="15dp"
                     android:textSize="20sp"
                     android:textAllCaps="true"
                     android:textColor="@color/colorTitulos"
                     android:text="Resultados de Auditoria" />
 
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:layout_marginTop="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Hallazgos"
+                        android:textAlignment="center"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/txtNumeroHallazgos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="0"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorTitulos"
+                        android:textSize="30sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Resultado"
+                        android:textAlignment="center"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/txtNotaTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="0%"
+                        android:textColor="@color/colorTitulos"
+                        android:textAlignment="center"
+                        android:textSize="36sp" />
+
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/btnGuardarDB"
@@ -1595,53 +1683,6 @@
                     android:elevation="2dp"
                     android:text="Finalizar"
                     android:textSize="24sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:text="Hallazgos"
-                    android:textAlignment="center"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/txtNumeroHallazgos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="0"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorTitulos"
-                    android:textSize="30sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:text="Resultado"
-                    android:textAlignment="center"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/txtNotaTotal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="0%"
-                    android:textColor="@color/colorTitulos"
-                    android:textAlignment="center"
-                    android:textSize="56sp" />
 
             </LinearLayout>
 

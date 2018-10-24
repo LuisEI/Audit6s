@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.PointF;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,10 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.example.liraheta.audit6s.MainActivity;
 import com.example.liraheta.audit6s.R;
 import com.github.clans.fab.FloatingActionButton;
@@ -58,6 +61,10 @@ public class FragmentLogin extends Fragment {
     private Button loginButton;
     private Spinner spinnerLogin;
     private TextView txtPassLogin;
+    private ImageView imaLogin;
+
+    private ConexionSQLiteHelper conn;
+    private QRCodeReaderView qrCodeReaderView;
 
     public FragmentLogin() {
         // Required empty public constructor
@@ -98,6 +105,34 @@ public class FragmentLogin extends Fragment {
         loginButton = vista.findViewById(R.id.btn_login);
         spinnerLogin = vista.findViewById(R.id.spinnerLogin);
         txtPassLogin = vista.findViewById(R.id.input_password);
+        imaLogin = vista.findViewById(R.id.imaLogin);
+        qrCodeReaderView = vista.findViewById(R.id.qrViewQr);
+
+        conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null, 1);
+
+        qrCodeReaderView.setFrontCamera();
+        qrCodeReaderView.setQRDecodingEnabled(true);
+        qrCodeReaderView.forceAutoFocus();
+        qrCodeReaderView.stopCamera();
+
+        imaLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imaLogin.setVisibility(View.INVISIBLE);
+                qrCodeReaderView.setVisibility(View.VISIBLE);
+                qrCodeReaderView.startCamera();
+            }
+        });
+
+        qrCodeReaderView.setOnQRCodeReadListener(new QRCodeReaderView.OnQRCodeReadListener() {
+            @Override
+            public void onQRCodeRead(String text, PointF[] points) {
+                loginQR(text);
+                imaLogin.setVisibility(View.VISIBLE);
+                qrCodeReaderView.setVisibility(View.INVISIBLE);
+                Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +172,7 @@ public class FragmentLogin extends Fragment {
 
     private boolean CompararClave(String auditor, String clave){
 
-        SQLiteOpenHelper conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null, 1);
+        conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null, 1);
         SQLiteDatabase db = conn.getReadableDatabase();
 
         String pass = "";
@@ -157,6 +192,63 @@ public class FragmentLogin extends Fragment {
         }
 
         return autorizado;
+    }
+
+    private int LlamarIDauditor(String auditor){
+
+        SQLiteDatabase db = conn.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT id_auditor FROM "+ Utilidades.TABLA_AUDITOR +" WHERE auditor = ?", new String[]{auditor});
+        int id = 0;
+        while (cursor.moveToNext()){
+            id = cursor.getInt(0);
+        }
+        db.close();
+        cursor.close();
+        conn.close();
+        return id;
+    }
+
+    public void loginQR(String clave) {
+        Log.d(TAG, "Login");
+
+        conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null, 1);
+        SQLiteDatabase db = conn.getReadableDatabase();
+
+        String pass = md5(clave);
+        Boolean autorizado = false;
+
+        Cursor cursor = db.rawQuery("SELECT clave, id_auditor FROM "+ Utilidades.TABLA_AUDITOR, null);
+        int id = 0;
+        while (cursor.moveToNext()){
+            if(pass.equals(cursor.getString(0))){
+                autorizado = true;
+                id = cursor.getInt(1);
+            }
+        }
+
+        cursor.close();
+        conn.close();
+
+        ((MainActivity)getActivity()).setAuditor(id);
+
+        if(autorizado){
+            final ProgressDialog progressDialog = new ProgressDialog(getActivity(),
+                    R.style.ThemeOverlay_AppCompat_Dialog);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Usuario aceptado...");
+            progressDialog.show();
+
+            new android.os.Handler().postDelayed(
+                    new Runnable() {
+                        public void run() {
+                            onLoginSuccess();
+                            progressDialog.dismiss();
+                        }
+                    }, 3000);
+        } else {
+            Toast.makeText(getContext(), "La clave no se reconocio", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void login() {
@@ -189,6 +281,7 @@ public class FragmentLogin extends Fragment {
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.contenerdorFragment, new FragmentHome());
+
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.commit();
     }
@@ -205,7 +298,7 @@ public class FragmentLogin extends Fragment {
                 Toast.makeText(getContext(), "No ha seleccionado un auditor", Toast.LENGTH_LONG).show();
             }else{
                 if(CompararClave(spinnerLogin.getSelectedItem().toString(), password)){
-                    ((MainActivity)getActivity()).setAuditor(spinnerLogin.getSelectedItemPosition() + 1);
+                    ((MainActivity)getActivity()).setAuditor(LlamarIDauditor(spinnerLogin.getSelectedItem().toString()));
                     txtPassLogin.setError(null);
                 }else{
                     txtPassLogin.setError("La contraseña no es valida");
@@ -226,12 +319,11 @@ public class FragmentLogin extends Fragment {
     }
 
     private void LlenarLista(){
-        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null, 1);
         SQLiteDatabase db = conn.getReadableDatabase();
         ArrayList<String> listaSpinner = new ArrayList<>();
         Cursor cursor;
 
-        cursor = db.rawQuery("SELECT * FROM "+ Utilidades.TABLA_AUDITOR, null);
+        cursor = db.rawQuery("SELECT * FROM " + Utilidades.TABLA_AUDITOR + " ORDER BY auditor ASC", null);
 
         while (cursor.moveToNext()){
             listaSpinner.add(cursor.getString(1));
@@ -239,6 +331,7 @@ public class FragmentLogin extends Fragment {
 
         db.close();
         cursor.close();
+        conn.close();
 
         final SpinnerAdaptador adaptador = new SpinnerAdaptador(getContext(), R.layout.spinner_textview);
         adaptador.addAll(listaSpinner);

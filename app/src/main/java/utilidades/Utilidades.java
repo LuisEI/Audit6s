@@ -162,11 +162,13 @@ public class Utilidades {
     //Constantes de la tabla Encontrados
     public static final String TABLA_ENCONTRADO = "t_encontrado";
     public static final String CAMPO_RUTA_IMAGEN = "ruta_imagen";
+    public static final String CAMPO_COMENTARIO = "comentario";
 
     public static final String CREAR_TABLA_ENCONTRADO =  "CREATE TABLE " + TABLA_ENCONTRADO + " (" +
             CAMPO_ID_DETALLE + " INTEGER, " +
             CAMPO_RUTA_IMAGEN + " TEXT, " +
-            CAMPO_ID_AUDITORIA + " INTEGER," +
+            CAMPO_ID_AUDITORIA + " INTEGER, " +
+            CAMPO_COMENTARIO + " TEXT, " +
             "FOREIGN KEY(" + CAMPO_ID_AUDITORIA + ") REFERENCES " + TABLA_AUDITORIA + "("+ CAMPO_ID_AUDITORIA +"))";
 
 

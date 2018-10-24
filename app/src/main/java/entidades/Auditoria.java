@@ -33,6 +33,7 @@ public class Auditoria {
     private float res_s4;
     private float res_s5;
     private float res_total;
+    private int sync;
 
     public Auditoria() {
 
@@ -286,5 +287,12 @@ public class Auditoria {
         this.res_total = res_total;
     }
 
+    public int getSync() {
+        return sync;
+    }
+
+    public void setSync(int sync) {
+        this.sync = sync;
+    }
 
 }
