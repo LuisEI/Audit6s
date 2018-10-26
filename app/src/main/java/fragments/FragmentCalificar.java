@@ -656,24 +656,28 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         btnHallazgo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LanzarVentanaHallazo(button);
+                LanzarVentanaHallazo(button, alertDialog, tv, rb, indice);
             }
         });
 
         btnCalificar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tv.setText(String.format("%.0f", rb.getRating()));
-                if(matrizHallazgos.get(indice).size() > 0) MostrarBotonHallazgo(indice);
-                CalificarNota(button);
-                estaCalificado[indice] = true;
-                GuardarPuntosDB(rb.getRating(), indice);
-                button.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
-                alertDialog.dismiss();
-                ComprobacionIconoOK();
+                CalificadorAlert(tv, rb, indice, button, alertDialog);
             }
         });
 
+    }
+
+    private void CalificadorAlert(TextView tv, RatingBar rb, int indice, FloatingActionButton button, AlertDialog alertDialog) {
+        tv.setText(String.format("%.0f", rb.getRating()));
+        if(matrizHallazgos.get(indice).size() > 0) MostrarBotonHallazgo(indice);
+        CalificarNota(button);
+        estaCalificado[indice] = true;
+        GuardarPuntosDB(rb.getRating(), indice);
+        button.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
+        alertDialog.dismiss();
+        ComprobacionIconoOK();
     }
 
     private void LanzarCalificadorRapido(final TextView tv, final FloatingActionButton button) {
@@ -709,7 +713,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         else if(index == 18) AuditoriaDB.setS5_obs_4((int)rating);
     }
 
-    private void LanzarVentanaHallazo(final FloatingActionButton b) {
+    private void LanzarVentanaHallazo(final FloatingActionButton b, final AlertDialog ad, final TextView tv, final RatingBar rb, final int index) {
 
         //Se crea la ventana de hallazgos
         final View alertFormView = getLayoutInflater().inflate(R.layout.alert_dialog_hallazgo, null);
@@ -912,6 +916,8 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
                     vibe.vibrate(TIEMPO_VIBRACION);
                 }else {
                     alertHallazgo.dismiss();
+                    CalificadorAlert(tv, rb, index, b, ad);
+                    ad.dismiss();
                 }
             }
         });

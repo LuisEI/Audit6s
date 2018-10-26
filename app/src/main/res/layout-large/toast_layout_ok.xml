@@ -4,14 +4,14 @@
     android:id="@+id/lytLayout"
     android:background="@drawable/toast_custom_ok"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="150dp"
     android:orientation="horizontal"
     android:padding="5dip"
     android:gravity="center">
 
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:src="@drawable/floppy"
         android:layout_margin="20dp"/>
 
@@ -22,7 +22,7 @@
         android:paddingLeft="15dip"
         android:paddingRight="15dip"
         android:drawablePadding="5dp"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:textColor="#00aaff"
         android:textAlignment="center"
         android:text="Se Almaceno el Hallazgo correctamente"

@@ -22,4 +22,6 @@
     <string name="fecha">Fecha</string>
     <string name="comenzar">Comenzar</string>
     <string name="cerrar_sesion">Cerrar Sesion</string>
+    <string name="buscar_actualizacion">Buscar Actualizacion</string>
+    <string name="update_app">Actualizar ahora</string>
 </resources>

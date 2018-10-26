@@ -46,6 +46,7 @@ public class FragmentSetting extends Fragment implements View.OnClickListener{
     private OnFragmentInteractionListener mListener;
     private Button btnGuardarPreferencias;
     private EditText urlWebServices;
+    private EditText tablet;
 
     public FragmentSetting() {
         // Required empty public constructor
@@ -92,6 +93,7 @@ public class FragmentSetting extends Fragment implements View.OnClickListener{
         chkSonido = vista.findViewById(R.id.chkSonidos);
 
         urlWebServices = vista.findViewById(R.id.urlWebServices);
+        tablet = vista.findViewById(R.id.tabletNumber);
         urlWebServices.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
         btnBorrarRegistros.setOnClickListener(this);
@@ -171,9 +173,11 @@ public class FragmentSetting extends Fragment implements View.OnClickListener{
         SharedPreferences preferences = getActivity().getSharedPreferences("opciones", Context.MODE_PRIVATE);
 
         String url_web_services = urlWebServices.getText().toString();
+        String numberTablet = tablet.getText().toString();
         boolean sonido = chkSonido.isChecked();
 
         SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("tablet", numberTablet);
         editor.putString("url_web", url_web_services);
         editor.putBoolean("sonido", sonido);
 
@@ -187,7 +191,9 @@ public class FragmentSetting extends Fragment implements View.OnClickListener{
     private void CargarPreferencias(){
         SharedPreferences preferences = getActivity().getSharedPreferences("opciones", Context.MODE_PRIVATE);
         String url = preferences.getString("url_web", "https://sistemas.avxslv.com/lean/");
+        String numberTablet = preferences.getString("tablet", "");
         urlWebServices.setText(url);
+        tablet.setText(numberTablet);
         if(preferences.getBoolean("sonido", false)){
             chkSonido.setChecked(true);
         }

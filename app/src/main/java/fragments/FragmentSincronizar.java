@@ -1,11 +1,13 @@
 package fragments;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -19,7 +21,11 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,6 +47,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.load.engine.Resource;
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.example.liraheta.audit6s.R;
 
@@ -50,6 +57,11 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +82,7 @@ import entidades.Planta;
 import entidades.Responsable;
 import sqlite.ConexionSQLiteHelper;
 import utilidades.Utilidades;
+import utilidades.VersionChecker;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -102,7 +115,7 @@ public class FragmentSincronizar extends Fragment {
     private JsonArrayRequest jsonArrayRequestDetalles;
     private JsonArrayRequest jsonArrayRequestLider;
     private JsonArrayRequest jsonArrayRequestResponsable;
-    private ProgressBar pbDownload;
+    private ProgressBar pbUpdateApp;
 
     private ConexionSQLiteHelper conn;
     private boolean registroPendientes;
@@ -122,12 +135,14 @@ public class FragmentSincronizar extends Fragment {
     private int cantidadHallazgos = 0;
     private int acumulador = 0;
     private boolean sonido;
+    private boolean isUpdate = false;
 
     private Timer myTimer;
     private WifiInfo wifiInfo;
     private TextView txtLevelWifi;
     private WifiManager wifiManager;
     private NumberProgressBar wifiBar;
+    private TextView txtUpdateApp;
 
     public FragmentSincronizar() {
         // Required empty public constructor
@@ -172,8 +187,9 @@ public class FragmentSincronizar extends Fragment {
         btnSyncLocal = vista.findViewById(R.id.btnSyncLocal);
         btnSyncRemoto = vista.findViewById(R.id.btnSyncRemoto);
         txtResgistrosNoSyn = vista.findViewById(R.id.txtRegistroNoSync);
+        txtUpdateApp = vista.findViewById(R.id.txtUpdateAppVersion);
         pbUpload = vista.findViewById(R.id.pbUpload);
-        pbDownload = vista.findViewById(R.id.pbDownload);
+        pbUpdateApp = vista.findViewById(R.id.pbDownload);
         imageWifi = vista.findViewById(R.id.logo_wifi);
         txtLevelWifi = vista.findViewById(R.id.txtLevelWifi);
         wifiBar = vista.findViewById(R.id.wifiBar);
@@ -183,15 +199,11 @@ public class FragmentSincronizar extends Fragment {
         btnSyncLocal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(url_base.equals("")){
-                    Toast.makeText(getContext(), "Revise en Ajustes la direccion de los Web Services", Toast.LENGTH_SHORT).show();
+                if(!isUpdate){
+                    requestAppPermissions();
+                    ExisteNuevaVersion();
                 }else {
-                    if(existeConexionWifi(getContext())){
-                        manualUpdateData = true;
-                        SincronizacionLocal();
-                    }else{
-                        startActivity(new Intent(WifiManager.ACTION_PICK_WIFI_NETWORK));
-                    }
+                    ActualizarApp();
                 }
             }
         });
@@ -584,8 +596,6 @@ public class FragmentSincronizar extends Fragment {
     }
 
     private void SincronizacionLocal(){
-
-        pbDownload.setVisibility(View.VISIBLE);
 
         jsonArrayRequestDivision = new JsonArrayRequest(Request.Method.POST, url_base + "CargarDivision.php", null, new Response.Listener<JSONArray>() {
             @Override
@@ -1110,19 +1120,156 @@ public class FragmentSincronizar extends Fragment {
         db.close();
         conn.close();
 
-        pbDownload.setVisibility(View.INVISIBLE);
-
-        if(manualUpdateData){
-            Toast.makeText(getContext(), "Se ha actualizado la base de datos local", Toast.LENGTH_LONG).show();
-            manualUpdateData = false;
-        }
     }
 
     private String CargarUrlWeb(){
         SharedPreferences preferences = getActivity().getSharedPreferences("opciones", Context.MODE_PRIVATE);
-        String url = preferences.getString("url_web", "");
+        String url = preferences.getString("url_web", "https://sistemas.avxslv.com/lean/");
         return url;
     }
+
+
+    //###########################################################################################
+
+
+    private Handler handler = new Handler();
+
+    private Runnable finishBackgroundDownload = new Runnable() {
+        @Override
+        public void run() {
+            pbUpdateApp.setVisibility(View.VISIBLE);
+            if(mVC.isNewVersionAvailable()){
+                txtUpdateApp.setText("Version actual: " + mVC.getCurrentVersionName() +"\n"+ "Version disponible: " + mVC.getLatestVersionName());
+                btnSyncLocal.setText(R.string.update_app);
+                btnSyncLocal.setBackgroundResource(R.drawable.button_background_pink);
+                isUpdate = true;
+            }else{
+                txtUpdateApp.setText("La app esta actualizada");
+            }
+        }
+    };
+
+    private Runnable backgroundDownload = new Runnable() {
+        @Override
+        public void run() {
+            mVC.getData(getContext());
+            handler.post(finishBackgroundDownload);
+        }
+    };
+
+    private VersionChecker mVC = new VersionChecker();
+
+    private int REQUEST_WRITE_STORAGE_REQUEST_CODE = 1;
+
+
+
+
+
+
+    private void ExisteNuevaVersion() {
+        pbUpdateApp.setVisibility(View.VISIBLE);
+        pbUpdateApp.setIndeterminate(false);
+        Thread downloadThread = new Thread(backgroundDownload, "VersionChecker");
+        downloadThread.start();
+    }
+
+    private void ActualizarApp() {
+        pbUpdateApp.setVisibility(View.VISIBLE);
+        pbUpdateApp.setIndeterminate(false);
+        new LongOperation().execute(mVC.getDownloadURL());
+    }
+
+    private class LongOperation extends AsyncTask<String, Integer, String> {
+        @Override
+        protected String doInBackground(String... sUrl) {
+            String path = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "/" + "app-audit6s.apk";
+            try {
+                URL url = new URL(sUrl[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setDoOutput(false);
+                connection.setConnectTimeout(10 * 1000);
+                connection.setReadTimeout(10 * 1000);
+                connection.setRequestProperty("Connection", "Keep-Alive");
+                connection.setRequestProperty("Charset", "UTF-8");
+                connection.setRequestProperty("Accept-Encoding", "gzip, deflate");
+
+                connection.connect();
+
+                int fileLength = connection.getContentLength();
+
+                InputStream input = connection.getInputStream();
+                OutputStream output = new FileOutputStream(path);
+
+                byte data[] = new byte[1024];
+                long total = 0;
+                int count;
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    publishProgress((int) ((total / (float) fileLength) * 100));
+                    output.write(data, 0, count);
+                }
+
+                output.flush();
+                output.close();
+                input.close();
+            } catch (Exception e) {
+                Log.e("App", "Ocurrio un error");
+                Log.e("App", e.getMessage());
+            }
+            return path;
+
+        }
+
+        @Override
+        protected void onPostExecute(String path) {
+            pbUpdateApp.setProgress(0);
+            pbUpdateApp.setVisibility(View.INVISIBLE);
+            pbUpdateApp.setIndeterminate(true);
+            btnSyncLocal.setText(R.string.buscar_actualizacion);
+            btnSyncLocal.setBackgroundResource(R.drawable.button_background_blue);
+
+            Intent i = new Intent();
+            i.setAction(Intent.ACTION_VIEW);
+            i.setDataAndType(FileProvider.getUriForFile(getContext(), "com.example.android.fileprovider", new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "/" + "app-audit6s.apk")), "application/vnd.android.package-archive");
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            getContext().startActivity(i);
+        }
+
+        @Override
+        protected void onPreExecute() {}
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            pbUpdateApp.setProgress(progress[0]);
+        }
+    }
+
+    private void requestAppPermissions() {
+
+        if (hasReadPermissions() && hasWritePermissions()) {
+            return;
+        }
+
+        ActivityCompat.requestPermissions(getActivity(),
+                new String[] {
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                }, REQUEST_WRITE_STORAGE_REQUEST_CODE);
+    }
+
+    private boolean hasReadPermissions() {
+        return (ContextCompat.checkSelfPermission(getActivity().getBaseContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private boolean hasWritePermissions() {
+        return (ContextCompat.checkSelfPermission(getActivity().getBaseContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+    }
+
+
+    //#############################################################################################
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
