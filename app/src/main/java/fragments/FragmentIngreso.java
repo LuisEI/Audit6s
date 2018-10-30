@@ -80,7 +80,7 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
 
     private View vista;
     private ConexionSQLiteHelper conn;
-    Vibrator vibe;
+    private Vibrator vibe;
 
     private ArrayList<String> listaSpinner;
 
@@ -91,7 +91,8 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
     private TextInputLayout txtLider;
     private TextInputLayout txtTurno;
     private TextInputLayout txtFecha;
-    private TextInputLayout txtAuditor;
+
+    private int ID_Auditor;
 
     private FloatingActionButton btnDivision;
     private FloatingActionButton btnPlanta;
@@ -99,7 +100,6 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
     private FloatingActionButton btnArea;
     private FloatingActionButton btnTurno;
     private FloatingActionButton btnFecha;
-    private FloatingActionButton btnAuditor;
     private FloatingActionButton btnLider;
 
     private int turno = 0;
@@ -160,9 +160,9 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
         txtLider = vista.findViewById(R.id.txtLider);
         txtTurno = vista.findViewById(R.id.txtTurno);
         txtFecha = vista.findViewById(R.id.txtFecha);
-        txtAuditor = vista.findViewById(R.id.txtAuditor);
 
         vibe = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+        ID_Auditor = ((MainActivity)getActivity()).getAuditor();
 
         btnQR = vista.findViewById(R.id.btnQR);
 
@@ -327,36 +327,12 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
             }
         });
 
-        txtAuditor.getEditText().addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(count > 0) {
-                    btnAuditor.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
-                    btnAuditor.setImageResource(R.drawable.ic_done);
-                }else {
-                    btnAuditor.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorBtnDesactivado)));
-                    btnAuditor.setImageResource(R.drawable.ic_touch_ingreso);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
         btnDivision = vista.findViewById(R.id.btnDivision);
         btnPlanta = vista.findViewById(R.id.btnPlanta);
         btnGerente = vista.findViewById(R.id.btnGerente);
         btnArea = vista.findViewById(R.id.btnArea);
         btnTurno = vista.findViewById(R.id.btnTurno);
         btnFecha = vista.findViewById(R.id.btnFecha);
-        btnAuditor = vista.findViewById(R.id.btnAuditor);
         btnValidar = vista.findViewById(R.id.btnValidar);
         btnLider = vista.findViewById(R.id.btnLider);
 
@@ -366,7 +342,6 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
         btnArea.setOnClickListener(this);
         btnTurno.setOnClickListener(this);
         btnFecha.setOnClickListener(this);
-        btnAuditor.setOnClickListener(this);
         btnValidar.setOnClickListener(this);
         btnLider.setOnClickListener(this);
 
@@ -378,7 +353,6 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
         txtLider.getEditText().setShowSoftInputOnFocus(false);
         txtTurno.getEditText().setShowSoftInputOnFocus(false);
         txtFecha.getEditText().setShowSoftInputOnFocus(false);
-        txtAuditor.getEditText().setShowSoftInputOnFocus(false);
 
         btnQR.setOnClickListener(this);
 
@@ -481,7 +455,6 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
         if (!Comprobacion(txtLider, "Debe seleccionar el Lider")) valido = false;
         if (!Comprobacion(txtTurno, "Debe seleccionar el Turno")) valido = false;
         if (!Comprobacion(txtFecha, "Debe seleccionar la Fecha")) valido = false;
-        if (!Comprobacion(txtAuditor, "Debe seleccionar el Auditor")) valido = false;
         return valido;
     }
 
@@ -612,7 +585,7 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
         bundle.putInt("gerente", getIDTable(db, cursor, Utilidades.CAMPO_ID_GERENTE, Utilidades.TABLA_GERENTE, Utilidades.CAMPO_GERENTE, txtGerente.getEditText().getText().toString()));
         bundle.putInt("area", getIDTable(db, cursor, Utilidades.CAMPO_ID_AREA, Utilidades.TABLA_AREA, Utilidades.CAMPO_AREA, txtArea.getEditText().getText().toString()));
         bundle.putInt("lider", getIDTable(db, cursor, Utilidades.CAMPO_ID_LIDER, Utilidades.TABLA_LIDER, Utilidades.CAMPO_LIDER, txtLider.getEditText().getText().toString()));
-        bundle.putInt("auditor", getIDTable(db, cursor, Utilidades.CAMPO_ID_AUDITOR, Utilidades.TABLA_AUDITOR, Utilidades.CAMPO_AUDITOR, txtAuditor.getEditText().getText().toString()));
+        bundle.putInt("auditor", ID_Auditor);
         bundle.putInt("turno", turno);
         bundle.putString("fecha", fechaMySQL);
 
@@ -717,13 +690,6 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
                 }
                 cursor.close();
 
-                int id_au = ((MainActivity)getActivity()).getAuditor();
-                Log.i("Auditor", String.valueOf(id_au));
-                cursor = db.rawQuery("SELECT auditor FROM "+ Utilidades.TABLA_AUDITOR +" WHERE "+ Utilidades.CAMPO_ID_AUDITOR +" = ?", new String[]{String.valueOf(id_au)});
-                while (cursor.moveToNext()){
-                    txtAuditor.getEditText().setText(cursor.getString(0));
-                }
-
                 DateFormat dateFormat = new SimpleDateFormat("d-M-yyyy");
                 DateFormat dateFormatSQL = new SimpleDateFormat("yyyy-MM-dd");
                 Date date = new Date();
@@ -815,9 +781,6 @@ public class FragmentIngreso extends Fragment implements View.OnClickListener, A
             SeleccionarTurno();
         }else if (v.getId() == R.id.btnFecha){
             LanzarSelectorFecha(txtFecha);
-        }else if (v.getId() == R.id.btnAuditor){
-            txtAuditor.getEditText().requestFocus();
-            LanzarListaSeleccionable(txtAuditor, Utilidades.TABLA_AUDITOR, "Seleccione el Auditor");
         }else if (v.getId() == R.id.btnQR){
             if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                 LanzarLectorQR();

@@ -172,4 +172,24 @@ public class Utilidades {
             "FOREIGN KEY(" + CAMPO_ID_AUDITORIA + ") REFERENCES " + TABLA_AUDITORIA + "("+ CAMPO_ID_AUDITORIA +"))";
 
 
+    //Constantes de la tabla Excepciones
+    public static final String TABLA_EXCEPCIONES = "t_excepcion";
+    public static final String CAMPO_ROWID = "oid";
+    public static final String CAMPO_NUMERO_TABLET = "numero_tablet";
+    public static final String CAMPO_DATE = "date";
+    public static final String CAMPO_TIME = "time";
+    public static final String CAMPO_VERSION = "version";
+    public static final String CAMPO_MEMORIA = "memoria";
+    public static final String CAMPO_ERROR = "error";
+    public static final String CAMPO_SYNC_E = "sync";
+
+    public static final String CREAR_TABLA_EXCEPCION =  "CREATE TABLE " + TABLA_EXCEPCIONES + " (" +
+            CAMPO_NUMERO_TABLET + " TEXT, " +
+            CAMPO_DATE + " TEXT, " +
+            CAMPO_TIME + " TEXT, " +
+            CAMPO_VERSION + " TEXT, " +
+            CAMPO_MEMORIA + " TEXT, " +
+            CAMPO_ERROR + " TEXT, " +
+            CAMPO_SYNC_E + " INTEGER)";
+
 }

@@ -5,6 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,7 +17,14 @@ import java.net.URL;
 
 public class VersionChecker {
 
-    public static final String INFO_FILE = "https://sistemas.avxslv.com/lean/Apk/version.txt";
+    public VersionChecker(String url) {
+        INFO_FILE = url + "Apk/output.json";
+        Url_Base = url;
+    }
+
+    private String Url_Base;
+
+    private String INFO_FILE;
 
     private int currentVersionCode;
 
@@ -35,10 +43,16 @@ public class VersionChecker {
             currentVersionName = pckginfo.versionName;
 
             String data = downloadHttp(new URL(INFO_FILE));
-            JSONObject json = new JSONObject(data);
+
+            JSONArray jsonArray = new JSONArray(data);
+            JSONObject object = new JSONObject(jsonArray.getString(0));
+            JSONObject json = new JSONObject(object.getString("apkInfo"));
+
             latestVersionCode = json.getInt("versionCode");
             latestVersionName = json.getString("versionName");
-            downloadURL = json.getString("downloadURL");
+
+            downloadURL = Url_Base + "Apk/app-debug.apk";
+
             Log.d("AutoUpdate", "Datos obtenidos con exito");
         }catch(JSONException e){
             Log.e("AutoUpdate", "Ha habido un error con el JSON", e);
@@ -87,4 +101,5 @@ public class VersionChecker {
         }
         return stringBuilder.toString();
     }
+
 }

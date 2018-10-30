@@ -760,6 +760,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
         final AlertDialog alertHallazgo = builder.create();
 
         listaImagenes = new ArrayList<>();
+        hallazgoSelect = false;
 
         fabComentario.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1068,20 +1069,19 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
             } catch (IOException ex) {
                 // Error cuando se crea la imagen
             }
-            // Continua solo si el archivo se ha creado correctamente
+
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(getContext(),
                         "com.example.android.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                //Inicia la camara y guarda el resultado
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
     }
 
     private File createImageFile() throws IOException {
-        // Se crea el nombre de la imagen
+
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -1091,7 +1091,6 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
                 storageDir      /* directorio */
         );
 
-        // Se guarda la direccion de la imagen
         mCurrentPhotoPath = image.getAbsolutePath();
         currentPhotoName = image.getName();
         return image;

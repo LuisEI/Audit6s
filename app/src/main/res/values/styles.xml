@@ -162,4 +162,13 @@
         <item name="progress_unreached_bar_height">0.75dp</item>
     </style>
 
+    <style name="AppDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
 </resources>

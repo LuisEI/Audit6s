@@ -74,6 +74,7 @@ import entidades.Auditor;
 import entidades.Auditoria;
 import entidades.Division;
 import entidades.Encontrado;
+import entidades.Excepcion;
 import entidades.Gerente;
 import entidades.HallazgoDetalle;
 import entidades.Hallazgos;
@@ -144,6 +145,9 @@ public class FragmentSincronizar extends Fragment {
     private NumberProgressBar wifiBar;
     private TextView txtUpdateApp;
 
+    private VersionChecker mVC;
+    private int REQUEST_WRITE_STORAGE_REQUEST_CODE = 1;
+
     public FragmentSincronizar() {
         // Required empty public constructor
     }
@@ -196,11 +200,30 @@ public class FragmentSincronizar extends Fragment {
 
         url_base = CargarUrlWeb();
 
+        request = Volley.newRequestQueue(getContext());
+        RegistrosNoSincronizados();
+        CantidadDeHallazgos();
+        if(existeConexionWifi(getContext())){
+            imageWifi.setImageResource(R.drawable.wifi_area_small);
+        } else {
+            imageWifi.setImageResource(R.drawable.wifi_area_small_stop);
+        }
+
+        wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
+        wifiBar.setMax(10);
+        myTimer = new Timer();
+        myTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                TimerMethod();
+            }
+
+        }, 0, 500);
+
         btnSyncLocal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!isUpdate){
-                    requestAppPermissions();
                     ExisteNuevaVersion();
                 }else {
                     ActualizarApp();
@@ -215,6 +238,7 @@ public class FragmentSincronizar extends Fragment {
                 }else{
                     if(registroPendientes){
                         if(existeConexionWifi(getContext())){
+                            SincronizacionExcepciones();
                             SincronizacionRemota();
                         }else{
                             if(sonido){
@@ -243,25 +267,6 @@ public class FragmentSincronizar extends Fragment {
                 }
             }
         });
-        request = Volley.newRequestQueue(getContext());
-        RegistrosNoSincronizados();
-        CantidadDeHallazgos();
-        if(existeConexionWifi(getContext())){
-            imageWifi.setImageResource(R.drawable.wifi_area_small);
-        } else {
-            imageWifi.setImageResource(R.drawable.wifi_area_small_stop);
-        }
-
-        wifiManager = (WifiManager) getContext().getSystemService(Context.WIFI_SERVICE);
-        wifiBar.setMax(10);
-        myTimer = new Timer();
-        myTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                TimerMethod();
-            }
-
-        }, 0, 500);
 
         new UpdateAuto().execute();
 
@@ -279,7 +284,6 @@ public class FragmentSincronizar extends Fragment {
             int numberOfLevels = 10;
             int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
             NivelWiFi(level);
-            Log.i("WIFI", String.valueOf(level));
         }
     };
 
@@ -346,9 +350,21 @@ public class FragmentSincronizar extends Fragment {
         pbUpload.setVisibility(View.VISIBLE);
         pbUpload.setMax(cantidadHallazgos);
 
+        List<Excepcion> listaEx = obtenerListaExcepciones();
+        for(Excepcion ex: listaEx){
+            EnviarExcepcionServidor(url_base, ex);
+        }
+
         List<Auditoria> listaAuditorias = obtenerListaAuditorias();
         for(Auditoria auditParams: listaAuditorias){
             EnviarAuditoria(url_base,auditParams);
+        }
+    }
+
+    private void SincronizacionExcepciones() {
+        List<Excepcion> listaEx = obtenerListaExcepciones();
+        for(Excepcion ex: listaEx){
+            EnviarExcepcionServidor(url_base, ex);
         }
     }
 
@@ -369,8 +385,7 @@ public class FragmentSincronizar extends Fragment {
                     if(listaE.size() == 0) ActualizarEstadoSync(auditParams.getId_auditoria());
                     if(numberOfRequestsToMake == 0){
                         Toast.makeText(getContext(), "Tarea completada", Toast.LENGTH_SHORT).show();
-                        pbUpload.setVisibility(View.INVISIBLE);
-                        RegistrosNoSincronizados();
+                        EnvioFinalizado();
                     }
                 }else {
                     Toast.makeText(getContext(), response, Toast.LENGTH_SHORT).show();
@@ -381,8 +396,7 @@ public class FragmentSincronizar extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 numberOfRequestsToMake--;
                 if(numberOfRequestsToMake == 0){
-                    pbUpload.setVisibility(View.INVISIBLE);
-                    RegistrosNoSincronizados();
+                    EnvioFinalizado();
                 }
                 Toast.makeText(getContext(), "Error al enviar tabla Auditoria " + error.toString(), Toast.LENGTH_SHORT).show();
             }
@@ -429,6 +443,12 @@ public class FragmentSincronizar extends Fragment {
         numberOfRequestsToMake++;
     }
 
+    private void EnvioFinalizado() {
+        pbUpload.setVisibility(View.INVISIBLE);
+        RegistrosNoSincronizados();
+        ExisteNuevaVersion();
+    }
+
     private void ActualizarEstadoSync(int id_auditoria){
         ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null,1);
         SQLiteDatabase db = conn.getWritableDatabase();
@@ -436,6 +456,18 @@ public class FragmentSincronizar extends Fragment {
 
         values.put(Utilidades.CAMPO_SYNC, 1);
         db.update(Utilidades.TABLA_AUDITORIA, values, Utilidades.CAMPO_ID_AUDITORIA+" = ?",new String[]{String.valueOf(id_auditoria)});
+
+        db.close();
+        conn.close();
+    }
+
+    private void ActualizarEstadoSyncExcepcion(int id){
+        ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null,1);
+        SQLiteDatabase db = conn.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(Utilidades.CAMPO_SYNC_E, 1);
+        db.update(Utilidades.TABLA_EXCEPCIONES, values, Utilidades.CAMPO_ROWID + " = ?",new String[]{String.valueOf(id)});
 
         db.close();
         conn.close();
@@ -455,8 +487,7 @@ public class FragmentSincronizar extends Fragment {
                     Toast.makeText(getContext(), response, Toast.LENGTH_LONG).show();
                 }
                 if(numberOfRequestsToMake == 0){
-                    pbUpload.setVisibility(View.INVISIBLE);
-                    RegistrosNoSincronizados();
+                    EnvioFinalizado();
                 }
             }
         }, new Response.ErrorListener() {
@@ -466,8 +497,7 @@ public class FragmentSincronizar extends Fragment {
                 pbUpload.setProgress(acumulador++, true);
                 Toast.makeText(getContext(), "Error al enviar tabla Encontrado " + error.toString(), Toast.LENGTH_SHORT).show();
                 if(numberOfRequestsToMake == 0){
-                    pbUpload.setVisibility(View.INVISIBLE);
-                    RegistrosNoSincronizados();
+                    EnvioFinalizado();
                 }
             }
         }){
@@ -489,6 +519,41 @@ public class FragmentSincronizar extends Fragment {
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         request.add(stringRequest);
         numberOfRequestsToMake++;
+    }
+
+    private void EnviarExcepcionServidor(String url_base, final Excepcion e) {
+
+        String url = url_base + "GuardarExcepcion.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if(response.replace("\t","").equals("OK")){
+                    ActualizarEstadoSyncExcepcion(e.getId());
+                }else{
+                    Toast.makeText(getContext(), response, Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(), "Error al enviar las Excepciones " + error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> parametros = new HashMap<>();
+                parametros.put("numero_tablet", e.getNumero_tablet());
+                parametros.put("fecha", e.getFecha());
+                parametros.put("hora", e.getHora());
+                parametros.put("version", e.getVersion());
+                parametros.put("memoria", e.getMemoria());
+                parametros.put("error", e.getError());
+
+                return parametros;
+            }
+        };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        request.add(stringRequest);
     }
 
     private String ConvertirImagenString(String imagen) {
@@ -593,6 +658,37 @@ public class FragmentSincronizar extends Fragment {
         conn.close();
 
         return listaEncontrados;
+    }
+
+    private List<Excepcion> obtenerListaExcepciones(){
+
+        conn = new ConexionSQLiteHelper(getContext(), "db_audit6s", null, 1);
+        SQLiteDatabase db = conn.getReadableDatabase();
+        List<Excepcion> listaExcepcion = new ArrayList<>();
+        Excepcion e;
+
+        Cursor cursor = db.rawQuery("SELECT oid, numero_tablet, date, time, version, memoria, error FROM "+ Utilidades.TABLA_EXCEPCIONES + " WHERE "+ Utilidades.CAMPO_SYNC_E +" = ?", new String[]{"0"});
+
+        while (cursor.moveToNext()){
+
+            e = new Excepcion();
+
+            e.setId(cursor.getInt(0));
+            e.setNumero_tablet(cursor.getString(1));
+            e.setFecha(cursor.getString(2));
+            e.setHora(cursor.getString(3));
+            e.setVersion(cursor.getString(4));
+            e.setMemoria(cursor.getString(5));
+            e.setError(cursor.getString(6));
+
+            listaExcepcion.add(e);
+        }
+
+        db.close();
+        cursor.close();
+        conn.close();
+
+        return listaExcepcion;
     }
 
     private void SincronizacionLocal(){
@@ -1128,9 +1224,7 @@ public class FragmentSincronizar extends Fragment {
         return url;
     }
 
-
     //###########################################################################################
-
 
     private Handler handler = new Handler();
 
@@ -1157,18 +1251,11 @@ public class FragmentSincronizar extends Fragment {
         }
     };
 
-    private VersionChecker mVC = new VersionChecker();
-
-    private int REQUEST_WRITE_STORAGE_REQUEST_CODE = 1;
-
-
-
-
-
-
     private void ExisteNuevaVersion() {
+        requestAppPermissions();
         pbUpdateApp.setVisibility(View.VISIBLE);
         pbUpdateApp.setIndeterminate(false);
+        mVC = new VersionChecker(url_base);
         Thread downloadThread = new Thread(backgroundDownload, "VersionChecker");
         downloadThread.start();
     }
@@ -1267,9 +1354,7 @@ public class FragmentSincronizar extends Fragment {
         return (ContextCompat.checkSelfPermission(getActivity().getBaseContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
     }
 
-
     //#############################################################################################
-
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

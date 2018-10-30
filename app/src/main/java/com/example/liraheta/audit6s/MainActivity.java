@@ -35,6 +35,7 @@ import fragments.FragmentSincronizar;
 import fragments.Fragment_Informacion;
 import interfaces.DrawerLocker;
 import sqlite.ConexionSQLiteHelper;
+import utilidades.ManejadorExcepciones;
 import utilidades.Utilidades;
 
 public class MainActivity extends AppCompatActivity
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Thread.setDefaultUncaughtExceptionHandler(new ManejadorExcepciones(this));
         setContentView(R.layout.activity_main);
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
