@@ -600,6 +600,7 @@ public class FragmentCalificar extends Fragment implements View.OnClickListener,
             @Override
             public void onClick(View v) {
                 tv.setText(String.format("%.0f", rbPunto16.getRating()));
+                GuardarPuntosDB(rbPunto16.getRating(), 15);
                 button.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.colorActivado)));
                 estaCalificado[15] = true;
                 alertDialog.dismiss();

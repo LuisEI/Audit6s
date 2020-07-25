@@ -9,6 +9,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import android.util.Log;
 
 import com.example.liraheta.audit6s.CrashActivity;
 
@@ -67,6 +68,8 @@ public class ManejadorExcepciones implements Thread.UncaughtExceptionHandler {
 
         db.close();
         conn.close();
+
+        Log.e("Crash App Error", error);
     }
 
     private String CargarNumeroTablet(){
